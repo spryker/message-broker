@@ -7,17 +7,16 @@
 
 namespace SprykerTest\Zed\MessageBroker\Plugin;
 
+use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface;
-use SprykerTest\Zed\MessageBroker\Messages\SomethingHappenedEvent;
-use SprykerTest\Zed\MessageBroker\Messages\SomethingToDoCommand;
 
 class SomethingHappenedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
      * @return void
      */
-    public function handle(SomethingHappenedEvent $somethingHappenedEvent): void
+    public function handle(MessageBrokerTestMessageTransfer $messageBrokerTestMessageTransfer): void
     {
         $foo = 'bar';
     }
@@ -28,8 +27,7 @@ class SomethingHappenedMessageHandlerPlugin extends AbstractPlugin implements Me
     public function handles(): array
     {
         return [
-            SomethingHappenedEvent::class => [$this, 'handle'],
-            SomethingToDoCommand::class,
+            MessageBrokerTestMessageTransfer::class => [$this, 'handle'],
         ];
     }
 }

@@ -7,12 +7,14 @@
 
 namespace Spryker\Zed\MessageBroker\Business\Publisher;
 
+use Symfony\Component\Messenger\Envelope;
+
 interface MessagePublisherInterface
 {
     /**
      * @param object $message
      *
-     * @return void
+     * @return \Symfony\Component\Messenger\Envelope
      */
-    public function pushMessage(object $message): void;
+    public function pushMessage(object $message): Envelope;
 }

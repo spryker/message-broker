@@ -1,24 +1,30 @@
 <?php
 
+/**
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
+
 namespace SprykerTest\Zed\MessageBroker\Plugin;
 
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Transport\InMemoryTransport;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSenderPluginInterface, MessageReceiverPluginInterface, TransportInterface
 {
     /**
-     * @var TransportInterface|null
+     * @var \Symfony\Component\Messenger\Transport\InMemoryTransport
      */
-    protected ?TransportInterface $transport = null;
+    protected InMemoryTransport $transport;
 
     /**
-     * @param TransportInterface|null $transport
+     * @param \Symfony\Component\Messenger\Transport\InMemoryTransport $transport
      */
-    public function __construct(?TransportInterface $transport)
+    public function __construct(InMemoryTransport $transport)
     {
         $this->transport = $transport;
     }
@@ -26,9 +32,9 @@ class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSe
     /**
      * @return string
      */
-    public function getChannelName(): string
+    public function getClientName(): string
     {
-        return '*';
+        return 'in-memory';
     }
 
     /**
@@ -40,7 +46,9 @@ class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSe
     }
 
     /**
-     * @param Envelope $envelope
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return void
      */
     public function ack(Envelope $envelope): void
     {
@@ -48,7 +56,9 @@ class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSe
     }
 
     /**
-     * @param Envelope $envelope
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return void
      */
     public function reject(Envelope $envelope): void
     {
@@ -56,11 +66,20 @@ class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSe
     }
 
     /**
-     * @param Envelope $envelope
-     * @return Envelope
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return \Symfony\Component\Messenger\Envelope
      */
     public function send(Envelope $envelope): Envelope
     {
         return $this->transport->send($envelope);
+    }
+
+    /**
+     * @return \Symfony\Component\Messenger\Transport\InMemoryTransport
+     */
+    public function getTransport(): InMemoryTransport
+    {
+        return $this->transport;
     }
 }

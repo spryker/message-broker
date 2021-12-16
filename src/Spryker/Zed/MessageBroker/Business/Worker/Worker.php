@@ -26,7 +26,7 @@ class Worker extends SymfonyWorker
         $receivers = [];
 
         foreach ($messageReceiverPlugins as $messageReceiverPlugin) {
-            $receivers[$messageReceiverPlugin->getChannelName()] = $messageReceiverPlugin;
+            $receivers[$messageReceiverPlugin->getClientName()] = $messageReceiverPlugin;
         }
 
         parent::__construct($receivers, $bus, $eventDispatcher, $logger);

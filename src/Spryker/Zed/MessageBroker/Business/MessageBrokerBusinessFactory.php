@@ -8,16 +8,17 @@
 namespace Spryker\Zed\MessageBroker\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
+use Spryker\Zed\MessageBroker\Business\Config\StringToArrayConfigFormatter;
 use Spryker\Zed\MessageBroker\Business\EventDispatcher\EventDispatcher;
 use Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecorator;
 use Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface;
 use Spryker\Zed\MessageBroker\Business\MessageHandler\MessageHandlerLocator;
-use Spryker\Zed\MessageBroker\Business\MesseageSender\MessageSenderLocator;
+use Spryker\Zed\MessageBroker\Business\MessageSender\MessageSenderLocator;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisher;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageDecoratorPluginInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher as SymfonyEventDispatcher;
 use Symfony\Component\Messenger\Handler\HandlersLocatorInterface;
 use Symfony\Component\Messenger\MessageBus;
@@ -52,7 +53,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return array<MessageDecoratorPluginInterface>
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageDecoratorPluginInterface>
      */
     protected function getMessageDecoratorPlugins(): array
     {
@@ -87,11 +88,24 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
+    /**
+     * @return \Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface
+     */
     public function createMessageSenderLocator(): SendersLocatorInterface
     {
         return new MessageSenderLocator(
+            $this->getConfig(),
+            $this->createConfigFormatter(),
             $this->getMessageSenderPlugins(),
         );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface
+     */
+    public function createConfigFormatter(): ConfigFormatterInterface
+    {
+        return new StringToArrayConfigFormatter();
     }
 
     /**

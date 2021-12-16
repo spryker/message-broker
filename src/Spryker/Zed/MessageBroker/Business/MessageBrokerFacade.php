@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractFacade;
+use Symfony\Component\Messenger\Envelope;
 
 /**
  * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory getFactory()
@@ -21,10 +22,10 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @param object $message
      *
-     * @return void
+     * @return Envelope
      */
-    public function pushMessage(object $message): void
+    public function pushMessage(object $message): Envelope
     {
-        $this->getFactory()->createMessagePublisher()->pushMessage($message);
+        return $this->getFactory()->createMessagePublisher()->pushMessage($message);
     }
 }

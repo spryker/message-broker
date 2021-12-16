@@ -25,12 +25,16 @@ class MessageDecorator implements MessageDecoratorInterface
     }
 
     /**
-     * @param object $message
+     * @param Envelope $message
      *
-     * @return object
+     * @return Envelope
      */
-    public function decorateMessage(object $message): object
+    public function decorateMessage(Envelope $message): Envelope
     {
-        return Envelope::wrap($message, $this->messageDecoratorPlugins);
+        foreach ($this->messageDecoratorPlugins as $messageDecoratorPlugin) {
+            $message = $messageDecoratorPlugin->decorateMessage($message);
+        }
+
+        return $message;
     }
 }

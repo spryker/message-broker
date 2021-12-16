@@ -7,12 +7,14 @@
 
 namespace Spryker\Zed\MessageBroker\Business\MessageDecorator;
 
+use Symfony\Component\Messenger\Envelope;
+
 interface MessageDecoratorInterface
 {
     /**
-     * @param object $message
+     * @param Envelope $message
      *
-     * @return object
+     * @return Envelope
      */
-    public function decorateMessage(object $message): object;
+    public function decorateMessage(Envelope $message): Envelope;
 }

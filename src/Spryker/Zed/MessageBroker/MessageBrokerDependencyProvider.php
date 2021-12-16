@@ -38,11 +38,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @var string
      */
-    public const PLUGINS_TRANSPORT_ADAPTER = 'PLUGINS_TRANSPORT_ADAPTER';
-
-    /**
-     * @var string
-     */
     public const PLUGINS_EVENT_DISPATCHER = 'PLUGINS_EVENT_DISPATCHER';
 
     /**
@@ -54,8 +49,10 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container = parent::provideBusinessLayerDependencies($container);
 
-        $container = $this->provideTransportAdapterPlugins($container);
+        $container = $this->provideMessageSenderAdapterPlugins($container);
+        $container = $this->provideMessageReceiverAdapterPlugins($container);
         $container = $this->provideMessageHandlerPlugins($container);
+        $container = $this->provideMessageDecoratorPlugins($container);
         $container = $this->provideEventDispatcherSubscriberPlugins($container);
 
         return $container;
@@ -66,11 +63,26 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function provideTransportAdapterPlugins(Container $container): Container
+    protected function provideMessageSenderAdapterPlugins(Container $container): Container
     {
-        $container->set(static::PLUGINS_TRANSPORT_ADAPTER, function () {
-
+        $container->set(static::PLUGINS_MESSAGE_SENDER, function () {
+            return [];
         });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function provideMessageReceiverAdapterPlugins(Container $container): Container
+    {
+        $container->set(static::PLUGINS_MESSAGE_RECEIVER, function () {
+            return [];
+        });
+
         return $container;
     }
 
@@ -81,6 +93,24 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
      */
     protected function provideMessageHandlerPlugins(Container $container): Container
     {
+        $container->set(static::PLUGINS_MESSAGE_HANDLER, function () {
+            return [];
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function provideMessageDecoratorPlugins(Container $container): Container
+    {
+        $container->set(static::PLUGINS_MESSAGE_DECORATOR, function () {
+            return [];
+        });
+
         return $container;
     }
 
@@ -91,6 +121,10 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
      */
     protected function provideEventDispatcherSubscriberPlugins(Container $container): Container
     {
+        $container->set(static::PLUGINS_EVENT_DISPATCHER, function () {
+            return [];
+        });
+
         return $container;
     }
 }

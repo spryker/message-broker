@@ -7,22 +7,21 @@
 
 namespace SprykerTest\Zed\MessageBroker\Helper;
 
-use AsyncAws\Sns\SnsClient;
-use AsyncAws\Sqs\SqsClient;
 use Codeception\Module;
+use Codeception\TestInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\Receiver\AwsSqsMessageReceiverPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\Sender\AwsSnsMessageSenderPlugin;
+use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface;
 use SprykerTest\Zed\MessageBroker\_support\Subscriber\StopWorkerWhenMessagesAreHandledEventDispatcherSubscriberPlugin;
 use SprykerTest\Zed\MessageBroker\MessageBrokerBusinessTester;
 use SprykerTest\Zed\MessageBroker\Plugin\InMemoryMessageTransportPlugin;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelperTrait;
-use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver;
-use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\Connection;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnTimeLimitListener;
+use Symfony\Component\Messenger\Stamp\SentStamp;
 use Symfony\Component\Messenger\Transport\InMemoryTransport;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
@@ -60,6 +59,89 @@ class MessageBrokerHelper extends Module
     protected ?MessageBrokerBusinessTester $tester = null;
 
     /**
+     * @return void
+     */
+    public function _before(TestInterface $test)
+    {
+        parent::_before($test);
+
+        putenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP');
+        putenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP');
+        putenv('AOP_MESSAGE_BROKER_SNS_SENDER');
+        putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER');
+    }
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     * @param string $senderAlias
+     *
+     * @return void
+     */
+    public function assertMessageWasSentWithSender(Envelope $envelope, string $senderAlias): void
+    {
+        /** @var \Symfony\Component\Messenger\Stamp\SentStamp $sentStamp */
+        $sentStamp = $envelope->last(SentStamp::class);
+
+        // Assert
+        $this->assertNotNull($sentStamp, sprintf('Expected to have a "%s" stamp but it was not found.', SentStamp::class));
+        $this->assertSame('in-memory', $sentStamp->getSenderAlias(), sprintf('Expected that message was sent with the "in-memory" sender but was sent with "%s".', $sentStamp->getSenderAlias() ?? ''));
+    }
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     * @param array $senderAlias
+     *
+     * @return void
+     */
+    public function assertMessageWasSentWithSenders(Envelope $envelope, array $senderAlias): void
+    {
+        /** @var \Symfony\Component\Messenger\Stamp\SentStamp $sentStamp */
+        $sentStamps = $envelope->all(SentStamp::class);
+
+        // Assert
+        $this->assertNotNull($sentStamps, sprintf('Expected to have a "%s" stamp but it was not found.', SentStamp::class));
+
+        foreach ($sentStamps as $sentStamp) {
+            $stampSenderAlias = $sentStamp->getSenderAlias();
+            $this->assertTrue(in_array($stampSenderAlias, $senderAlias), sprintf('Expected that message was sent with the "%s" but was not.', $stampSenderAlias));
+        }
+    }
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     * @param string $stampClass
+     *
+     * @return void
+     */
+    public function assertMessageHasStamp(Envelope $envelope, string $stampClass): void
+    {
+        $stamp = $envelope->last($stampClass);
+
+        // Assert
+        $this->assertNotNull($stamp, sprintf('Expected to have a "%s" stamp but it was not found.', $stampClass));
+    }
+
+    /**
+     * @param string $messageClassName
+     * @param string $channelName
+     *
+     * @return void
+     */
+    public function setMessageToSenderChannelNameMap(string $messageClassName, string $channelName): void
+    {
+        putenv(sprintf('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP=%s=%s', $messageClassName, $channelName));
+    }
+
+    /**
+     * @param string $channelName
+     * @param string $clientName
+     */
+    public function setSenderChannelToClientNameMap(string $channelName, string $clientName): void
+    {
+        putenv(sprintf('AOP_SENDER_CHANNEL_TO_CLIENT_MAP=%s=%s', $channelName, $clientName));
+    }
+
+    /**
      * @return \SprykerTest\Zed\MessageBroker\Plugin\InMemoryMessageTransportPlugin
      */
     public function getInMemoryMessageTransportPlugin(): InMemoryMessageTransportPlugin
@@ -77,38 +159,38 @@ class MessageBrokerHelper extends Module
      */
     public function createSnsSenderPlugin(): MessageSenderPluginInterface
     {
-        $snsClient = new SnsClient([
-            'endpoint' => 'http://localhost.localstack.cloud:4566',
-            'accessKeyId' => 'test',
-            'accessKeySecret' => 'test',
-            'region' => 'eu-central-1',
-            'debug' => true,
-        ]);
+         putenv('AOP_MESSAGE_BROKER_SNS_SENDER=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&topic=arn:aws:sns:eu-central-1:000000000000:message-broker');
+//        $snsClient = new SnsClient([
+//            'endpoint' => 'http://localhost.localstack.cloud:4566',
+//            'accessKeyId' => 'test',
+//            'accessKeySecret' => 'test',
+//            'region' => 'eu-central-1',
+//            'debug' => true,
+//        ]);
 
-        return $this->sender = new AwsSnsMessageSenderPlugin($snsClient, new PhpSerializer(), 'arn:aws:sns:eu-central-1:000000000000:message-broker');
+        return $this->sender = new AwsSnsMessageSenderPlugin();
+//        return $this->sender = new AwsSnsMessageSenderPlugin($snsClient, new PhpSerializer(), 'arn:aws:sns:eu-central-1:000000000000:message-broker');
     }
 
     /**
-     * @return \Spryker\Zed\MessageBroker\Communication\Plugin\Receiver\AwsSqsMessageReceiverPlugin
+     * @return \Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface
      */
-    public function createAwsSqsReceiverPlugin(): AwsSqsMessageReceiverPlugin
+    public function createAwsSqsReceiverPlugin(): MessageReceiverPluginInterface
     {
-        $sqsClient = new SqsClient([
-            'endpoint' => 'http://localhost.localstack.cloud:4566',
-            'accessKeyId' => 'test',
-            'accessKeySecret' => 'test',
-            'region' => 'eu-central-1',
-        ]);
+        putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&queueName=message-broker');
+//        $sqsClient = new SqsClient([
+//            'endpoint' => 'http://localhost.localstack.cloud:4566',
+//            'accessKeyId' => 'test',
+//            'accessKeySecret' => 'test',
+//            'region' => 'eu-central-1',
+//        ]);
+//
+//        $connection = new Connection([
+//            'queue_name' => 'message-broker',
+//        ], $sqsClient);
 
-        $connection = new Connection([
-            'endpoint' => 'http://localhost.localstack.cloud:4566',
-            'access_key' => 'test',
-            'secret_key' => 'test',
-            'region' => 'eu-central-1',
-            'queue_name' => 'message-broker',
-        ], $sqsClient, 'http://localhost.localstack.cloud:4566/000000000000/message-broker');
-
-        return $this->receiver = new AwsSqsMessageReceiverPlugin(new AmazonSqsReceiver($connection, new PhpSerializer()));
+        return $this->receiver = new AwsSqsMessageReceiverPlugin();
+//        return $this->receiver = new AwsSqsMessageReceiverPlugin(new AmazonSqsReceiver($connection, new PhpSerializer()));
     }
 
     /**

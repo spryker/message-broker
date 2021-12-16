@@ -7,26 +7,44 @@
 
 namespace Spryker\Zed\MessageBroker;
 
+use Spryker\Shared\MessageBroker\MessageBrokerConstants;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class MessageBrokerConfig extends AbstractBundleConfig
 {
-//    /**
-//     * This configuration needs to be done via environment variable.
-//     *
-//     * @example
-//     * [
-//     *      Message::class => [
-//     *          MessageDecoratorPlugin::class,
-//     *      ],
-//     * ]
-//     *
-//     * When this is not configured all messages will be decorated with all MessageDecorators.
-//     *
-//     * @return string[]
-//     */
-//    public function getMessageDecoratorMap(): array
-//    {
-//        return getenv('AOP_MESSAGE_DECORATOR_MAP') ?? [];
-//    }
+    /**
+     * This configuration can to be done via environment variable.
+     *
+     * @return string|array<string, string>
+     */
+    public function getMessageToSenderChannelMap()
+    {
+        if (getenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP') !== false) {
+            return getenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP');
+        }
+
+        if ($this->getConfig()->hasKey(MessageBrokerConstants::MESSAGE_TO_SENDER_CHANNEL_MAP)) {
+            return $this->get(MessageBrokerConstants::MESSAGE_TO_SENDER_CHANNEL_MAP);
+        }
+
+        return [];
+    }
+
+    /**
+     * This configuration can to be done via environment variable.
+     *
+     * @return string|array<string, string>
+     */
+    public function getSenderChannelToClientMap()
+    {
+        if (getenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP') !== false) {
+            return getenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP');
+        }
+
+        if ($this->getConfig()->hasKey(MessageBrokerConstants::SENDER_CHANNEL_TO_CLIENT_MAP)) {
+            return $this->get(MessageBrokerConstants::SENDER_CHANNEL_TO_CLIENT_MAP);
+        }
+
+        return [];
+    }
 }

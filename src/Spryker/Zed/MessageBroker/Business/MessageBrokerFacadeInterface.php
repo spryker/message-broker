@@ -7,6 +7,8 @@
 
 namespace Spryker\Zed\MessageBroker\Business;
 
+use Symfony\Component\Messenger\Envelope;
+
 interface MessageBrokerFacadeInterface
 {
     /**
@@ -18,7 +20,7 @@ interface MessageBrokerFacadeInterface
      *
      * @param object $message
      *
-     * @return void
+     * @return Envelope
      */
-    public function pushMessage(object $message): void;
+    public function pushMessage(object $message): Envelope;
 }

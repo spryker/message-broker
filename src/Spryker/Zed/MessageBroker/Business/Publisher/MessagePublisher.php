@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Business\Publisher;
 
 use Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class MessagePublisher implements MessagePublisherInterface
@@ -35,11 +36,11 @@ class MessagePublisher implements MessagePublisherInterface
     /**
      * @param object $message
      *
-     * @return void
+     * @return Envelope
      */
-    public function pushMessage(object $message): void
+    public function pushMessage(object $message): Envelope
     {
-        $this->messageBus->dispatch(
+        return $this->messageBus->dispatch(
             $this->decorateMessage($message),
         );
     }
@@ -51,6 +52,10 @@ class MessagePublisher implements MessagePublisherInterface
      */
     protected function decorateMessage(object $message): object
     {
+        if (!($message instanceof Envelope)) {
+            $message = Envelope::wrap($message);
+        }
+
         return $this->messageDecorator->decorateMessage($message);
     }
 }
