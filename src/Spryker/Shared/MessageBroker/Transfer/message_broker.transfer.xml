@@ -1,48 +1,10 @@
 <?xml version="1.0"?>
 <transfers xmlns="spryker:transfer-01" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
-    <transfer name="Message">
-        <property name="name" type="string"/>
-        <property name="payload" type="array"/>
-        <property name="headers" type="HeaderCollection" singular="header"/>
-    </transfer>
-
-    <transfer name="MessageCollectionRequest">
-        <property name="messages" type="Message[]" singular="message"/>
-    </transfer>
-
-    <transfer name="MessageCollectionResponse">
-        <property name="errors" type="Error[]" singular="error"/>
-        <property name="messages" type="Message[]" singular="message"/>
-    </transfer>
-
-    <transfer name="HeaderCollection">
-        <property name="headers" type="Header[]" singular="header"/>
-    </transfer>
-
-    <transfer name="Header">
-        <property name="key" type="string"/>
-        <property name="value" type="mixed"/>
-    </transfer>
-
-    <transfer name="Error">
-        <property name="message" type="string"/>
-    </transfer>
-
-    <transfer name="ValidateResponse">
-        <property name="errors" type="Error[]" singular="error"/>
-    </transfer>
 
     <transfer name="MessageBrokerTestMessage">
         <property name="key" type="string"/>
-    </transfer>
-
-    <transfer name="CorrelationId">
-        <property name="correlationId" type="string"/>
-    </transfer>
-
-    <transfer name="ChannelNameMessageStamp">
-        <property name="channelName" type="string"/>
+        <property name="empty" type="string"/>
     </transfer>
 
 </transfers>

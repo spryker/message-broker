@@ -28,4 +28,12 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
     {
         return $this->getFactory()->createMessagePublisher()->pushMessage($message);
     }
+
+    /**
+     * @param array $channels
+     */
+    public function startWorker(array $channels): void
+    {
+        $this->getFactory()->createWorker()->run(['queues' => $channels]);
+    }
 }

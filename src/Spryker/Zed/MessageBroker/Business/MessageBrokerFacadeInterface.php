@@ -23,4 +23,9 @@ interface MessageBrokerFacadeInterface
      * @return Envelope
      */
     public function pushMessage(object $message): Envelope;
+
+    /**
+     * @param array $channels
+     */
+    public function startWorker(array $channels): void;
 }
