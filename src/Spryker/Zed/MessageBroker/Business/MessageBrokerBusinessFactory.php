@@ -178,15 +178,4 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_EVENT_DISPATCHER);
     }
-
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\Channel\ChannelNameResolverInterface
-     */
-    public function createChannelNameResolver(): ChannelNameResolverInterface
-    {
-        return new ChannelNameResolver(
-            $this->getConfig(),
-            $this->createConfigFormatter(),
-        );
-    }
 }
