@@ -36,4 +36,18 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
     {
         $this->getFactory()->createWorker()->run(['queues' => $channels]);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return string
+     */
+    public function getChannelNameForMessage(Envelope $envelope): string
+    {
+        return $this->getFactory()->createChannelNameResolver()->getChannelNameForMessage($envelope);
+    }
 }

@@ -166,11 +166,6 @@ class MessageBrokerFacadeTest extends Unit
     }
 
     /**
-     * This method tests that when the message is associated with a channel but the channel is not bound
-     * to a specific sender client.
-     *
-     * This case will ensure that messages can be sent with many senders.
-     *
      * @return void
      */
     public function testPushedMessageCanBeConsumedByWorker(): void
@@ -188,11 +183,10 @@ class MessageBrokerFacadeTest extends Unit
         $messageBrokerTestMessageTransfer->setKey('value');
 
         // Act
-        $envelope = $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
+        $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
         $this->tester->consumeMessages();
 
         // Assert
-        $this->tester->assertMessageHasStamp($envelope, HandledStamp::class);
         $acknowledged = $inMemoryMessageTransportMock->getTransport()->getAcknowledged();
         $this->assertCount(1, $acknowledged, sprintf('Expected that exactly one Message was acknowledged but "%s" were acknowledged', count($acknowledged)));
     }

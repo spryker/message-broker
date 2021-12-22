@@ -10,7 +10,7 @@ namespace SprykerTest\Zed\MessageBroker\Helper;
 use Codeception\Module;
 use Codeception\TestInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
-use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Decorator\Receiver\AwsSqsMessageReceiverPlugin;
+use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver\AwsSqsMessageReceiverPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface;
@@ -65,7 +65,11 @@ class MessageBrokerHelper extends Module
     {
         parent::_before($test);
 
+        $this->transportPlugin = null;
+
+        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
         putenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP');
+        putenv('AOP_MESSAGE_TO_RECEIVER_CHANNEL_MAP');
         putenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP');
         putenv('AOP_MESSAGE_BROKER_SNS_SENDER');
         putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER');
@@ -127,6 +131,17 @@ class MessageBrokerHelper extends Module
      *
      * @return void
      */
+    public function setMessageToChannelNameMap(string $messageClassName, string $channelName): void
+    {
+        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP=%s=%s', $messageClassName, $channelName));
+    }
+
+    /**
+     * @param string $messageClassName
+     * @param string $channelName
+     *
+     * @return void
+     */
     public function setMessageToSenderChannelNameMap(string $messageClassName, string $channelName): void
     {
         putenv(sprintf('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP=%s=%s', $messageClassName, $channelName));
@@ -159,7 +174,7 @@ class MessageBrokerHelper extends Module
      */
     public function createSnsSenderPlugin(): MessageSenderPluginInterface
     {
-         putenv('AOP_MESSAGE_BROKER_SNS_SENDER=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&topic=arn:aws:sns:eu-central-1:000000000000:message-broker');
+         putenv('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&topic=arn:aws:sns:eu-central-1:000000000000:message-broker');
 //        $snsClient = new SnsClient([
 //            'endpoint' => 'http://localhost.localstack.cloud:4566',
 //            'accessKeyId' => 'test',
@@ -177,7 +192,7 @@ class MessageBrokerHelper extends Module
      */
     public function createAwsSqsReceiverPlugin(): MessageReceiverPluginInterface
     {
-        putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&queueName=message-broker');
+        putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&queueName=message-broker');
 //        $sqsClient = new SqsClient([
 //            'endpoint' => 'http://localhost.localstack.cloud:4566',
 //            'accessKeyId' => 'test',
@@ -297,7 +312,19 @@ class MessageBrokerHelper extends Module
             new StopWorkerOnTimeLimitListener(10),
         ]);
 
-        $this->getFactory()->createWorker()->run();
+        $this->getFacade()->startWorker([]);
+//        $this->getFactory()->createWorker()->run();
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface
+     */
+    protected function getFacade()
+    {
+        /** @var \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface $messageBrokerFacade */
+        $messageBrokerFacade = $this->getBusinessHelper()->getFacade('MessageBroker');
+
+        return $messageBrokerFacade;
     }
 
     /**
@@ -306,7 +333,7 @@ class MessageBrokerHelper extends Module
     protected function getFactory()
     {
         /** @var \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory $messageBrokerFactory */
-        $messageBrokerFactory = $this->getBusinessHelper()->getFactory();
+        $messageBrokerFactory = $this->getBusinessHelper()->getFactory('MessageBroker');
 
         return $messageBrokerFactory;
     }

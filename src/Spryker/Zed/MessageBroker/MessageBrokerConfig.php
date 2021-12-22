@@ -35,6 +35,24 @@ class MessageBrokerConfig extends AbstractBundleConfig
      *
      * @return string|array<string, string>
      */
+    public function getMessageToChannelMap()
+    {
+        if (getenv('AOP_MESSAGE_TO_CHANNEL_MAP') !== false) {
+            return getenv('AOP_MESSAGE_TO_CHANNEL_MAP');
+        }
+
+        if ($this->getConfig()->hasKey(MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP)) {
+            return $this->get(MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP);
+        }
+
+        return [];
+    }
+
+    /**
+     * This configuration can to be done via environment variable.
+     *
+     * @return string|array<string, string>
+     */
     public function getSenderChannelToClientMap()
     {
         if (getenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP') !== false) {

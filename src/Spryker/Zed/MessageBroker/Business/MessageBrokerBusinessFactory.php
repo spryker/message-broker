@@ -8,6 +8,8 @@
 namespace Spryker\Zed\MessageBroker\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\MessageBroker\Business\Channel\ChannelNameResolver;
+use Spryker\Zed\MessageBroker\Business\Channel\ChannelNameResolverInterface;
 use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBroker\Business\Config\StringToArrayConfigFormatter;
 use Spryker\Zed\MessageBroker\Business\EventDispatcher\EventDispatcher;
@@ -162,8 +164,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * TODO: This needs to be replaced with `spryker/event-dispatcher`
-     *
      * @return \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
      */
     public function createEventDispatcher(): EventDispatcherInterface
@@ -177,5 +177,16 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     protected function getEventDispatcherSubscriberPlugins(): array
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_EVENT_DISPATCHER);
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Channel\ChannelNameResolverInterface
+     */
+    public function createChannelNameResolver(): ChannelNameResolverInterface
+    {
+        return new ChannelNameResolver(
+            $this->getConfig(),
+            $this->createConfigFormatter(),
+        );
     }
 }

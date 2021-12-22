@@ -28,4 +28,15 @@ interface MessageBrokerFacadeInterface
      * @param array $channels
      */
     public function startWorker(array $channels): void;
+
+    /**
+     * Specification:
+     *
+     * @api
+     *
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return string
+     */
+    public function getChannelNameForMessage(Envelope $envelope): string;
 }
