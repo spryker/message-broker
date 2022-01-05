@@ -7,8 +7,13 @@
 
 namespace Spryker\Zed\MessageBroker\Communication\Plugin;
 
+use Laminas\Filter\FilterChain;
+use Laminas\Filter\StringToLower;
+use Laminas\Filter\Word\CamelCaseToDash;
+use Ramsey\Uuid\Uuid;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBroker\Business\Stamp\CorrelationIdStamp;
+use Spryker\Zed\MessageBroker\Business\Stamp\EventNameStamp;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageDecoratorPluginInterface;
 use Symfony\Component\Messenger\Envelope;
 
@@ -16,7 +21,7 @@ use Symfony\Component\Messenger\Envelope;
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
  * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface getFacade()
  */
-class CorrelationIdMessageDecoratorPlugin extends AbstractPlugin implements MessageDecoratorPluginInterface
+class EventNameMessageDecoratorPlugin extends AbstractPlugin implements MessageDecoratorPluginInterface
 {
     /**
      * {@inheritDoc}
@@ -29,6 +34,14 @@ class CorrelationIdMessageDecoratorPlugin extends AbstractPlugin implements Mess
      */
     public function decorateMessage(Envelope $envelope): Envelope
     {
-        return $envelope->with(new CorrelationIdStamp());
+        $eventName = get_class($envelope->getMessage());
+
+        $eventName = str_replace(['Generated\Shared\Transfer\\', 'Transfer'], '', $eventName);
+        $filter = new FilterChain();
+        $filter
+            ->attach(new CamelCaseToDash())
+            ->attach(new StringToLower());
+
+        return $envelope->with(new EventNameStamp($filter->filter($eventName)));
     }
 }
