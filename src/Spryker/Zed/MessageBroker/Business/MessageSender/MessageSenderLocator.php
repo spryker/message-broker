@@ -104,7 +104,7 @@ class MessageSenderLocator implements SendersLocatorInterface
      */
     protected function getChannelForMessageClass(Envelope $envelope): string
     {
-        $messageToChannelMap = $this->config->getMessageToSenderChannelMap();
+        $messageToChannelMap = $this->config->getMessageToChannelMap();
 
         if (is_string($messageToChannelMap)) {
             $messageToChannelMap = $this->configFormatter->format($messageToChannelMap);

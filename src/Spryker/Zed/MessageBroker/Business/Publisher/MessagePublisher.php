@@ -36,7 +36,7 @@ class MessagePublisher implements MessagePublisherInterface
     /**
      * @param object $message
      *
-     * @return Envelope
+     * @return \Symfony\Component\Messenger\Envelope
      */
     public function pushMessage(object $message): Envelope
     {

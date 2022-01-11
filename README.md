@@ -48,11 +48,11 @@ $config[MessageBrokerAwsConstants::CHANNEL_TO_RECEIVER_CLIENT_MAP] = [
     'payment' => 'sqs',
 ];
 
-$config[MessageBrokerConstants::MESSAGE_TO_SENDER_CHANNEL_MAP] = [
+$config[MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP] = [
     PaymentMethodTransfer::class => 'payment',
 ];
 
-$config[MessageBrokerAwsConstants::MESSAGE_TO_RECEIVER_CHANNEL_MAP] = [
+$config[MessageBrokerAwsConstants::MESSAGE_TO_CHANNEL_MAP] = [
     PaymentMethodTransfer::class => 'payment',
 ];
 ```

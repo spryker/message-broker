@@ -1,9 +1,9 @@
 <?php
 
 /**
-* Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
-* Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
-*/
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
 
 namespace Spryker\Zed\MessageBroker;
 
@@ -15,25 +15,9 @@ class MessageBrokerConfig extends AbstractBundleConfig
     /**
      * This configuration can to be done via environment variable.
      *
-     * @return string|array<string, string>
-     */
-    public function getMessageToSenderChannelMap()
-    {
-        if (getenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP') !== false) {
-            return getenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP');
-        }
-
-        if ($this->getConfig()->hasKey(MessageBrokerConstants::MESSAGE_TO_SENDER_CHANNEL_MAP)) {
-            return $this->get(MessageBrokerConstants::MESSAGE_TO_SENDER_CHANNEL_MAP);
-        }
-
-        return [];
-    }
-
-    /**
-     * This configuration can to be done via environment variable.
+     * @api
      *
-     * @return string|array<string, string>
+     * @return array<string, string>|string
      */
     public function getMessageToChannelMap()
     {
@@ -51,7 +35,9 @@ class MessageBrokerConfig extends AbstractBundleConfig
     /**
      * This configuration can to be done via environment variable.
      *
-     * @return string|array<string, string>
+     * @api
+     *
+     * @return array<string, string>|string
      */
     public function getSenderChannelToClientMap()
     {

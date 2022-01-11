@@ -14,6 +14,8 @@ use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInte
 class SomethingHappenedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
+     * @param \Generated\Shared\Transfer\MessageBrokerTestMessageTransfer $messageBrokerTestMessageTransfer
+     *
      * @return void
      */
     public function handle(MessageBrokerTestMessageTransfer $messageBrokerTestMessageTransfer): void

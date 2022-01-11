@@ -18,17 +18,21 @@ class StopWorkerWhenMessagesAreHandledEventDispatcherSubscriberPlugin extends Ab
     protected ?Worker $worker = null;
 
     /**
+     * @param \Symfony\Component\Messenger\Event\WorkerStartedEvent $event
+     *
      * @return void
      */
-    public function onWorkerStarted(WorkerStartedEvent $event)
+    public function onWorkerStarted(WorkerStartedEvent $event): void
     {
         $this->worker = $event->getWorker();
     }
 
     /**
+     * @param \Symfony\Component\Messenger\Event\WorkerMessageHandledEvent $event
+     *
      * @return void
      */
-    public function onWorkerMessageHandled(WorkerMessageHandledEvent $event)
+    public function onWorkerMessageHandled(WorkerMessageHandledEvent $event): void
     {
         $this->worker->stop();
     }

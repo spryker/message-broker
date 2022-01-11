@@ -7,7 +7,6 @@
 
 namespace Spryker\Zed\MessageBroker\Business\Stamp;
 
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
 class EventNameStamp implements StampInterface
@@ -17,6 +16,9 @@ class EventNameStamp implements StampInterface
      */
     protected ?string $eventName = null;
 
+    /**
+     * @param string $eventName
+     */
     public function __construct(string $eventName)
     {
         $this->eventName = $eventName;

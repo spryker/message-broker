@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
+
 namespace SprykerTest\Zed\MessageBroker\Messages;
 
 class SomethingToDoCommand
@@ -7,7 +12,7 @@ class SomethingToDoCommand
     protected array $payload = [];
 
     /**
-     * @param string|null $message
+     * @param array $payload
      */
     public function __construct(array $payload)
     {

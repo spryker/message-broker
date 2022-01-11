@@ -16,6 +16,9 @@ class Worker extends SymfonyWorker
 {
     /**
      * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface> $messageReceiverPlugins
+     * @param \Symfony\Component\Messenger\MessageBusInterface $bus
+     * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|null $eventDispatcher
+     * @param \Psr\Log\LoggerInterface|null $logger #
      */
     public function __construct(
         array $messageReceiverPlugins,

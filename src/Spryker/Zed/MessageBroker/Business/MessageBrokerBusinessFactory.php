@@ -8,10 +8,8 @@
 namespace Spryker\Zed\MessageBroker\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
-use Spryker\Zed\MessageBroker\Business\Channel\ChannelNameResolver;
-use Spryker\Zed\MessageBroker\Business\Channel\ChannelNameResolverInterface;
 use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
-use Spryker\Zed\MessageBroker\Business\Config\StringToArrayConfigFormatter;
+use Spryker\Zed\MessageBroker\Business\Config\JsonToArrayConfigFormatter;
 use Spryker\Zed\MessageBroker\Business\EventDispatcher\EventDispatcher;
 use Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecorator;
 use Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface;
@@ -22,6 +20,7 @@ use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Symfony\Component\EventDispatcher\EventDispatcher as SymfonyEventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface as SymfonyEventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\HandlersLocatorInterface;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -36,6 +35,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class MessageBrokerBusinessFactory extends AbstractBusinessFactory
 {
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface
+     */
     public function createMessagePublisher(): MessagePublisherInterface
     {
         return new MessagePublisher(
@@ -83,7 +85,10 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         ];
     }
 
-    public function createSendMessageMiddleware()
+    /**
+     * @return \Symfony\Component\Messenger\Middleware\SendMessageMiddleware
+     */
+    public function createSendMessageMiddleware(): MiddlewareInterface
     {
         return new SendMessageMiddleware(
             $this->createMessageSenderLocator(),
@@ -107,7 +112,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     public function createConfigFormatter(): ConfigFormatterInterface
     {
-        return new StringToArrayConfigFormatter();
+        return new JsonToArrayConfigFormatter();
     }
 
     /**
@@ -128,6 +133,9 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
+    /**
+     * @return \Symfony\Component\Messenger\Handler\HandlersLocatorInterface
+     */
     public function createMessageHandlerLocator(): HandlersLocatorInterface
     {
         return new MessageHandlerLocator(
@@ -158,7 +166,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface>
      */
-    public function getMessageReceiverPlugins()
+    public function getMessageReceiverPlugins(): array
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_RECEIVER);
     }
@@ -168,7 +176,15 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     public function createEventDispatcher(): EventDispatcherInterface
     {
-        return new EventDispatcher(new SymfonyEventDispatcher(), $this->getEventDispatcherSubscriberPlugins());
+        return new EventDispatcher($this->createSymfonyEventDispatcher(), $this->getEventDispatcherSubscriberPlugins());
+    }
+
+    /**
+     * @return \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    public function createSymfonyEventDispatcher(): SymfonyEventDispatcherInterface
+    {
+        return new SymfonyEventDispatcher();
     }
 
     /**

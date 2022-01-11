@@ -18,6 +18,7 @@ class EventDispatcher implements EventDispatcherInterface
 
     /**
      * @param \Symfony\Component\EventDispatcher\EventDispatcher|\Psr\EventDispatcher\EventDispatcherInterface|null $eventDispatcher
+     * @param array<\Symfony\Component\EventDispatcher\EventSubscriberInterface> $eventDispatcherSubscriberPlugins
      */
     public function __construct(?EventDispatcherInterface $eventDispatcher, array $eventDispatcherSubscriberPlugins)
     {
@@ -30,10 +31,11 @@ class EventDispatcher implements EventDispatcherInterface
 
     /**
      * @param object $event
+     * @param string|null $eventName
      *
      * @return object|void
      */
-    public function dispatch(object $event, string $eventName = null): object
+    public function dispatch(object $event, ?string $eventName = null): object
     {
         return $this->eventDispatcher->dispatch($event);
     }

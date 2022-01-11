@@ -22,7 +22,7 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @param object $message
      *
-     * @return Envelope
+     * @return \Symfony\Component\Messenger\Envelope
      */
     public function pushMessage(object $message): Envelope
     {
@@ -30,7 +30,13 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
      * @param array $channels
+     *
+     * @return void
      */
     public function startWorker(array $channels): void
     {

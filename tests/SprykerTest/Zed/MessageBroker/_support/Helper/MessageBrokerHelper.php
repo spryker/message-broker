@@ -9,6 +9,8 @@ namespace SprykerTest\Zed\MessageBroker\Helper;
 
 use Codeception\Module;
 use Codeception\TestInterface;
+use Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory;
+use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver\AwsSqsMessageReceiverPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
@@ -59,17 +61,19 @@ class MessageBrokerHelper extends Module
     protected ?MessageBrokerBusinessTester $tester = null;
 
     /**
+     * @param \Codeception\TestInterface $test
+     *
      * @return void
      */
-    public function _before(TestInterface $test)
+    public function _before(TestInterface $test): void
     {
         parent::_before($test);
 
         $this->transportPlugin = null;
 
         putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
-        putenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP');
-        putenv('AOP_MESSAGE_TO_RECEIVER_CHANNEL_MAP');
+        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
+        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
         putenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP');
         putenv('AOP_MESSAGE_BROKER_SNS_SENDER');
         putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER');
@@ -99,12 +103,12 @@ class MessageBrokerHelper extends Module
      */
     public function assertMessageWasSentWithSenders(Envelope $envelope, array $senderAlias): void
     {
-        /** @var \Symfony\Component\Messenger\Stamp\SentStamp $sentStamp */
         $sentStamps = $envelope->all(SentStamp::class);
 
         // Assert
         $this->assertNotNull($sentStamps, sprintf('Expected to have a "%s" stamp but it was not found.', SentStamp::class));
 
+        /** @var \Symfony\Component\Messenger\Stamp\SentStamp $sentStamp */
         foreach ($sentStamps as $sentStamp) {
             $stampSenderAlias = $sentStamp->getSenderAlias();
             $this->assertTrue(in_array($stampSenderAlias, $senderAlias), sprintf('Expected that message was sent with the "%s" but was not.', $stampSenderAlias));
@@ -133,7 +137,7 @@ class MessageBrokerHelper extends Module
      */
     public function setMessageToChannelNameMap(string $messageClassName, string $channelName): void
     {
-        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP=%s=%s', $messageClassName, $channelName));
+        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
     /**
@@ -144,16 +148,18 @@ class MessageBrokerHelper extends Module
      */
     public function setMessageToSenderChannelNameMap(string $messageClassName, string $channelName): void
     {
-        putenv(sprintf('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP=%s=%s', $messageClassName, $channelName));
+        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
     /**
      * @param string $channelName
      * @param string $clientName
+     *
+     * @return void
      */
     public function setSenderChannelToClientNameMap(string $channelName, string $clientName): void
     {
-        putenv(sprintf('AOP_SENDER_CHANNEL_TO_CLIENT_MAP=%s=%s', $channelName, $clientName));
+        putenv(sprintf('AOP_SENDER_CHANNEL_TO_CLIENT_MAP={"%s": "%s"}', $channelName, $clientName));
     }
 
     /**
@@ -170,42 +176,27 @@ class MessageBrokerHelper extends Module
     }
 
     /**
+     * @param string $topic
+     *
      * @return \Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface
      */
-    public function createSnsSenderPlugin(): MessageSenderPluginInterface
+    public function createSnsSenderPlugin(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): MessageSenderPluginInterface
     {
-         putenv('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&topic=arn:aws:sns:eu-central-1:000000000000:message-broker');
-//        $snsClient = new SnsClient([
-//            'endpoint' => 'http://localhost.localstack.cloud:4566',
-//            'accessKeyId' => 'test',
-//            'accessKeySecret' => 'test',
-//            'region' => 'eu-central-1',
-//            'debug' => true,
-//        ]);
+        putenv(sprintf('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
 
         return $this->sender = new AwsSnsMessageSenderPlugin();
-//        return $this->sender = new AwsSnsMessageSenderPlugin($snsClient, new PhpSerializer(), 'arn:aws:sns:eu-central-1:000000000000:message-broker');
     }
 
     /**
-     * @return \Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface
+     * @param string $queueName
+     *
+     * @return \Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface
      */
-    public function createAwsSqsReceiverPlugin(): MessageReceiverPluginInterface
+    public function createAwsSqsReceiverPlugin(string $queueName = 'message-broker'): MessageReceiverPluginInterface
     {
-        putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&queueName=message-broker');
-//        $sqsClient = new SqsClient([
-//            'endpoint' => 'http://localhost.localstack.cloud:4566',
-//            'accessKeyId' => 'test',
-//            'accessKeySecret' => 'test',
-//            'region' => 'eu-central-1',
-//        ]);
-//
-//        $connection = new Connection([
-//            'queue_name' => 'message-broker',
-//        ], $sqsClient);
+        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
 
         return $this->receiver = new AwsSqsMessageReceiverPlugin();
-//        return $this->receiver = new AwsSqsMessageReceiverPlugin(new AmazonSqsReceiver($connection, new PhpSerializer()));
     }
 
     /**
@@ -265,7 +256,7 @@ class MessageBrokerHelper extends Module
      *
      * @return void
      */
-    public function setMessageReceiverPlugins(array $messageReceiverPlugins)
+    public function setMessageReceiverPlugins(array $messageReceiverPlugins): void
     {
         $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_RECEIVER, $messageReceiverPlugins);
     }
@@ -275,7 +266,7 @@ class MessageBrokerHelper extends Module
      *
      * @return void
      */
-    public function setMessageSenderPlugins(array $messageSenderPlugins)
+    public function setMessageSenderPlugins(array $messageSenderPlugins): void
     {
         $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_SENDER, $messageSenderPlugins);
     }
@@ -285,7 +276,7 @@ class MessageBrokerHelper extends Module
      *
      * @return void
      */
-    public function setMessageHandlerPlugins(array $messageHandlerPlugins)
+    public function setMessageHandlerPlugins(array $messageHandlerPlugins): void
     {
         $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_HANDLER, $messageHandlerPlugins);
     }
@@ -295,7 +286,7 @@ class MessageBrokerHelper extends Module
      *
      * @return void
      */
-    public function setMessageDecoratorPlugins(array $messageDecoratorPlugins)
+    public function setMessageDecoratorPlugins(array $messageDecoratorPlugins): void
     {
         $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_DECORATOR, $messageDecoratorPlugins);
     }
@@ -303,7 +294,7 @@ class MessageBrokerHelper extends Module
     /**
      * @return void
      */
-    public function consumeMessages()
+    public function consumeMessages(): void
     {
         // Add Event subscriber that will stop the Worker when all messages are handled or when a time limit was reached.
         // This prevents the worker from running forever.
@@ -313,13 +304,12 @@ class MessageBrokerHelper extends Module
         ]);
 
         $this->getFacade()->startWorker([]);
-//        $this->getFactory()->createWorker()->run();
     }
 
     /**
      * @return \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface
      */
-    protected function getFacade()
+    protected function getFacade(): MessageBrokerFacadeInterface
     {
         /** @var \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface $messageBrokerFacade */
         $messageBrokerFacade = $this->getBusinessHelper()->getFacade('MessageBroker');
@@ -330,7 +320,7 @@ class MessageBrokerHelper extends Module
     /**
      * @return \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory
      */
-    protected function getFactory()
+    protected function getFactory(): MessageBrokerBusinessFactory
     {
         /** @var \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory $messageBrokerFactory */
         $messageBrokerFactory = $this->getBusinessHelper()->getFactory('MessageBroker');

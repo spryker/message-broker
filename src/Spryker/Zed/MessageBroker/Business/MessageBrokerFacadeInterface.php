@@ -20,12 +20,19 @@ interface MessageBrokerFacadeInterface
      *
      * @param object $message
      *
-     * @return Envelope
+     * @return \Symfony\Component\Messenger\Envelope
      */
     public function pushMessage(object $message): Envelope;
 
     /**
-     * @param array $channels
+     * Specification:
+     * - Starts a worker process for the defined channels.
+     *
+     * @api
+     *
+     * @param array<string> $channels
+     *
+     * @return void
      */
     public function startWorker(array $channels): void;
 }

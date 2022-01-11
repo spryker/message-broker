@@ -12,9 +12,9 @@ use Symfony\Component\Messenger\Envelope;
 interface MessageDecoratorInterface
 {
     /**
-     * @param Envelope $message
+     * @param \Symfony\Component\Messenger\Envelope $message
      *
-     * @return Envelope
+     * @return \Symfony\Component\Messenger\Envelope
      */
     public function decorateMessage(Envelope $message): Envelope;
 }
