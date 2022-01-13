@@ -13,9 +13,9 @@ use Symfony\Component\Messenger\Stamp\StampInterface;
 class CorrelationIdStamp implements StampInterface
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $correlationId = null;
+    protected string $correlationId;
 
     public function __construct()
     {

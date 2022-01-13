@@ -16,12 +16,12 @@ class MessagePublisher implements MessagePublisherInterface
     /**
      * @var \Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface
      */
-    protected ?MessageDecoratorInterface $messageDecorator = null;
+    protected MessageDecoratorInterface $messageDecorator;
 
     /**
      * @var \Symfony\Component\Messenger\MessageBusInterface
      */
-    protected ?MessageBusInterface $messageBus = null;
+    protected MessageBusInterface $messageBus;
 
     /**
      * @param \Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface $messageDecorator

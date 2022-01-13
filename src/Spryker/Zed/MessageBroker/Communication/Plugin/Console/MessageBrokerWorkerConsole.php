@@ -9,18 +9,12 @@ namespace Spryker\Zed\MessageBroker\Communication\Plugin\Console;
 
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Zed\Kernel\Communication\Console\Console;
-use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Messenger\EventListener\StopWorkerOnFailureLimitListener;
-use Symfony\Component\Messenger\EventListener\StopWorkerOnMemoryLimitListener;
-use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
-use Symfony\Component\Messenger\EventListener\StopWorkerOnTimeLimitListener;
-use Symfony\Component\Messenger\Worker;
 
 /**
  * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface getFacade()
@@ -37,17 +31,59 @@ class MessageBrokerWorkerConsole extends Console
      */
     protected const COMMAND_DESCRIPTION = 'This command consumes messages from the selected channels.';
 
+    /**
+     * @var string
+     */
     public const ARGUMENT_QUEUES = 'queues';
 
+    /**
+     * @var string
+     */
     public const OPTION_MESSAGE_LIMIT = 'message-limit';
+
+    /**
+     * @var string
+     */
     public const OPTION_MESSAGE_LIMIT_SHORT = 'l';
+
+    /**
+     * @var string
+     */
     public const OPTION_FAILURE_LIMIT = 'failure-limit';
+
+    /**
+     * @var string
+     */
     public const OPTION_FAILURE_LIMIT_SHORT = 'f';
+
+    /**
+     * @var string
+     */
     public const OPTION_MEMORY_LIMIT = 'memory-limit';
+
+    /**
+     * @var string
+     */
     public const OPTION_MEMORY_LIMIT_SHORT = 'm';
+
+    /**
+     * @var string
+     */
     public const OPTION_TIME_LIMIT = 'time-limit';
+
+    /**
+     * @var string
+     */
     public const OPTION_TIME_LIMIT_SHORT = 't';
+
+    /**
+     * @var string
+     */
     public const OPTION_SLEEP = 'sleep';
+
+    /**
+     * @var string
+     */
     public const OPTION_SLEEP_SHORT = 's';
 
     /**
@@ -82,22 +118,26 @@ class MessageBrokerWorkerConsole extends Console
 
         $stopsWhen = [];
 
-        if ($limit = $input->getOption(static::OPTION_MESSAGE_LIMIT)) {
+        $limit = $input->getOption(static::OPTION_MESSAGE_LIMIT);
+        if ($limit) {
             $stopsWhen[] = "processed {$limit} messages";
             $messageBrokerWorkerConfigTransfer->setLimit($limit);
         }
 
-        if ($failureLimit = $input->getOption(static::OPTION_FAILURE_LIMIT)) {
+        $failureLimit = $input->getOption(static::OPTION_FAILURE_LIMIT);
+        if ($failureLimit) {
             $stopsWhen[] = "reached {$failureLimit} failed messages";
             $messageBrokerWorkerConfigTransfer->setFailureLimit($failureLimit);
         }
 
-        if ($memoryLimit = $input->getOption(static::OPTION_MEMORY_LIMIT)) {
+        $memoryLimit = $input->getOption(static::OPTION_MEMORY_LIMIT);
+        if ($memoryLimit) {
             $stopsWhen[] = "exceeded {$memoryLimit} of memory";
             $messageBrokerWorkerConfigTransfer->setMemoryLimit($memoryLimit);
         }
 
-        if ($timeLimit = $input->getOption(static::OPTION_TIME_LIMIT)) {
+        $timeLimit = $input->getOption(static::OPTION_TIME_LIMIT);
+        if ($timeLimit) {
             $stopsWhen[] = "been running for {$timeLimit}s";
             $messageBrokerWorkerConfigTransfer->setTimeLimit($timeLimit);
         }
@@ -105,13 +145,11 @@ class MessageBrokerWorkerConsole extends Console
         $stopsWhen[] = 'received a stop signal via the messenger:stop-workers command';
 
         $io = new SymfonyStyle($input, $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output);
-        $io->success(sprintf('Consuming messages from queue%s "%s".', \count($queues) > 0 ? static::OPTION_SLEEP_SHORT : '', implode(', ', $queues)));
+        $io->success(sprintf('Consuming messages from queue%s "%s".', count($queues) > 0 ? static::OPTION_SLEEP_SHORT : '', implode(', ', $queues)));
 
-        if ($stopsWhen) {
-            $last = array_pop($stopsWhen);
-            $stopsWhen = ($stopsWhen ? implode(', ', $stopsWhen).' or ' : '').$last;
-            $io->comment("The worker will automatically exit once it has {$stopsWhen}.");
-        }
+        $last = array_pop($stopsWhen);
+        $stopsWhen = ($stopsWhen ? implode(', ', $stopsWhen) . ' or ' : '') . $last;
+        $io->comment("The worker will automatically exit once it has {$stopsWhen}.");
 
         $io->comment('Quit the worker with CONTROL-C.');
 

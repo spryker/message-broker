@@ -31,7 +31,7 @@ interface MessageBrokerFacadeInterface
      *
      * @api
      *
-     * @param MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
+     * @param \Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
      *
      * @return void
      */

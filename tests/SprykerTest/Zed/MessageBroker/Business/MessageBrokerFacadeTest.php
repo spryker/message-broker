@@ -165,37 +165,6 @@ class MessageBrokerFacadeTest extends Unit
     }
 
     /**
-     * This method tests that when the message is associated with a channel but the channel is not bound
-     * to a specific sender client.
-     *
-     * This case will ensure that messages can be sent with many senders.
-     *
-     * @return void
-     */
-    public function testPushMessageSendsMessageWithAllSendersWhenMessageChannelIsNotAssociatedWithASpecificSenderClient(): void
-    {
-        $this->markTestSkipped('Not sure if we need it. Test is also not working currently. Needs to be re-checked.');
-
-        // Arrange
-        $this->tester->setMessageToSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
-
-        $this->tester->setMessageSenderPlugins([
-            $this->tester->createSnsSenderPlugin(),
-            $this->tester->getInMemoryMessageTransportPlugin(),
-        ]);
-
-        $this->tester->setMessageHandlerPlugins([new SomethingHappenedMessageHandlerPlugin()]);
-
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
-
-        // Act
-        $envelope = $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
-
-        $this->tester->assertMessageWasSentWithSenders($envelope, ['sns', 'in-memory']);
-    }
-
-    /**
      * @return void
      */
     public function testPushedMessageCanBeConsumedByWorker(): void

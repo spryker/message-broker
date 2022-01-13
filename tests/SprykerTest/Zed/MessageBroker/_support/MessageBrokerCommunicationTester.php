@@ -7,9 +7,6 @@
 namespace SprykerTest\Zed\MessageBroker;
 
 use Codeception\Actor;
-use Codeception\Stub;
-use Spryker\Zed\MessageBroker\Business\Worker\Worker;
-use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 
 /**
  * Inherited Methods

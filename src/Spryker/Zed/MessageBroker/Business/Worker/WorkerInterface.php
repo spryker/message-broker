@@ -13,6 +13,8 @@ interface WorkerInterface
 {
     /**
      * @param \Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
+     *
+     * @return void
      */
     public function runWorker(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): void;
 }

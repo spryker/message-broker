@@ -25,7 +25,7 @@ class MessageHandlerLocator extends HandlersLocator
     /**
      * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface> $messageHandlerPlugins
      *
-     * @return array<string, callable>
+     * @return array<array<callable>>
      */
     protected function prepareHandlers(array $messageHandlerPlugins): array
     {
@@ -42,7 +42,7 @@ class MessageHandlerLocator extends HandlersLocator
      * @param \Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface $messageHandlerPlugin
      * @param array<string, callable> $handlers
      *
-     * @return array<string, callable>
+     * @return array<array<callable>>
      */
     protected function addHandlersFromHandlerPlugin(MessageHandlerPluginInterface $messageHandlerPlugin, array $handlers): array
     {

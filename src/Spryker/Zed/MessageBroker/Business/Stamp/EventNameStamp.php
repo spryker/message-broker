@@ -12,9 +12,9 @@ use Symfony\Component\Messenger\Stamp\StampInterface;
 class EventNameStamp implements StampInterface
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $eventName = null;
+    protected string $eventName;
 
     /**
      * @param string $eventName

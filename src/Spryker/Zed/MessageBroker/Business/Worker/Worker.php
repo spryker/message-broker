@@ -17,7 +17,7 @@ use Symfony\Component\Messenger\EventListener\StopWorkerOnTimeLimitListener;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Worker as SymfonyWorker;
 
-class Worker extends SymfonyWorker implements WorkerInterface
+class Worker implements WorkerInterface
 {
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -30,9 +30,14 @@ class Worker extends SymfonyWorker implements WorkerInterface
     protected ?LoggerInterface $logger;
 
     /**
+     * @var \Symfony\Component\Messenger\Worker
+     */
+    protected SymfonyWorker $worker;
+
+    /**
      * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface> $messageReceiverPlugins
      * @param \Symfony\Component\Messenger\MessageBusInterface $bus
-     * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
      * @param \Psr\Log\LoggerInterface|null $logger
      */
     public function __construct(
@@ -50,7 +55,7 @@ class Worker extends SymfonyWorker implements WorkerInterface
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
 
-        parent::__construct($receivers, $bus, $eventDispatcher, $logger);
+        $this->worker = new SymfonyWorker($receivers, $bus, $eventDispatcher, $logger);
     }
 
     /**
@@ -77,7 +82,7 @@ class Worker extends SymfonyWorker implements WorkerInterface
         }
 
         $options = [
-            'queues' => $messageBrokerWorkerConfigTransfer->getQueues() ?? [],
+            'queues' => $messageBrokerWorkerConfigTransfer->getQueues(),
         ];
 
         if ($messageBrokerWorkerConfigTransfer->getSleep()) {
@@ -85,5 +90,15 @@ class Worker extends SymfonyWorker implements WorkerInterface
         }
 
         $this->run($options);
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     *
+     * @return void
+     */
+    protected function run(array $options): void
+    {
+        $this->worker->run($options);
     }
 }

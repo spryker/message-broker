@@ -121,7 +121,7 @@ class MessageBrokerHelper extends Module
         ];
 
         $mockedMethods = $mockRunMethod ? [
-            'run' => function (array $options) {
+            'run' => function (array $options): void {
                 $this->receivedOptions = $options;
             },
         ] : [];
