@@ -11,7 +11,9 @@ use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
 use Spryker\Zed\MessageBroker\Business\Exception\CouldNotMapMessageToChannelNameException;
 use Spryker\Zed\MessageBroker\Business\Stamp\CorrelationIdStamp;
+use Spryker\Zed\MessageBroker\Business\Stamp\EventNameStamp;
 use Spryker\Zed\MessageBroker\Communication\Plugin\CorrelationIdMessageDecoratorPlugin;
+use Spryker\Zed\MessageBroker\Communication\Plugin\EventNameMessageDecoratorPlugin;
 use SprykerTest\Zed\MessageBroker\Plugin\SomethingHappenedMessageHandlerPlugin;
 use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
 
@@ -82,7 +84,7 @@ class MessageBrokerFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testPushMessageAddsMetaDataToMessage(): void
+    public function testPushMessageAddsCorrelationIdToMessage(): void
     {
         // Arrange
         $this->tester->setMessageToSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
@@ -106,6 +108,35 @@ class MessageBrokerFacadeTest extends Unit
         /** @var \Spryker\Zed\MessageBroker\Business\Stamp\CorrelationIdStamp $correlationIdStamp */
         $correlationIdStamp = $envelope->last(CorrelationIdStamp::class);
         $this->assertIsString($correlationIdStamp->getCorrelationId());
+    }
+
+    /**
+     * @return void
+     */
+    public function testPushMessageAddsEventNameToMessage(): void
+    {
+        // Arrange
+        $this->tester->setMessageToSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+
+        $this->tester->setMessageSenderPlugins([$this->tester->getInMemoryMessageTransportPlugin()]);
+        $this->tester->setMessageReceiverPlugins([$this->tester->getInMemoryMessageTransportPlugin()]);
+
+        $this->tester->setMessageHandlerPlugins([new SomethingHappenedMessageHandlerPlugin()]);
+        $this->tester->setMessageDecoratorPlugins([
+            new EventNameMessageDecoratorPlugin(),
+        ]);
+
+        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
+        $messageBrokerTestMessageTransfer->setKey('value');
+
+        // Act
+        $envelope = $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
+
+        $this->tester->assertMessageHasStamp($envelope, EventNameStamp::class);
+
+        /** @var \Spryker\Zed\MessageBroker\Business\Stamp\EventNameStamp $eventNameStamp */
+        $eventNameStamp = $envelope->last(EventNameStamp::class);
+        $this->assertIsString($eventNameStamp->getEventName());
     }
 
     /**

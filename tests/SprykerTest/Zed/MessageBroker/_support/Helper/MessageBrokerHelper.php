@@ -8,19 +8,26 @@
 namespace SprykerTest\Zed\MessageBroker\Helper;
 
 use Codeception\Module;
+use Codeception\Stub;
 use Codeception\TestInterface;
+use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory;
 use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
+use Spryker\Zed\MessageBroker\Business\Worker\Worker;
+use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerWorkerConsole;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver\AwsSqsMessageReceiverPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface;
+use SprykerTest\Zed\Console\Helper\ConsoleHelperTrait;
 use SprykerTest\Zed\MessageBroker\_support\Subscriber\StopWorkerWhenMessagesAreHandledEventDispatcherSubscriberPlugin;
 use SprykerTest\Zed\MessageBroker\MessageBrokerBusinessTester;
 use SprykerTest\Zed\MessageBroker\Plugin\InMemoryMessageTransportPlugin;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelperTrait;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnTimeLimitListener;
 use Symfony\Component\Messenger\Stamp\SentStamp;
@@ -34,6 +41,17 @@ class MessageBrokerHelper extends Module
 {
     use BusinessHelperTrait;
     use DependencyProviderHelperTrait;
+    use ConsoleHelperTrait;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected $receivedOptions = [];
+
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    protected EventDispatcherInterface $eventDispatcher;
 
     /**
      * @var \Symfony\Component\Messenger\Transport\Sender\SenderInterface|null
@@ -77,6 +95,117 @@ class MessageBrokerHelper extends Module
         putenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP');
         putenv('AOP_MESSAGE_BROKER_SNS_SENDER');
         putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER');
+    }
+
+    /**
+     * @param array<\Symfony\Component\EventDispatcher\EventSubscriberInterface> $eventSubscribers
+     * @param bool $mockRunMethod
+     *
+     * @return void
+     */
+    public function mockWorker(array $eventSubscribers = [], bool $mockRunMethod = true): void
+    {
+        $factory = $this->getBusinessFactory();
+        $receiverPlugins = $factory->getMessageReceiverPlugins();
+        $messageBus = $factory->createMessageBus();
+        $eventDispatcher = $this->eventDispatcher = $factory->getEventDispatcher();
+
+        foreach ($eventSubscribers as $eventSubscriber) {
+            $eventDispatcher->addSubscriber($eventSubscriber);
+        }
+
+        $constructorArguments = [
+            $receiverPlugins,
+            $messageBus,
+            $eventDispatcher,
+        ];
+
+        $mockedMethods = $mockRunMethod ? [
+            'run' => function (array $options) {
+                $this->receivedOptions = $options;
+            },
+        ] : [];
+
+        $workerStub = Stub::construct(
+            Worker::class,
+            $constructorArguments,
+            $mockedMethods,
+            $this,
+        );
+
+        $this->getBusinessHelper()->mockFactoryMethod('createWorker', $workerStub);
+    }
+
+    /**
+     * @return \Symfony\Component\Console\Tester\CommandTester
+     */
+    public function getWorkerConsoleCommandTester(): CommandTester
+    {
+        $this->mockWorker();
+        $facade = $this->getFacade();
+
+        $command = new MessageBrokerWorkerConsole();
+        $command->setFacade($facade);
+
+        return $this->getConsoleHelper()->getConsoleTester($command);
+    }
+
+    /**
+     * @param string $eventName
+     *
+     * @return void
+     */
+    public function assertEventDispatcherHasListenersForEvent(string $eventName): void
+    {
+        $this->assertTrue($this->eventDispatcher->hasListeners($eventName), sprintf('Expected to have listeners for the "%s" event but no listener found.', $eventName));
+    }
+
+    /**
+     * @param string $eventName
+     *
+     * @return void
+     */
+    public function assertEventDispatcherDoesNotHasListenersForEvent(string $eventName): void
+    {
+        $this->assertFalse($this->eventDispatcher->hasListeners($eventName), sprintf('Expected not to have listeners for the "%s" event but listener found.', $eventName));
+    }
+
+    /**
+     * @param string $optionName
+     * @param mixed $expectedValue
+     *
+     * @return void
+     */
+    public function assertReceivedOption(string $optionName, $expectedValue): void
+    {
+        $this->assertArrayHasKey($optionName, $this->receivedOptions, sprintf('Option "%s" was not received by worker.', $optionName));
+
+        $receivedOption = $this->receivedOptions[$optionName];
+        $receivedOption = is_array($receivedOption) ? implode(', ', $receivedOption) : $receivedOption;
+
+        $expectedValue = is_array($expectedValue) ? implode(', ', $expectedValue) : $expectedValue;
+
+        $this->assertSame(
+            $expectedValue,
+            $receivedOption,
+            sprintf(
+                'Expected option value "%s" for option "%s" but got "%s"',
+                $expectedValue,
+                $optionName,
+                $receivedOption,
+            ),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory
+     */
+    protected function getBusinessFactory(): MessageBrokerBusinessFactory
+    {
+        /** @var \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory $messageBrokerFactory */
+        $messageBrokerFactory = $this->getBusinessHelper()->getFactory('MessageBroker');
+
+        return $messageBrokerFactory;
     }
 
     /**
@@ -298,12 +427,24 @@ class MessageBrokerHelper extends Module
     {
         // Add Event subscriber that will stop the Worker when all messages are handled or when a time limit was reached.
         // This prevents the worker from running forever.
-        $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_EVENT_DISPATCHER, [
+        $factory = $this->getBusinessFactory();
+        $eventDispatcher = $factory->getEventDispatcher();
+
+        $eventSubscribers = [
             new StopWorkerWhenMessagesAreHandledEventDispatcherSubscriberPlugin(),
             new StopWorkerOnTimeLimitListener(10),
-        ]);
+        ];
 
-        $this->getFacade()->startWorker([]);
+        foreach ($eventSubscribers as $eventSubscriber) {
+            $eventDispatcher->addSubscriber($eventSubscriber);
+        }
+
+        $this->getBusinessHelper()->mockFactoryMethod('getEventDispatcher', $eventDispatcher);
+
+        $messageBrokerWorkerConfigTransfer = new MessageBrokerWorkerConfigTransfer();
+        $messageBrokerWorkerConfigTransfer->setQueues([]);
+
+        $this->getFacade()->startWorker($messageBrokerWorkerConfigTransfer);
     }
 
     /**

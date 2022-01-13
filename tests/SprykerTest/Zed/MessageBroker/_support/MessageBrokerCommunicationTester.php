@@ -7,6 +7,9 @@
 namespace SprykerTest\Zed\MessageBroker;
 
 use Codeception\Actor;
+use Codeception\Stub;
+use Spryker\Zed\MessageBroker\Business\Worker\Worker;
+use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 
 /**
  * Inherited Methods
@@ -23,12 +26,10 @@ use Codeception\Actor;
  * @method void pause()
  *
  * @SuppressWarnings(PHPMD)
+ *
+ * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory getFactory(?string $moduleName = null)
  */
 class MessageBrokerCommunicationTester extends Actor
 {
     use _generated\MessageBrokerCommunicationTesterActions;
-
-    /**
-     * Define custom actions here
-     */
 }

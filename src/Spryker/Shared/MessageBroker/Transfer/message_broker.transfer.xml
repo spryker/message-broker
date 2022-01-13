@@ -7,4 +7,13 @@
         <property name="empty" type="string"/>
     </transfer>
 
+    <transfer name="MessageBrokerWorkerConfig">
+        <property name="queues" type="array"/>
+        <property name="limit" type="int"/>
+        <property name="failureLimit" type="int"/>
+        <property name="memoryLimit" type="int"/>
+        <property name="timeLimit" type="int"/>
+        <property name="sleep" type="int"/>
+    </transfer>
+
 </transfers>

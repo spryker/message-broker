@@ -16,6 +16,13 @@ use Spryker\Zed\Kernel\Container;
 class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
 {
     /**
+     * @uses \Spryker\Zed\EventDispatcher\Communication\Plugin\Application\EventDispatcherApplicationPlugin::SERVICE_DISPATCHER
+     *
+     * @var string
+     */
+    public const SERVICE_EVENT_DISPATCHER = 'dispatcher';
+
+    /**
      * @var string
      */
     public const PLUGINS_MESSAGE_SENDER = 'PLUGINS_MESSAGE_SENDER';
@@ -53,7 +60,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideMessageReceiverAdapterPlugins($container);
         $container = $this->provideMessageHandlerPlugins($container);
         $container = $this->provideMessageDecoratorPlugins($container);
-        $container = $this->provideEventDispatcherSubscriberPlugins($container);
 
         return $container;
     }
@@ -142,28 +148,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
      * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageDecoratorPluginInterface>
      */
     public function getMessageDecoratorPlugins(): array
-    {
-        return [];
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function provideEventDispatcherSubscriberPlugins(Container $container): Container
-    {
-        $container->set(static::PLUGINS_EVENT_DISPATCHER, function () {
-            return $this->getEventDispatcherSubscriberPlugins();
-        });
-
-        return $container;
-    }
-
-    /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\EventDispatcherSubscriberPluginInterface>
-     */
-    public function getEventDispatcherSubscriberPlugins(): array
     {
         return [];
     }

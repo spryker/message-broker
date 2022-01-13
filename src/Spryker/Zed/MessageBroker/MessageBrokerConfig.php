@@ -26,7 +26,9 @@ class MessageBrokerConfig extends AbstractBundleConfig
         }
 
         if ($this->getConfig()->hasKey(MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP)) {
+            // @codeCoverageIgnoreStart
             return $this->get(MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP);
+            // @codeCoverageIgnoreEnd
         }
 
         return [];
@@ -46,7 +48,9 @@ class MessageBrokerConfig extends AbstractBundleConfig
         }
 
         if ($this->getConfig()->hasKey(MessageBrokerConstants::SENDER_CHANNEL_TO_CLIENT_MAP)) {
+            // @codeCoverageIgnoreStart
             return $this->get(MessageBrokerConstants::SENDER_CHANNEL_TO_CLIENT_MAP);
+            // @codeCoverageIgnoreEnd
         }
 
         return [];

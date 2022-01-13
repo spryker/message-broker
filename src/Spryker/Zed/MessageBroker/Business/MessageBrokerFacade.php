@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\MessageBroker\Business;
 
+use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 use Symfony\Component\Messenger\Envelope;
 
@@ -34,12 +35,12 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @api
      *
-     * @param array $channels
+     * @param \Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
      *
      * @return void
      */
-    public function startWorker(array $channels): void
+    public function startWorker(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): void
     {
-        $this->getFactory()->createWorker()->run(['queues' => $channels]);
+        $this->getFactory()->createWorker()->runWorker($messageBrokerWorkerConfigTransfer);
     }
 }

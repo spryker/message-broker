@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\MessageBroker\Business;
 
+use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Symfony\Component\Messenger\Envelope;
 
 interface MessageBrokerFacadeInterface
@@ -30,9 +31,9 @@ interface MessageBrokerFacadeInterface
      *
      * @api
      *
-     * @param array<string> $channels
+     * @param MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
      *
      * @return void
      */
-    public function startWorker(array $channels): void;
+    public function startWorker(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): void;
 }
