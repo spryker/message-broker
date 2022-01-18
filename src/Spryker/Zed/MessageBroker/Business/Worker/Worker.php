@@ -49,7 +49,7 @@ class Worker implements WorkerInterface
         $receivers = [];
 
         foreach ($messageReceiverPlugins as $messageReceiverPlugin) {
-            $receivers[$messageReceiverPlugin->getClientName()] = $messageReceiverPlugin;
+            $receivers[$messageReceiverPlugin->getTransportName()] = $messageReceiverPlugin;
         }
 
         $this->eventDispatcher = $eventDispatcher;

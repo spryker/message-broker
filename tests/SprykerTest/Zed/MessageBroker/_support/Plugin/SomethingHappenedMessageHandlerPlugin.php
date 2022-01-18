@@ -24,7 +24,7 @@ class SomethingHappenedMessageHandlerPlugin extends AbstractPlugin implements Me
     }
 
     /**
-     * @return array<string>
+     * @return array<string, callable>
      */
     public function handles(): array
     {

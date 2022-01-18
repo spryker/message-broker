@@ -43,11 +43,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     public const PLUGINS_MESSAGE_DECORATOR = 'PLUGINS_MESSAGE_DECORATOR';
 
     /**
-     * @var string
-     */
-    public const PLUGINS_EVENT_DISPATCHER = 'PLUGINS_EVENT_DISPATCHER';
-
-    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -145,7 +140,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageDecoratorPluginInterface>
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageAttributeProviderPluginInterface>
      */
     public function getMessageDecoratorPlugins(): array
     {

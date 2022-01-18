@@ -7,16 +7,19 @@
 
 namespace Spryker\Zed\MessageBroker\Business\Publisher;
 
-use Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface;
+use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Spryker\Shared\Kernel\Transfer\TransferInterface;
+use Spryker\Zed\MessageBroker\Business\Exception\MessageBrokerException;
+use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class MessagePublisher implements MessagePublisherInterface
 {
     /**
-     * @var \Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface
+     * @var \Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface
      */
-    protected MessageDecoratorInterface $messageDecorator;
+    protected MessageAttributeProviderInterface $messageAttributeProvider;
 
     /**
      * @var \Symfony\Component\Messenger\MessageBusInterface
@@ -24,38 +27,61 @@ class MessagePublisher implements MessagePublisherInterface
     protected MessageBusInterface $messageBus;
 
     /**
-     * @param \Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface $messageDecorator
+     * @param \Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface $messageDecorator
      * @param \Symfony\Component\Messenger\MessageBusInterface $messageBus
      */
-    public function __construct(MessageDecoratorInterface $messageDecorator, MessageBusInterface $messageBus)
+    public function __construct(MessageAttributeProviderInterface $messageDecorator, MessageBusInterface $messageBus)
     {
-        $this->messageDecorator = $messageDecorator;
+        $this->messageAttributeProvider = $messageDecorator;
         $this->messageBus = $messageBus;
     }
 
     /**
-     * @param object $message
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
-    public function pushMessage(object $message): Envelope
+    public function pushMessage(TransferInterface $messageTransfer): Envelope
     {
         return $this->messageBus->dispatch(
-            $this->decorateMessage($message),
+            $this->provideMessageAttributes($messageTransfer),
         );
     }
 
     /**
-     * @param object $message
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
-     * @return object
+     * @throws \Spryker\Zed\MessageBroker\Business\Exception\MessageBrokerException
+     *
+     * @return \Spryker\Shared\Kernel\Transfer\TransferInterface
      */
-    protected function decorateMessage(object $message): object
+    protected function provideMessageAttributes(TransferInterface $messageTransfer): TransferInterface
     {
-        if (!($message instanceof Envelope)) {
-            $message = Envelope::wrap($message);
+        if (!method_exists($messageTransfer, 'setMessageAttributes') || !method_exists($messageTransfer, 'getMessageAttributes')) {
+            throw new MessageBrokerException(sprintf('The passed "%s" transfer object must have an attribute "messageAttributes" but it was not found. Please add "<property name=\"messageAttributes\" type=\"MessageAttributes\"/>" to your transfer definition.', get_class($messageTransfer)));
         }
 
-        return $this->messageDecorator->decorateMessage($message);
+        $messageAttributes = $messageTransfer->getMessageAttributes() ?? new MessageAttributesTransfer();
+
+        $transferName = $this->getTransferNameFromClass($messageTransfer);
+        $messageAttributes->setTransferName($transferName);
+        $messageAttributes->setEvent($transferName);
+
+        $messageAttributes = $this->messageAttributeProvider->provideMessageAttributes($messageAttributes);
+        $messageTransfer->setMessageAttributes($messageAttributes);
+
+        return $messageTransfer;
+    }
+
+    /**
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
+     *
+     * @return string
+     */
+    protected function getTransferNameFromClass(TransferInterface $messageTransfer): string
+    {
+        $messageName = get_class($messageTransfer);
+
+        return str_replace(['Generated\Shared\Transfer\\', 'Transfer'], '', $messageName);
     }
 }

@@ -8,22 +8,23 @@
 namespace Spryker\Zed\MessageBroker\Business;
 
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
+use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Symfony\Component\Messenger\Envelope;
 
 interface MessageBrokerFacadeInterface
 {
     /**
      * Specification:
-     * - Push a message through a configured transport.
-     * - Wraps the message within an envelope and add stamps (metadata) to it.
+     * - Adds message attributes to the transfer object.
+     * - Wraps message in a Symfony Envelope and sends it through the configured transport for this message.
      *
      * @api
      *
-     * @param object $message
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
-    public function pushMessage(object $message): Envelope;
+    public function pushMessage(TransferInterface $messageTransfer): Envelope;
 
     /**
      * Specification:

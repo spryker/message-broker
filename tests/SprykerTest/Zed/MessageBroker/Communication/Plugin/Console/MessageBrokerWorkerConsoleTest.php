@@ -8,8 +8,10 @@
 namespace SprykerTest\Zed\MessageBroker\Communication\Plugin\Console;
 
 use Codeception\Test\Unit;
-use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerWorkerConsole;
+use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
+use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\Console\MessageBrokerWorkerConsole;
 use SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester;
+use SprykerTest\Zed\MessageBroker\Plugin\SomethingHappenedMessageHandlerPlugin;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
@@ -29,6 +31,11 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 class MessageBrokerWorkerConsoleTest extends Unit
 {
     /**
+     * @var string
+     */
+    public const CHANNEL_NAME = 'channel';
+
+    /**
      * @var array<string>
      */
     protected const QUEUE_NAMES = ['queueName1', 'queueName2'];
@@ -37,6 +44,39 @@ class MessageBrokerWorkerConsoleTest extends Unit
      * @var \SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester
      */
     protected MessageBrokerCommunicationTester $tester;
+
+    /**
+     * @return void
+     */
+    public function testMessageCanBeConsumed(): void
+    {
+        $this->tester->setMessageToSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+
+        $inMemoryMessageTransportMock = $this->tester->getInMemoryMessageTransportPlugin();
+        $this->tester->setMessageSenderPlugins([$inMemoryMessageTransportMock]);
+        $this->tester->setMessageReceiverPlugins([$inMemoryMessageTransportMock]);
+
+        $this->tester->setMessageHandlerPlugins([new SomethingHappenedMessageHandlerPlugin()]);
+
+        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
+        $messageBrokerTestMessageTransfer->setKey('value');
+
+        // Act
+        $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
+        $this->tester->consumeMessages();
+
+        // Assert
+        $acknowledged = $inMemoryMessageTransportMock->getTransport()->getAcknowledged();
+        $this->assertCount(1, $acknowledged, sprintf('Expected that exactly one Message was acknowledged but "%s" were acknowledged', count($acknowledged)));
+
+        $commandTester = $this->tester->getWorkerConsoleCommandTester();
+
+        $arguments = [
+            MessageBrokerWorkerConsole::ARGUMENT_QUEUES => static::QUEUE_NAMES,
+        ];
+
+        $commandTester->execute($arguments);
+    }
 
     /**
      * @return void

@@ -10,8 +10,8 @@ namespace Spryker\Zed\MessageBroker\Business;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBroker\Business\Config\JsonToArrayConfigFormatter;
-use Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecorator;
-use Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface;
+use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProvider;
+use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface;
 use Spryker\Zed\MessageBroker\Business\MessageHandler\MessageHandlerLocator;
 use Spryker\Zed\MessageBroker\Business\MessageSender\MessageSenderLocator;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisher;
@@ -45,17 +45,17 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\MessageBroker\Business\MessageDecorator\MessageDecoratorInterface
+     * @return \Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface
      */
-    public function createMessageDecorator(): MessageDecoratorInterface
+    public function createMessageDecorator(): MessageAttributeProviderInterface
     {
-        return new MessageDecorator(
+        return new MessageAttributeProvider(
             $this->getMessageDecoratorPlugins(),
         );
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageDecoratorPluginInterface>
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageAttributeProviderPluginInterface>
      */
     protected function getMessageDecoratorPlugins(): array
     {

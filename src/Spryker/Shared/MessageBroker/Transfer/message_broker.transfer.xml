@@ -2,9 +2,19 @@
 <transfers xmlns="spryker:transfer-01" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
 
+    <transfer name="MessageAttributes">
+        <property name="transferName" type="string"/>
+        <property name="event" type="string"/>
+        <property name="tenantIdentifier" type="string"/>
+        <property name="appIdentifier" type="string"/>
+        <property name="timestamp" type="string"/>
+        <property name="correlationId" type="string"/>
+    </transfer>
+
     <transfer name="MessageBrokerTestMessage">
         <property name="key" type="string"/>
         <property name="empty" type="string"/>
+        <property name="messageAttributes" type="MessageAttributes"/>
     </transfer>
 
     <transfer name="MessageBrokerWorkerConfig">

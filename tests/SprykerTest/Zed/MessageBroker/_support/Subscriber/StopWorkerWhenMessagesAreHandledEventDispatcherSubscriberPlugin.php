@@ -8,12 +8,12 @@
 namespace SprykerTest\Zed\MessageBroker\_support\Subscriber;
 
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\EventDispatcherSubscriberPluginInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 use Symfony\Component\Messenger\Worker;
 
-class StopWorkerWhenMessagesAreHandledEventDispatcherSubscriberPlugin extends AbstractPlugin implements EventDispatcherSubscriberPluginInterface
+class StopWorkerWhenMessagesAreHandledEventDispatcherSubscriberPlugin extends AbstractPlugin implements EventSubscriberInterface
 {
     protected ?Worker $worker = null;
 

@@ -62,8 +62,8 @@ class MessageSenderLocator implements SendersLocatorInterface
         $clientName = $this->getSenderClientNameForMessage($envelope);
 
         foreach ($this->messageSenderPlugins as $messageSenderPlugin) {
-            if ($clientName === null || $clientName === $messageSenderPlugin->getClientName()) {
-                yield $messageSenderPlugin->getClientName() => $messageSenderPlugin;
+            if ($clientName === null || $clientName === $messageSenderPlugin->getTransportName()) {
+                yield $messageSenderPlugin->getTransportName() => $messageSenderPlugin;
             }
         }
     }

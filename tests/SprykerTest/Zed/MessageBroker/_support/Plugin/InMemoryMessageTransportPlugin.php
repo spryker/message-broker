@@ -32,7 +32,7 @@ class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSe
     /**
      * @return string
      */
-    public function getClientName(): string
+    public function getTransportName(): string
     {
         return 'in-memory';
     }

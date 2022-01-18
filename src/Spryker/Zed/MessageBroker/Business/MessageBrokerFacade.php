@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Business;
 
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
+use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 use Symfony\Component\Messenger\Envelope;
 
@@ -21,13 +22,13 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @api
      *
-     * @param object $message
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
-    public function pushMessage(object $message): Envelope
+    public function pushMessage(TransferInterface $messageTransfer): Envelope
     {
-        return $this->getFactory()->createMessagePublisher()->pushMessage($message);
+        return $this->getFactory()->createMessagePublisher()->pushMessage($messageTransfer);
     }
 
     /**
