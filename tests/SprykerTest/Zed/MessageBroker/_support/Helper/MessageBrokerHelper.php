@@ -417,7 +417,7 @@ class MessageBrokerHelper extends Module
      */
     public function setMessageDecoratorPlugins(array $messageDecoratorPlugins): void
     {
-        $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_DECORATOR, $messageDecoratorPlugins);
+        $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER, $messageDecoratorPlugins);
     }
 
     /**

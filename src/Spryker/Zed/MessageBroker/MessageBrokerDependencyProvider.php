@@ -40,7 +40,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @var string
      */
-    public const PLUGINS_MESSAGE_DECORATOR = 'PLUGINS_MESSAGE_DECORATOR';
+    public const PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER = 'PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -54,7 +54,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideMessageSenderAdapterPlugins($container);
         $container = $this->provideMessageReceiverAdapterPlugins($container);
         $container = $this->provideMessageHandlerPlugins($container);
-        $container = $this->provideMessageDecoratorPlugins($container);
+        $container = $this->provideMessageAttributeProviderPlugins($container);
 
         return $container;
     }
@@ -130,10 +130,10 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function provideMessageDecoratorPlugins(Container $container): Container
+    protected function provideMessageAttributeProviderPlugins(Container $container): Container
     {
-        $container->set(static::PLUGINS_MESSAGE_DECORATOR, function () {
-            return $this->getMessageDecoratorPlugins();
+        $container->set(static::PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER, function () {
+            return $this->getMessageAttributeProviderPlugins();
         });
 
         return $container;
@@ -142,7 +142,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageAttributeProviderPluginInterface>
      */
-    public function getMessageDecoratorPlugins(): array
+    public function getMessageAttributeProviderPlugins(): array
     {
         return [];
     }

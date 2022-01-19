@@ -59,7 +59,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     protected function getMessageDecoratorPlugins(): array
     {
-        return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_DECORATOR);
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER);
     }
 
     /**
