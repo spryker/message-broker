@@ -14,7 +14,7 @@ use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory;
 use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
-use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\Console\MessageBrokerWorkerConsole;
+use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerWorkerConsole;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver\AwsSqsMessageReceiverPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;

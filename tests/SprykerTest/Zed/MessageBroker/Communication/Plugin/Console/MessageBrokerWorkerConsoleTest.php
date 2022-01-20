@@ -9,7 +9,7 @@ namespace SprykerTest\Zed\MessageBroker\Communication\Plugin\Console;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
-use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\Console\MessageBrokerWorkerConsole;
+use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerWorkerConsole;
 use SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester;
 use SprykerTest\Zed\MessageBroker\Plugin\SomethingHappenedMessageHandlerPlugin;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;

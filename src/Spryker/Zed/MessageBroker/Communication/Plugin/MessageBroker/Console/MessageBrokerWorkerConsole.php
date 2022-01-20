@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\Console;
+namespace Spryker\Zed\MessageBroker\Communication\Plugin\Console;
 
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Zed\Kernel\Communication\Console\Console;
