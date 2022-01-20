@@ -8,7 +8,8 @@
         "spryker/kernel": "^3.30.0",
         "spryker/log": "^3.0.0",
         "spryker/message-broker-extension": "*",
-        "spryker/symfony": "^3.7.0"
+        "spryker/symfony": "^3.7.0",
+        "symfony/messenger": "^6.0.0"
     },
     "require-dev": {
         "spryker/application": "*",
