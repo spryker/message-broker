@@ -174,6 +174,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     public function getEventDispatcher(): EventDispatcherInterface
     {
-        return $this->getProvidedDependency(MessageBrokerDependencyProvider::SERVICE_EVENT_DISPATCHER);
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::EVENT_DISPATCHER);
     }
 }

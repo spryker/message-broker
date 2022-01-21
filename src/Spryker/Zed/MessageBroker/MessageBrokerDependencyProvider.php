@@ -9,6 +9,7 @@ namespace Spryker\Zed\MessageBroker;
 
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
@@ -16,11 +17,9 @@ use Spryker\Zed\Kernel\Container;
 class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
 {
     /**
-     * @uses \Spryker\Zed\EventDispatcher\Communication\Plugin\Application\EventDispatcherApplicationPlugin::SERVICE_DISPATCHER
-     *
      * @var string
      */
-    public const SERVICE_EVENT_DISPATCHER = 'dispatcher';
+    public const EVENT_DISPATCHER = 'dispatcher';
 
     /**
      * @var string
@@ -51,10 +50,28 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container = parent::provideBusinessLayerDependencies($container);
 
+        $container = $this->provideEventDispatcher($container);
         $container = $this->provideMessageSenderAdapterPlugins($container);
         $container = $this->provideMessageReceiverAdapterPlugins($container);
         $container = $this->provideMessageHandlerPlugins($container);
         $container = $this->provideMessageAttributeProviderPlugins($container);
+
+        return $container;
+    }
+
+    /**
+     * We need to make sure that wherever we use the EventDispatcher we get always the same. That why is is added here
+     * and not in the Factory. The Factory would always create a new one.
+     *
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function provideEventDispatcher(Container $container): Container
+    {
+        $container->set(static::EVENT_DISPATCHER, function () {
+            return new EventDispatcher();
+        });
 
         return $container;
     }
