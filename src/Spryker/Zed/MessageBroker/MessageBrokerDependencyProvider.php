@@ -74,7 +74,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface>
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface>
      */
     public function getMessageSenderPlugins(): array
     {
@@ -96,7 +96,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface>
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface>
      */
     public function getMessageReceiverPlugins(): array
     {
@@ -118,7 +118,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface>
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface>
      */
     public function getMessageHandlerPlugins(): array
     {
@@ -140,7 +140,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageAttributeProviderPluginInterface>
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageAttributeProviderPluginInterface>
      */
     public function getMessageAttributeProviderPlugins(): array
     {

@@ -10,7 +10,7 @@ namespace Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageAttributeProviderPluginInterface;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageAttributeProviderPluginInterface;
 
 /**
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()

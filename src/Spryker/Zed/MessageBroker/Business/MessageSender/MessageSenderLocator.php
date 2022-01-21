@@ -26,14 +26,14 @@ class MessageSenderLocator implements SendersLocatorInterface
     protected ConfigFormatterInterface $configFormatter;
 
     /**
-     * @var array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface>
+     * @var array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface>
      */
     protected array $messageSenderPlugins = [];
 
     /**
      * @param \Spryker\Zed\MessageBroker\MessageBrokerConfig $config
      * @param \Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface $configFormatter
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface> $messageSenderPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface> $messageSenderPlugins
      */
     public function __construct(MessageBrokerConfig $config, ConfigFormatterInterface $configFormatter, array $messageSenderPlugins)
     {
@@ -45,7 +45,7 @@ class MessageSenderLocator implements SendersLocatorInterface
     /**
      * @param \Symfony\Component\Messenger\Envelope $envelope
      *
-     * @return array<string, \Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface>
+     * @return array<string, \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface>
      */
     public function getSenders(Envelope $envelope): iterable
     {
@@ -55,7 +55,7 @@ class MessageSenderLocator implements SendersLocatorInterface
     /**
      * @param \Symfony\Component\Messenger\Envelope $envelope
      *
-     * @return array<string, \Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface>
+     * @return array<string, \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface>
      */
     protected function getMessageSenderPlugins(Envelope $envelope): iterable
     {

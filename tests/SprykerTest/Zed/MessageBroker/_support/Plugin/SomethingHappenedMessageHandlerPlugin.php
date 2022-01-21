@@ -9,7 +9,7 @@ namespace SprykerTest\Zed\MessageBroker\Plugin;
 
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface;
 
 class SomethingHappenedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {

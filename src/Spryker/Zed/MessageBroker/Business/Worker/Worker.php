@@ -35,7 +35,7 @@ class Worker implements WorkerInterface
     protected SymfonyWorker $worker;
 
     /**
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface> $messageReceiverPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface> $messageReceiverPlugins
      * @param \Symfony\Component\Messenger\MessageBusInterface $bus
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
      * @param \Psr\Log\LoggerInterface|null $logger

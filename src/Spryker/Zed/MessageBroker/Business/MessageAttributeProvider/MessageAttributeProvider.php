@@ -12,12 +12,12 @@ use Generated\Shared\Transfer\MessageAttributesTransfer;
 class MessageAttributeProvider implements MessageAttributeProviderInterface
 {
     /**
-     * @var array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageAttributeProviderPluginInterface>
+     * @var array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageAttributeProviderPluginInterface>
      */
     protected array $messageAttributeProviderPlugins = [];
 
     /**
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageAttributeProviderPluginInterface> $messageAttributeProviderPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageAttributeProviderPluginInterface> $messageAttributeProviderPlugins
      */
     public function __construct(array $messageAttributeProviderPlugins)
     {

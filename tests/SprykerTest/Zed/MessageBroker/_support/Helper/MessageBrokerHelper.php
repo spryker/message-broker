@@ -18,8 +18,8 @@ use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerWorkerCo
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver\AwsSqsMessageReceiverPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface;
 use SprykerTest\Zed\Console\Helper\ConsoleHelperTrait;
 use SprykerTest\Zed\MessageBroker\_support\Subscriber\StopWorkerWhenMessagesAreHandledEventDispatcherSubscriberPlugin;
 use SprykerTest\Zed\MessageBroker\MessageBrokerBusinessTester;
@@ -307,7 +307,7 @@ class MessageBrokerHelper extends Module
     /**
      * @param string $topic
      *
-     * @return \Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface
+     * @return \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface
      */
     public function createSnsSenderPlugin(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): MessageSenderPluginInterface
     {
@@ -319,7 +319,7 @@ class MessageBrokerHelper extends Module
     /**
      * @param string $queueName
      *
-     * @return \Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface
+     * @return \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface
      */
     public function createAwsSqsReceiverPlugin(string $queueName = 'message-broker'): MessageReceiverPluginInterface
     {
@@ -381,7 +381,7 @@ class MessageBrokerHelper extends Module
     }
 
     /**
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface> $messageReceiverPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface> $messageReceiverPlugins
      *
      * @return void
      */
@@ -391,7 +391,7 @@ class MessageBrokerHelper extends Module
     }
 
     /**
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface> $messageSenderPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface> $messageSenderPlugins
      *
      * @return void
      */
@@ -401,7 +401,7 @@ class MessageBrokerHelper extends Module
     }
 
     /**
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface> $messageHandlerPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface> $messageHandlerPlugins
      *
      * @return void
      */
@@ -411,7 +411,7 @@ class MessageBrokerHelper extends Module
     }
 
     /**
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageAttributeProviderPluginInterface> $messageDecoratorPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageAttributeProviderPluginInterface> $messageDecoratorPlugins
      *
      * @return void
      */

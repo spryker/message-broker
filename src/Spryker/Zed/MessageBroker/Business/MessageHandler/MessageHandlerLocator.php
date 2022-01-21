@@ -7,13 +7,13 @@
 
 namespace Spryker\Zed\MessageBroker\Business\MessageHandler;
 
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 
 class MessageHandlerLocator extends HandlersLocator
 {
     /**
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface> $messageHandlerPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface> $messageHandlerPlugins
      */
     public function __construct(array $messageHandlerPlugins)
     {
@@ -23,7 +23,7 @@ class MessageHandlerLocator extends HandlersLocator
     }
 
     /**
-     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface> $messageHandlerPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface> $messageHandlerPlugins
      *
      * @return array<array<callable>>
      */
@@ -39,7 +39,7 @@ class MessageHandlerLocator extends HandlersLocator
     }
 
     /**
-     * @param \Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageHandlerPluginInterface $messageHandlerPlugin
+     * @param \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface $messageHandlerPlugin
      * @param array<string, callable> $handlers
      *
      * @return array<array<callable>>
