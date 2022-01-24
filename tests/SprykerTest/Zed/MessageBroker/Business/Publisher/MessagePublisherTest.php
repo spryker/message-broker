@@ -42,6 +42,6 @@ class MessagePublisherTest extends Unit
         $this->expectException(MessageBrokerException::class);
 
         // Act
-        $messagePublisher->pushMessage($messageBrokerWorkerConfigTransfer);
+        $messagePublisher->sendMessage($messageBrokerWorkerConfigTransfer);
     }
 }

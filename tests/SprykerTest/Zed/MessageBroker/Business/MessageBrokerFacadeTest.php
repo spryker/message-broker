@@ -46,7 +46,7 @@ class MessageBrokerFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testPushMessageWithoutConfiguredHandlerThrowsAnException(): void
+    public function testSendMessageWithoutConfiguredHandlerThrowsAnException(): void
     {
         // Arrange
         $this->tester->setMessageToSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
@@ -58,13 +58,13 @@ class MessageBrokerFacadeTest extends Unit
         $this->expectException(NoHandlerForMessageException::class);
 
         // Act
-        $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
+        $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
     }
 
     /**
      * @return void
      */
-    public function testPushMessageWithoutConfiguredMessageToChannelMapThrowsAnException(): void
+    public function testSendMessageWithoutConfiguredMessageToChannelMapThrowsAnException(): void
     {
         // Arrange
         $this->tester->setMessageHandlerPlugins([new SomethingHappenedMessageHandlerPlugin()]);
@@ -76,13 +76,13 @@ class MessageBrokerFacadeTest extends Unit
         $this->expectException(CouldNotMapMessageToChannelNameException::class);
 
         // Act
-        $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
+        $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
     }
 
     /**
      * @return void
      */
-    public function testPushMessageAddsMessageAttributesToMessage(): void
+    public function testSendMessageAddsMessageAttributesToMessage(): void
     {
         // Arrange
         $this->tester->setMessageToSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
@@ -100,7 +100,7 @@ class MessageBrokerFacadeTest extends Unit
         $messageBrokerTestMessageTransfer->setKey('value');
 
         // Act
-        $envelope = $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
+        $envelope = $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
 
         /** @var \Generated\Shared\Transfer\MessageAttributesTransfer $messageAttributesTransfer */
         $messageAttributesTransfer = $envelope->getMessage()->getMessageAttributes();
@@ -112,7 +112,7 @@ class MessageBrokerFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testPushMessageSendsMessageWithSpecifiedClient(): void
+    public function testSendMessageSendsMessageWithSpecifiedClient(): void
     {
         // Arrange
         $this->tester->setSenderChannelToClientNameMap(static::CHANNEL_NAME, 'in-memory');
@@ -129,7 +129,7 @@ class MessageBrokerFacadeTest extends Unit
         $messageBrokerTestMessageTransfer->setKey('value');
 
         // Act
-        $envelope = $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
+        $envelope = $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
 
         $this->tester->assertMessageWasSentWithSender($envelope, 'in-memory');
     }

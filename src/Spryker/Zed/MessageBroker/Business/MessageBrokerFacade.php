@@ -26,9 +26,9 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
-    public function pushMessage(TransferInterface $messageTransfer): Envelope
+    public function sendMessage(TransferInterface $messageTransfer): Envelope
     {
-        return $this->getFactory()->createMessagePublisher()->pushMessage($messageTransfer);
+        return $this->getFactory()->createMessagePublisher()->sendMessage($messageTransfer);
     }
 
     /**

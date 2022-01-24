@@ -62,7 +62,7 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $messageBrokerTestMessageTransfer->setKey('value');
 
         // Act
-        $this->tester->getFacade()->pushMessage($messageBrokerTestMessageTransfer);
+        $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
         $this->tester->consumeMessages();
 
         // Assert
