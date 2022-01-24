@@ -8,35 +8,15 @@
 namespace SprykerTest\Zed\MessageBroker\Helper;
 
 use Codeception\Module;
-use Codeception\Stub;
 use Codeception\TestInterface;
-use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
-use Spryker\Zed\Event\EventDependencyProvider;
-use Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory;
-use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
-use Spryker\Zed\MessageBroker\Business\Worker\Worker;
-use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerWorkerConsole;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
-use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver\AwsSqsMessageReceiverPlugin;
-use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
-use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface;
-use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface;
-use SprykerTest\Zed\Console\Helper\ConsoleHelperTrait;
-use SprykerTest\Zed\MessageBroker\_support\Subscriber\StopWorkerWhenMessagesAreHandledEventDispatcherSubscriberPlugin;
 use SprykerTest\Zed\MessageBroker\MessageBrokerBusinessTester;
 use SprykerTest\Zed\MessageBroker\Plugin\InMemoryMessageTransportPlugin;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelperTrait;
-use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\EventListener\StopWorkerOnTimeLimitListener;
-use Symfony\Component\Messenger\Stamp\SentStamp;
 use Symfony\Component\Messenger\Transport\InMemoryTransport;
-use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
-use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
-use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class InMemoryMessageBrokerHelper extends Module
 {
@@ -44,7 +24,7 @@ class InMemoryMessageBrokerHelper extends Module
     use DependencyProviderHelperTrait;
 
     /**
-     * @var InMemoryTransport|null
+     * @var \Symfony\Component\Messenger\Transport\InMemoryTransport|null
      */
     protected ?InMemoryTransport $transport;
 
@@ -92,12 +72,14 @@ class InMemoryMessageBrokerHelper extends Module
 
     /**
      * @param string $messageName
+     *
+     * @return void
      */
     public function assertMessageWasSent(string $messageName): void
     {
         $envelope = $this->getMessageByName($messageName);
 
-        $this->assertNotNull($envelope, sprintf('Expected to have a messsage with class name "%s" sent, but it was not found.'));
+        $this->assertNotNull($envelope, sprintf('Expected to have a message with class name "%s" sent, but it was not found.', $messageName));
     }
 
     /**
