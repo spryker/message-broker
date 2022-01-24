@@ -79,7 +79,19 @@ class InMemoryMessageBrokerHelper extends Module
     {
         $envelope = $this->getMessageByName($messageName);
 
-        $this->assertNotNull($envelope, sprintf('Expected to have a message with class name "%s" sent, but it was not found.', $messageName));
+        $this->assertNotNull($envelope, sprintf('Expected to have a message with class name "%s" sent, but it was not sent.', $messageName));
+    }
+
+    /**
+     * @param string $messageName
+     *
+     * @return void
+     */
+    public function assertMessageWasNotSent(string $messageName): void
+    {
+        $envelope = $this->getMessageByName($messageName);
+
+        $this->assertNull($envelope, sprintf('Expected not to have a message with class name "%s" sent, but it was sent.', $messageName));
     }
 
     /**
