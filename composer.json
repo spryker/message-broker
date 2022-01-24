@@ -27,7 +27,8 @@
     "autoload": {
         "psr-4": {
             "Spryker\\": "src/Spryker/",
-            "SprykerTest\\Zed\\MessageBroker\\Helper\\": "tests/SprykerTest/Zed/MessageBroker/_support/Helper"
+            "SprykerTest\\Zed\\MessageBroker\\Helper\\": "tests/SprykerTest/Zed/MessageBroker/_support/Helper",
+            "SprykerTest\\Zed\\MessageBroker\\Plugin\\": "tests/SprykerTest/Zed/MessageBroker/_support/Plugin"
         }
     },
     "autoload-dev": {
