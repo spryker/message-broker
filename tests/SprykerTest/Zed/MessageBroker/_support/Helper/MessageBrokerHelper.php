@@ -90,8 +90,6 @@ class MessageBrokerHelper extends Module
         $this->transportPlugin = null;
 
         putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
-        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
-        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
         putenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP');
         putenv('AOP_MESSAGE_BROKER_SNS_SENDER');
         putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER');
