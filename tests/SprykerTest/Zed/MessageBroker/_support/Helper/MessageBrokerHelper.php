@@ -298,7 +298,7 @@ class MessageBrokerHelper extends Module
      *
      * @return void
      */
-    public function setSenderChannelToClientNameMap(string $channelName, string $clientName): void
+    public function setChannelToTransportMap(string $channelName, string $clientName): void
     {
         putenv(sprintf('AOP_CHANNEL_TO_TRANSPORT_MAP={"%s": "%s"}', $channelName, $clientName));
     }

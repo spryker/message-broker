@@ -9,6 +9,7 @@ namespace Spryker\Zed\MessageBroker\Communication\Plugin\Console;
 
 use Spryker\Zed\Kernel\Communication\Console\Console;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -27,12 +28,23 @@ class MessageBrokerDebugConsole extends Console
     protected const COMMAND_DESCRIPTION = 'This command prints debug information about the message broker.';
 
     /**
+     * @var string
+     */
+    protected const OPTION_ASYNC_API_FILE = 'asyncapi-file';
+
+    /**
+     * @var string
+     */
+    protected const OPTION_ASYNC_API_FILE_SHORT = 'a';
+
+    /**
      * @return void
      */
     protected function configure(): void
     {
         $this->setName(static::COMMAND_NAME);
         $this->setDescription(static::COMMAND_DESCRIPTION);
+        $this->addOption(static::OPTION_ASYNC_API_FILE, static::OPTION_ASYNC_API_FILE_SHORT, InputOption::VALUE_REQUIRED, 'When a path to an AsyncAPI is passed the debug will run against this file.');
     }
 
     /**
@@ -43,7 +55,7 @@ class MessageBrokerDebugConsole extends Console
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->getFacade()->printDebug($output);
+        $this->getFacade()->printDebug($output, $input->getOption(static::OPTION_ASYNC_API_FILE));
 
         return static::CODE_SUCCESS;
     }

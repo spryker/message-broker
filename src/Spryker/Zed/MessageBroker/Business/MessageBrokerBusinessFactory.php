@@ -186,6 +186,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     {
         return new DebugPrinter(
             $this->getConfig(),
+            $this->createConfigFormatter(),
             $this->getMessageReceiverPlugins(),
             $this->getMessageSenderPlugins(),
             $this->getMessageHandlerPlugins(),

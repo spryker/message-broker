@@ -9,7 +9,9 @@ namespace SprykerTest\Zed\MessageBroker\Communication\Plugin\Console;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
+use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerDebugConsole;
 use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerWorkerConsole;
+use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester;
 use SprykerTest\Zed\MessageBroker\Plugin\SomethingHappenedMessageHandlerPlugin;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
@@ -30,6 +32,8 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
  */
 class MessageBrokerDebugConsoleTest extends Unit
 {
+    public const CHANNEL_NAME = 'test-channel';
+    public const SQS_TRANSPORT_NAME = 'sqs';
     /**
      * @var \SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester
      */
@@ -38,19 +42,65 @@ class MessageBrokerDebugConsoleTest extends Unit
     /**
      * @return void
      */
-    public function testPrintsDebugInformation(): void
+    public function testPrintsDebugInformationOfConfiguredChannelMessageAndTransport(): void
     {
-        $commandTester = $this->tester->getWorkerConsoleCommandTester();
+        // Arrange
+        $this->tester->setMessageToChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToTransportMap(static::CHANNEL_NAME, static::SQS_TRANSPORT_NAME);
 
+        // Act
+        $commandTester = $this->tester->getDebugConsoleCommandTester();
         $commandTester->execute([]);
 
-        $this->tester->assertReceivedOption('queues', static::CHANNEL_NAMES);
-        $this->tester->assertReceivedOption('sleep', 1000000);
+        // Assert
+        $this->assertSame(MessageBrokerDebugConsole::CODE_SUCCESS, $commandTester->getStatusCode());
+        $this->assertStringContainsString('test-channel', $commandTester->getDisplay());
+        $this->assertStringContainsString('Generated\Shared\Transfer\MessageBrokerTestMessageTransfer', $commandTester->getDisplay());
+        $this->assertStringContainsString('sqs', $commandTester->getDisplay());
+        $this->assertStringContainsString('No handler found', $commandTester->getDisplay());
+    }
 
-        $this->tester->assertEventDispatcherDoesNotHasListenersForEvent(WorkerRunningEvent::class);
-        $this->tester->assertEventDispatcherDoesNotHasListenersForEvent(WorkerMessageFailedEvent::class);
+    /**
+     * @return void
+     */
+    public function testPrintsDebugInformationOfConfiguredChannelMessageTransportAndHandlerIfConfigured(): void
+    {
+        // Arrange
+        $this->tester->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_HANDLER, [new SomethingHappenedMessageHandlerPlugin()]);
+        $this->tester->setMessageToChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToTransportMap(static::CHANNEL_NAME, static::SQS_TRANSPORT_NAME);
 
-        $this->assertSame(MessageBrokerWorkerConsole::CODE_SUCCESS, $commandTester->getStatusCode());
-        $this->assertStringContainsString('Quit the worker with CONTROL-C.', $commandTester->getDisplay());
+        // Act
+        $commandTester = $this->tester->getDebugConsoleCommandTester();
+        $commandTester->execute([]);
+
+        //Assert
+        $this->assertSame(MessageBrokerDebugConsole::CODE_SUCCESS, $commandTester->getStatusCode());
+        $this->assertStringContainsString('test-channel', $commandTester->getDisplay());
+        $this->assertStringContainsString('Generated\Shared\Transfer\MessageBrokerTestMessageTransfer', $commandTester->getDisplay());
+        $this->assertStringContainsString('sqs', $commandTester->getDisplay());
+        $this->assertStringContainsString('SprykerTest\Zed\MessageBroker\Plugin\SomethingHappenedMessageHandlerPlugin', $commandTester->getDisplay());
+    }
+
+    /**
+     * @return void
+     */
+    public function testPrintsDebugInformationAgainstAnAsyncApiFile(): void
+    {
+        // Arrange
+//        $this->tester->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_HANDLER, [new SomethingHappenedMessageHandlerPlugin()]);
+//        $this->tester->setMessageToChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+//        $this->tester->setChannelToTransportMap(static::CHANNEL_NAME, static::SQS_TRANSPORT_NAME);
+
+        // Act
+        $commandTester = $this->tester->getDebugConsoleCommandTester();
+        $commandTester->execute([]);
+
+        //Assert
+        $this->assertSame(MessageBrokerDebugConsole::CODE_SUCCESS, $commandTester->getStatusCode());
+        $this->assertStringContainsString('test-channel', $commandTester->getDisplay());
+        $this->assertStringContainsString('Generated\Shared\Transfer\MessageBrokerTestMessageTransfer', $commandTester->getDisplay());
+        $this->assertStringContainsString('sqs', $commandTester->getDisplay());
+        $this->assertStringContainsString('SprykerTest\Zed\MessageBroker\Plugin\SomethingHappenedMessageHandlerPlugin', $commandTester->getDisplay());
     }
 }

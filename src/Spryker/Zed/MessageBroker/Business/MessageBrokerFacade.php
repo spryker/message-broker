@@ -52,11 +52,12 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      * @api
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param string|null $pathToAsyncApiFile
      *
      * @return void
      */
-    public function printDebug(OutputInterface $output): void
+    public function printDebug(OutputInterface $output, ?string $pathToAsyncApiFile = null): void
     {
-        $this->getFactory()->createDebugPrinter()->printDebug($output);
+        $this->getFactory()->createDebugPrinter()->printDebug($output, $pathToAsyncApiFile);
     }
 }

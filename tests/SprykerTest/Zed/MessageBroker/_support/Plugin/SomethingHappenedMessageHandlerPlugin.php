@@ -26,10 +26,8 @@ class SomethingHappenedMessageHandlerPlugin extends AbstractPlugin implements Me
     /**
      * @return array<string, callable>
      */
-    public function handles(): array
+    public function handles(): iterable
     {
-        return [
-            MessageBrokerTestMessageTransfer::class => [$this, 'handle'],
-        ];
+        yield MessageBrokerTestMessageTransfer::class => [$this, 'handle'];
     }
 }
