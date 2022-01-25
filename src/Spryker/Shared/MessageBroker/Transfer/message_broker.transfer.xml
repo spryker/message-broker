@@ -11,12 +11,6 @@
         <property name="correlationId" type="string"/>
     </transfer>
 
-    <transfer name="MessageBrokerTestMessage">
-        <property name="key" type="string"/>
-        <property name="empty" type="string"/>
-        <property name="messageAttributes" type="MessageAttributes"/>
-    </transfer>
-
     <transfer name="MessageBrokerWorkerConfig">
         <property name="channels" type="array"/>
         <property name="limit" type="int"/>
@@ -24,6 +18,18 @@
         <property name="memoryLimit" type="int"/>
         <property name="timeLimit" type="int"/>
         <property name="sleep" type="int"/>
+    </transfer>
+
+    <transfer name="IncomingMessage">
+    </transfer>
+
+    <transfer name="AnotherIncomingMessage">
+    </transfer>
+
+    <transfer name="OutgoingMessage">
+    </transfer>
+
+    <transfer name="AnotherOutgoingMessage">
     </transfer>
 
 </transfers>

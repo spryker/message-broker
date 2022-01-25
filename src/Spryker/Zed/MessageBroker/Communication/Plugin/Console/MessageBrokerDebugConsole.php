@@ -30,12 +30,12 @@ class MessageBrokerDebugConsole extends Console
     /**
      * @var string
      */
-    protected const OPTION_ASYNC_API_FILE = 'asyncapi-file';
+    public const OPTION_ASYNC_API_FILE = 'asyncapi-file';
 
     /**
      * @var string
      */
-    protected const OPTION_ASYNC_API_FILE_SHORT = 'a';
+    public const OPTION_ASYNC_API_FILE_SHORT = 'a';
 
     /**
      * @return void

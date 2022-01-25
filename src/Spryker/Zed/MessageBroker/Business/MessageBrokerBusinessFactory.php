@@ -21,6 +21,8 @@ use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
+use SprykerSdk\AsyncApi\Loader\AsyncApiLoader;
+use SprykerSdk\AsyncApi\Loader\AsyncApiLoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\HandlersLocatorInterface;
 use Symfony\Component\Messenger\MessageBus;
@@ -190,6 +192,15 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
             $this->getMessageReceiverPlugins(),
             $this->getMessageSenderPlugins(),
             $this->getMessageHandlerPlugins(),
+            $this->createAsyncApiLoader(),
         );
+    }
+
+    /**
+     * @return \SprykerSdk\AsyncApi\Loader\AsyncApiLoaderInterface
+     */
+    public function createAsyncApiLoader(): AsyncApiLoaderInterface
+    {
+        return new AsyncApiLoader();
     }
 }

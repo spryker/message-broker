@@ -8,7 +8,10 @@
 namespace Spryker\Zed\MessageBroker\Business\Debug;
 
 use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
+use Spryker\Zed\MessageBroker\Business\Exception\AsyncApiFileNotFoundException;
 use Spryker\Zed\MessageBroker\MessageBrokerConfig;
+use SprykerSdk\AsyncApi\Channel\AsyncApiChannelInterface;
+use SprykerSdk\AsyncApi\Loader\AsyncApiLoaderInterface;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -40,7 +43,7 @@ class DebugPrinter implements DebugPrinterInterface
     protected array $messageHandlerPlugins;
 
     /**
-     * @var AsyncApiLoaderInterface
+     * @var \SprykerSdk\AsyncApi\Loader\AsyncApiLoaderInterface
      */
     protected AsyncApiLoaderInterface $asyncApiLoader;
 
@@ -50,7 +53,7 @@ class DebugPrinter implements DebugPrinterInterface
      * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface> $receiverPlugins
      * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface> $senderPlugins
      * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface> $messageHandlerPlugins
-     * @param AsyncApiLoaderInterface $asyncApiLoader
+     * @param \SprykerSdk\AsyncApi\Loader\AsyncApiLoaderInterface $asyncApiLoader
      */
     public function __construct(
         MessageBrokerConfig $config,
@@ -78,9 +81,11 @@ class DebugPrinter implements DebugPrinterInterface
     {
         if ($pathToAsyncApiFile === null) {
             $this->printDebugForConfiguration($output);
+
+            return;
         }
 
-        $this->printDebugForAsyncApi();
+        $this->printDebugForAsyncApi($output, $pathToAsyncApiFile);
     }
 
     /**
@@ -115,10 +120,149 @@ class DebugPrinter implements DebugPrinterInterface
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param string $pathToAsyncApiFile
      *
+     * @throws \Spryker\Zed\MessageBroker\Business\Exception\AsyncApiFileNotFoundException
+     *
      * @return void
      */
     protected function printDebugForAsyncApi(OutputInterface $output, string $pathToAsyncApiFile): void
     {
+        if (!file_exists($pathToAsyncApiFile)) {
+            throw new AsyncApiFileNotFoundException(sprintf('Could not find the "%s" AsyncAPI file.', $pathToAsyncApiFile));
+        }
+
+        $asyncApi = $this->asyncApiLoader->load($pathToAsyncApiFile);
+
+        foreach ($asyncApi->getChannels() as $channel) {
+            $output->writeln('');
+            $output->writeln(sprintf('Channel: <fg=yellow>%s</>', $channel->getName()));
+            $output->writeln('');
+
+            if (count(iterator_to_array($channel->getSubscribeMessages())) !== 0) {
+                $this->printSubscribeMessageInformation($channel, $output);
+            }
+
+            if (count(iterator_to_array($channel->getPublishMessages())) !== 0) {
+                $this->printPublishMessageInformation($channel, $output);
+            }
+        }
+    }
+
+    /**
+     * @param \SprykerSdk\AsyncApi\Channel\AsyncApiChannelInterface $channel
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return void
+     */
+    protected function printSubscribeMessageInformation(AsyncApiChannelInterface $channel, OutputInterface $output): void
+    {
+        $output->writeln('<fg=green>Others can subscribe to</>');
+
+        $table = new Table($output);
+        $table->setHeaders(['Message', 'Channel', 'Transport']);
+
+        $configuredTransport = $this->getTransportForChannel($channel->getName()) ?? '<fg=red>No transport configured</>';
+
+        foreach ($channel->getSubscribeMessages() as $message) {
+            $messageName = sprintf('Generated\Shared\Transfer\%sTransfer', $message->getName());
+            $configuredChannel = $this->getChannelNameOutputForMessage($messageName, $channel->getName());
+
+            $table->addRow([
+                $messageName,
+                $configuredChannel,
+                $configuredTransport,
+            ]);
+        }
+
+        $table->render();
+        $output->writeln('');
+    }
+
+    /**
+     * @param string $messageName
+     * @param string $expectedChannelName
+     *
+     * @return string
+     */
+    protected function getChannelNameOutputForMessage(string $messageName, string $expectedChannelName): string
+    {
+        $configuredChannel = $this->getConfiguredChannelForMessage($messageName);
+
+        if ($configuredChannel === null) {
+            return '<fg=red>Not mapped to a channel</>';
+        }
+
+        if ($configuredChannel !== $expectedChannelName) {
+            return sprintf('<fg=red>Wrong channel "%s", expected "%s"</>', $configuredChannel, $expectedChannelName);
+        }
+
+        return $configuredChannel;
+    }
+
+    /**
+     * @param \SprykerSdk\AsyncApi\Channel\AsyncApiChannelInterface $channel
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return void
+     */
+    protected function printPublishMessageInformation(AsyncApiChannelInterface $channel, OutputInterface $output): void
+    {
+        $output->writeln('<fg=green>Others can publish</>');
+
+        $messagesToHandlerMap = $this->getMessagesToHandlerMap();
+        $configuredTransport = $this->getTransportForChannel($channel->getName()) ?? '<fg=red>No transport configured</>';
+
+        $table = new Table($output);
+        $table->setHeaders(['Message', 'Channel', 'Transport', 'Handler']);
+
+        foreach ($channel->getPublishMessages() as $message) {
+            $messageName = sprintf('Generated\Shared\Transfer\%sTransfer', $message->getName());
+            $configuredChannel = $this->getChannelNameOutputForMessage($messageName, $channel->getName());
+
+            $handlersForMessage = $this->getHandlersForMessage($messageName, $messagesToHandlerMap);
+            $handlersForMessage = count($handlersForMessage) > 0 ? implode(PHP_EOL, $handlersForMessage) : '<fg=red>No handler defined</>';
+
+            $table->addRow([
+                $messageName,
+                $configuredChannel,
+                $configuredTransport,
+                $handlersForMessage,
+            ]);
+        }
+
+        $table->render();
+        $output->writeln('');
+    }
+
+    /**
+     * @param string $channelName
+     *
+     * @return string|null
+     */
+    protected function getTransportForChannel(string $channelName): ?string
+    {
+        $channelToTransportMap = $this->getChannelToTransportMap();
+
+        if (isset($channelToTransportMap[$channelName])) {
+            return $channelToTransportMap[$channelName];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $messageClassNAme
+     *
+     * @return string|null
+     */
+    protected function getConfiguredChannelForMessage(string $messageClassNAme): ?string
+    {
+        $messageToChannelMap = $this->getMessageToChannelMap();
+
+        if (isset($messageToChannelMap[$messageClassNAme])) {
+            return $messageToChannelMap[$messageClassNAme];
+        }
+
+        return null;
     }
 
     /**
