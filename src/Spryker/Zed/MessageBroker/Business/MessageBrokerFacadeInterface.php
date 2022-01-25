@@ -9,6 +9,7 @@ namespace Spryker\Zed\MessageBroker\Business;
 
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Messenger\Envelope;
 
 interface MessageBrokerFacadeInterface
@@ -37,4 +38,16 @@ interface MessageBrokerFacadeInterface
      * @return void
      */
     public function startWorker(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): void;
+
+    /**
+     * Specification:
+     * - Prints debug information to the console.
+     *
+     * @api
+     *
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return void
+     */
+    public function printDebug(OutputInterface $output): void;
 }

@@ -34,7 +34,7 @@ class MessageBrokerWorkerConsole extends Console
     /**
      * @var string
      */
-    public const ARGUMENT_QUEUES = 'queues';
+    public const ARGUMENT_CHANNELS = 'channels';
 
     /**
      * @var string
@@ -94,7 +94,7 @@ class MessageBrokerWorkerConsole extends Console
         $this->setName(static::COMMAND_NAME);
         $this->setDescription(static::COMMAND_DESCRIPTION);
         $this->setDefinition([
-            new InputArgument(static::ARGUMENT_QUEUES, InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Limit receivers to only consume from the specified queues.'),
+            new InputArgument(static::ARGUMENT_CHANNELS, InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Limit receivers to only consume from the specified channels.'),
             new InputOption(static::OPTION_MESSAGE_LIMIT, static::OPTION_MESSAGE_LIMIT_SHORT, InputOption::VALUE_REQUIRED, 'Limit the number of received messages.'),
             new InputOption(static::OPTION_FAILURE_LIMIT, static::OPTION_FAILURE_LIMIT_SHORT, InputOption::VALUE_REQUIRED, 'The number of failed messages the worker can consume.'),
             new InputOption(static::OPTION_MEMORY_LIMIT, static::OPTION_MEMORY_LIMIT_SHORT, InputOption::VALUE_REQUIRED, 'The memory limit the worker can consume.'),
@@ -113,8 +113,8 @@ class MessageBrokerWorkerConsole extends Console
     {
         $messageBrokerWorkerConfigTransfer = new MessageBrokerWorkerConfigTransfer();
 
-        $queues = $input->getArgument(static::ARGUMENT_QUEUES);
-        $messageBrokerWorkerConfigTransfer->setQueues($queues);
+        $channels = $input->getArgument(static::ARGUMENT_CHANNELS);
+        $messageBrokerWorkerConfigTransfer->setChannels($channels);
 
         $stopsWhen = [];
 
@@ -142,18 +142,15 @@ class MessageBrokerWorkerConsole extends Console
             $messageBrokerWorkerConfigTransfer->setTimeLimit($timeLimit);
         }
 
-        $stopsWhen[] = 'received a stop signal via the messenger:stop-workers command';
-
         $io = new SymfonyStyle($input, $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output);
-        $io->success(sprintf('Consuming messages from queue%s "%s".', count($queues) > 0 ? static::OPTION_SLEEP_SHORT : '', implode(', ', $queues)));
+        $io->success(sprintf('Consuming messages from channel%s "%s".', count($channels) > 0 ? static::OPTION_SLEEP_SHORT : '', implode(', ', $channels)));
 
         $last = array_pop($stopsWhen);
         $stopsWhen = ($stopsWhen ? implode(', ', $stopsWhen) . ' or ' : '') . $last;
-        $io->comment("The worker will automatically exit once it has {$stopsWhen}.");
-
-        $io->comment('Quit the worker with CONTROL-C.');
 
         if (OutputInterface::VERBOSITY_VERBOSE > $output->getVerbosity()) {
+            $io->comment(sprintf('The worker will automatically exit once it has %s.', $stopsWhen));
+            $io->comment('Quit the worker with CONTROL-C.');
             $io->comment('Re-run the command with a -vv option to see logs about consumed messages.');
         }
 

@@ -82,7 +82,7 @@ class Worker implements WorkerInterface
         }
 
         $options = [
-            'queues' => $messageBrokerWorkerConfigTransfer->getQueues(),
+            'queues' => $messageBrokerWorkerConfigTransfer->getChannels(),
         ];
 
         if ($messageBrokerWorkerConfigTransfer->getSleep()) {

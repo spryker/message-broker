@@ -20,5 +20,5 @@ interface MessageBrokerConstants
     /**
      * @var string
      */
-    public const SENDER_CHANNEL_TO_CLIENT_MAP = 'MESSAGE_BROKER:SENDER_CHANNEL_TO_CLIENT_MAP';
+    public const CHANNEL_TO_TRANSPORT_MAP = 'MESSAGE_BROKER:SENDER_CHANNEL_TO_CLIENT_MAP';
 }

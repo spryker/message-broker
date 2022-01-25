@@ -18,7 +18,7 @@
     </transfer>
 
     <transfer name="MessageBrokerWorkerConfig">
-        <property name="queues" type="array"/>
+        <property name="channels" type="array"/>
         <property name="limit" type="int"/>
         <property name="failureLimit" type="int"/>
         <property name="memoryLimit" type="int"/>

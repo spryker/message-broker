@@ -10,6 +10,7 @@ namespace Spryker\Zed\MessageBroker\Business;
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Messenger\Envelope;
 
 /**
@@ -43,5 +44,19 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
     public function startWorker(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): void
     {
         $this->getFactory()->createWorker()->runWorker($messageBrokerWorkerConfigTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return void
+     */
+    public function printDebug(OutputInterface $output): void
+    {
+        $this->getFactory()->createDebugPrinter()->printDebug($output);
     }
 }

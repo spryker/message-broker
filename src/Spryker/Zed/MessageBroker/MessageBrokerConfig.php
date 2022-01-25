@@ -41,15 +41,15 @@ class MessageBrokerConfig extends AbstractBundleConfig
      *
      * @return array<string, string>|string
      */
-    public function getSenderChannelToClientMap()
+    public function getChannelToTransportMap()
     {
-        if (getenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP') !== false) {
-            return getenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP');
+        if (getenv('AOP_CHANNEL_TO_TRANSPORT_MAP') !== false) {
+            return getenv('AOP_CHANNEL_TO_TRANSPORT_MAP');
         }
 
-        if ($this->getConfig()->hasKey(MessageBrokerConstants::SENDER_CHANNEL_TO_CLIENT_MAP)) {
+        if ($this->getConfig()->hasKey(MessageBrokerConstants::CHANNEL_TO_TRANSPORT_MAP)) {
             // @codeCoverageIgnoreStart
-            return $this->get(MessageBrokerConstants::SENDER_CHANNEL_TO_CLIENT_MAP);
+            return $this->get(MessageBrokerConstants::CHANNEL_TO_TRANSPORT_MAP);
             // @codeCoverageIgnoreEnd
         }
 

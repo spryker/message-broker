@@ -10,6 +10,8 @@ namespace Spryker\Zed\MessageBroker\Business;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBroker\Business\Config\JsonToArrayConfigFormatter;
+use Spryker\Zed\MessageBroker\Business\Debug\DebugPrinter;
+use Spryker\Zed\MessageBroker\Business\Debug\DebugPrinterInterface;
 use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProvider;
 use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface;
 use Spryker\Zed\MessageBroker\Business\MessageHandler\MessageHandlerLocator;
@@ -175,5 +177,18 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     public function getEventDispatcher(): EventDispatcherInterface
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::EVENT_DISPATCHER);
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Debug\DebugPrinterInterface
+     */
+    public function createDebugPrinter(): DebugPrinterInterface
+    {
+        return new DebugPrinter(
+            $this->getConfig(),
+            $this->getMessageReceiverPlugins(),
+            $this->getMessageSenderPlugins(),
+            $this->getMessageHandlerPlugins(),
+        );
     }
 }

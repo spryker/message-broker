@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory;
 use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
+use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerDebugConsole;
 use Spryker\Zed\MessageBroker\Communication\Plugin\Console\MessageBrokerWorkerConsole;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver\AwsSqsMessageReceiverPlugin;
@@ -90,7 +91,7 @@ class MessageBrokerHelper extends Module
         $this->transportPlugin = null;
 
         putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
-        putenv('AOP_SENDER_CHANNEL_TO_CLIENT_MAP');
+        putenv('AOP_CHANNEL_TO_TRANSPORT_MAP');
         putenv('AOP_MESSAGE_BROKER_SNS_SENDER');
         putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER');
     }
@@ -143,6 +144,19 @@ class MessageBrokerHelper extends Module
         $facade = $this->getFacade();
 
         $command = new MessageBrokerWorkerConsole();
+        $command->setFacade($facade);
+
+        return $this->getConsoleHelper()->getConsoleTester($command);
+    }
+
+    /**
+     * @return \Symfony\Component\Console\Tester\CommandTester
+     */
+    public function getDebugConsoleCommandTester(): CommandTester
+    {
+        $facade = $this->getFacade();
+
+        $command = new MessageBrokerDebugConsole();
         $command->setFacade($facade);
 
         return $this->getConsoleHelper()->getConsoleTester($command);
@@ -286,7 +300,7 @@ class MessageBrokerHelper extends Module
      */
     public function setSenderChannelToClientNameMap(string $channelName, string $clientName): void
     {
-        putenv(sprintf('AOP_SENDER_CHANNEL_TO_CLIENT_MAP={"%s": "%s"}', $channelName, $clientName));
+        putenv(sprintf('AOP_CHANNEL_TO_TRANSPORT_MAP={"%s": "%s"}', $channelName, $clientName));
     }
 
     /**
@@ -440,7 +454,7 @@ class MessageBrokerHelper extends Module
         $this->getBusinessHelper()->mockFactoryMethod('getEventDispatcher', $eventDispatcher);
 
         $messageBrokerWorkerConfigTransfer = new MessageBrokerWorkerConfigTransfer();
-        $messageBrokerWorkerConfigTransfer->setQueues([]);
+        $messageBrokerWorkerConfigTransfer->setChannels([]);
 
         $this->getFacade()->startWorker($messageBrokerWorkerConfigTransfer);
     }

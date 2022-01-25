@@ -38,7 +38,7 @@ class MessageBrokerWorkerConsoleTest extends Unit
     /**
      * @var array<string>
      */
-    protected const QUEUE_NAMES = ['queueName1', 'queueName2'];
+    protected const CHANNEL_NAMES = ['channelName1', 'channelName2'];
 
     /**
      * @var \SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester
@@ -72,7 +72,7 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
 
         $arguments = [
-            MessageBrokerWorkerConsole::ARGUMENT_QUEUES => static::QUEUE_NAMES,
+            MessageBrokerWorkerConsole::ARGUMENT_CHANNELS => static::CHANNEL_NAMES,
         ];
 
         $commandTester->execute($arguments);
@@ -86,12 +86,12 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
 
         $arguments = [
-            MessageBrokerWorkerConsole::ARGUMENT_QUEUES => static::QUEUE_NAMES,
+            MessageBrokerWorkerConsole::ARGUMENT_CHANNELS => static::CHANNEL_NAMES,
         ];
 
         $commandTester->execute($arguments);
 
-        $this->tester->assertReceivedOption('queues', static::QUEUE_NAMES);
+        $this->tester->assertReceivedOption('queues', static::CHANNEL_NAMES);
         $this->tester->assertReceivedOption('sleep', 1000000);
 
         $this->tester->assertEventDispatcherDoesNotHasListenersForEvent(WorkerRunningEvent::class);
@@ -109,7 +109,7 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
 
         $arguments = [
-            MessageBrokerWorkerConsole::ARGUMENT_QUEUES => static::QUEUE_NAMES,
+            MessageBrokerWorkerConsole::ARGUMENT_CHANNELS => static::CHANNEL_NAMES,
             '--' . MessageBrokerWorkerConsole::OPTION_MESSAGE_LIMIT => 1,
         ];
 
@@ -129,7 +129,7 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
 
         $arguments = [
-            MessageBrokerWorkerConsole::ARGUMENT_QUEUES => static::QUEUE_NAMES,
+            MessageBrokerWorkerConsole::ARGUMENT_CHANNELS => static::CHANNEL_NAMES,
             '--' . MessageBrokerWorkerConsole::OPTION_FAILURE_LIMIT => 1,
         ];
 
@@ -149,7 +149,7 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
 
         $arguments = [
-            MessageBrokerWorkerConsole::ARGUMENT_QUEUES => static::QUEUE_NAMES,
+            MessageBrokerWorkerConsole::ARGUMENT_CHANNELS => static::CHANNEL_NAMES,
             '--' . MessageBrokerWorkerConsole::OPTION_MEMORY_LIMIT => 1,
         ];
 
@@ -169,7 +169,7 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
 
         $arguments = [
-            MessageBrokerWorkerConsole::ARGUMENT_QUEUES => static::QUEUE_NAMES,
+            MessageBrokerWorkerConsole::ARGUMENT_CHANNELS => static::CHANNEL_NAMES,
             '--' . MessageBrokerWorkerConsole::OPTION_TIME_LIMIT => 1,
         ];
 
