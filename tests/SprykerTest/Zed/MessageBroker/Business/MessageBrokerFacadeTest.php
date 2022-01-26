@@ -115,7 +115,7 @@ class MessageBrokerFacadeTest extends Unit
     public function testSendMessageSendsMessageWithSpecifiedClient(): void
     {
         // Arrange
-        $this->tester->setSenderChannelToClientNameMap(static::CHANNEL_NAME, 'in-memory');
+        $this->tester->setChannelToTransportMap(static::CHANNEL_NAME, 'in-memory');
         $this->tester->setMessageToSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
 
         $this->tester->setMessageSenderPlugins([

@@ -155,7 +155,7 @@ class DebugPrinter implements DebugPrinterInterface
      */
     protected function printSubscribeMessageInformation(AsyncApiChannelInterface $channel, OutputInterface $output): void
     {
-        $output->writeln('<fg=green>Others can subscribe to</>');
+        $output->writeln('<fg=green>This application can send the following messages</>');
 
         $table = new Table($output);
         $table->setHeaders(['Message', 'Channel', 'Transport']);
@@ -206,7 +206,7 @@ class DebugPrinter implements DebugPrinterInterface
      */
     protected function printPublishMessageInformation(AsyncApiChannelInterface $channel, OutputInterface $output): void
     {
-        $output->writeln('<fg=green>Others can publish</>');
+        $output->writeln('<fg=green>This application can receive the following messages</>');
 
         $messagesToHandlerMap = $this->getMessagesToHandlerMap();
         $configuredTransport = $this->getTransportForChannel($channel->getName()) ?? '<fg=red>No transport configured</>';

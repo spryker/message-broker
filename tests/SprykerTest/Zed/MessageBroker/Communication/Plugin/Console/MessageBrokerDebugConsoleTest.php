@@ -93,7 +93,7 @@ class MessageBrokerDebugConsoleTest extends Unit
     /**
      * @return void
      */
-    public function testPrintDebugThrowsExceptionWhenInvalidAsyncApiPath(): void
+    public function testPrintDebugThrowsExceptionWhenPathToAsyncApiIsInvalid(): void
     {
         // Expect
         $this->expectException(AsyncApiFileNotFoundException::class);
@@ -133,6 +133,7 @@ class MessageBrokerDebugConsoleTest extends Unit
         ]);
 
         // Assert
+        $this->assertStringContainsString('This application can send the following messages', $commandTester->getDisplay());
         $this->assertStringContainsString('No transport configured', $commandTester->getDisplay());
         $this->assertStringContainsString('Not mapped to a channel', $commandTester->getDisplay());
     }
@@ -188,7 +189,7 @@ class MessageBrokerDebugConsoleTest extends Unit
 
         // Assert
         $this->assertStringContainsString('channelNameA', $commandTester->getDisplay());
-        $this->assertStringContainsString('Others can publish', $commandTester->getDisplay());
+        $this->assertStringContainsString('This application can receive the following messages', $commandTester->getDisplay());
         $this->assertStringContainsString('No transport configured', $commandTester->getDisplay());
         $this->assertStringContainsString('Not mapped to a channel', $commandTester->getDisplay());
     }
@@ -211,7 +212,7 @@ class MessageBrokerDebugConsoleTest extends Unit
 
         // Assert
         $this->assertStringContainsString('channelNameA', $commandTester->getDisplay());
-        $this->assertStringContainsString('Others can publish', $commandTester->getDisplay());
+        $this->assertStringContainsString('This application can receive the following messages', $commandTester->getDisplay());
         $this->assertStringContainsString('channelNameA', $commandTester->getDisplay());
         $this->assertStringContainsString('sqs', $commandTester->getDisplay());
         $this->assertStringContainsString('SprykerTest\Zed\MessageBroker\Plugin\IncomingMessageHandlerPlugin', $commandTester->getDisplay());
