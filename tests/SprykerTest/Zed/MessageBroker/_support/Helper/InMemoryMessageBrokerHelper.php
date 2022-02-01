@@ -108,6 +108,45 @@ class InMemoryMessageBrokerHelper extends Module
     }
 
     /**
+     * @param callable $callback
+     * @param string $messageName
+     *
+     * @return void
+     */
+    public function assertMessagesByCallbackForMessageName(callable $callback, string $messageName): void
+    {
+        $messages = $this->getMessagesByName($messageName);
+
+        $callback($messages);
+    }
+
+    /**
+     * @param string $messageName
+     *
+     * @return array<\Symfony\Component\Messenger\Envelope>
+     */
+    protected function getMessagesByName(string $messageName): array
+    {
+        $messages = [];
+
+        if (!method_exists($this->transport, 'getSent')) {
+            codecept_debug(sprintf('"%s" can only be used when the "%s" plugin is used.', __METHOD__, InMemoryMessageTransportPlugin::class));
+
+            return $messages;
+        }
+
+        foreach ($this->transport->getSent() as $message) {
+            $innerMessage = $message->getMessage();
+
+            if ($innerMessage instanceof $messageName) {
+                $messages[] = $message;
+            }
+        }
+
+        return $messages;
+    }
+
+    /**
      * @param string $messageName
      *
      * @return \Symfony\Component\Messenger\Envelope|null
