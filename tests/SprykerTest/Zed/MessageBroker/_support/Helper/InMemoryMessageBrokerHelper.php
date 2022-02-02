@@ -121,6 +121,14 @@ class InMemoryMessageBrokerHelper extends Module
     }
 
     /**
+     * @return void
+     */
+    public function resetInMemoryMessages(): void
+    {
+        $this->transportPlugin->reset();
+    }
+
+    /**
      * @param string $messageName
      *
      * @return array<\Symfony\Component\Messenger\Envelope>
