@@ -50,7 +50,7 @@ class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSe
      */
     public function reset()
     {
-        $this->sent = $this->queue = $this->rejected = $this->acknowledged = [];
+        $this->transport->reset();
     }
 
     /**
