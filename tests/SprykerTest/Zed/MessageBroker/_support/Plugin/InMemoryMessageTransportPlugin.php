@@ -46,6 +46,14 @@ class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSe
     }
 
     /**
+     * @return void
+     */
+    public function reset()
+    {
+        $this->sent = $this->queue = $this->rejected = $this->acknowledged = [];
+    }
+
+    /**
      * @param \Symfony\Component\Messenger\Envelope $envelope
      *
      * @return void
