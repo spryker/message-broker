@@ -46,14 +46,6 @@ class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSe
     }
 
     /**
-     * @return void
-     */
-    public function reset()
-    {
-        $this->transport->reset();
-    }
-
-    /**
      * @param \Symfony\Component\Messenger\Envelope $envelope
      *
      * @return void

@@ -125,7 +125,7 @@ class InMemoryMessageBrokerHelper extends Module
      */
     public function resetInMemoryMessages(): void
     {
-        $this->transportPlugin->reset();
+        $this->transport->reset();
     }
 
     /**
