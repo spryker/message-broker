@@ -7,32 +7,24 @@ channels:
         subscribe:
             message:
                 oneOf:
-                    -
-                        $ref: '#/components/messages/OutgoingMessage'
-                    -
-                        $ref: '#/components/messages/AnotherOutgoingMessage'
+                    - $ref: '#/components/messages/OutgoingMessage'
+                    - $ref: '#/components/messages/AnotherOutgoingMessage'
         publish:
             message:
                 oneOf:
-                    -
-                        $ref: '#/components/messages/IncomingMessage'
-                    -
-                        $ref: '#/components/messages/AnotherIncomingMessage'
+                    - $ref: '#/components/messages/IncomingMessage'
+                    - $ref: '#/components/messages/AnotherIncomingMessage'
     channelNameB:
         subscribe:
             message:
                 oneOf:
-                    -
-                        $ref: '#/components/messages/OutgoingMessage'
-                    -
-                        $ref: '#/components/messages/AnotherOutgoingMessage'
+                    - $ref: '#/components/messages/OutgoingMessage'
+                    - $ref: '#/components/messages/AnotherOutgoingMessage'
         publish:
             message:
                 oneOf:
-                    -
-                        $ref: '#/components/messages/IncomingMessage'
-                    -
-                        $ref: '#/components/messages/AnotherIncomingMessage'
+                    - $ref: '#/components/messages/IncomingMessage'
+                    - $ref: '#/components/messages/AnotherIncomingMessage'
 components:
     messages:
         OutgoingMessage:
