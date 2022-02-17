@@ -16,6 +16,7 @@ use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttribute
 use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface;
 use Spryker\Zed\MessageBroker\Business\MessageHandler\MessageHandlerLocator;
 use Spryker\Zed\MessageBroker\Business\MessageSender\MessageSenderLocator;
+use Spryker\Zed\MessageBroker\Business\Middleware\ValidationMiddleware;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisher;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
@@ -81,10 +82,10 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     public function getMiddlewares(): array
     {
-        return [
+        return array_merge($this->getMiddlewareValidatorPlugins(), [
             $this->createSendMessageMiddleware(),
-            $this->createHandleMessageMiddleware(),
-        ];
+            $this->createHandleMessageMiddleware()
+        ]);
     }
 
     /**
@@ -202,5 +203,13 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     public function createAsyncApiLoader(): AsyncApiLoaderInterface
     {
         return new AsyncApiLoader();
+    }
+
+    /**
+     * @return array<\Symfony\Component\Messenger\Middleware\MiddlewareInterface>
+     */
+    protected function getMiddlewareValidatorPlugins(): array
+    {
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MIDDLEWARE_VALIDATOR);
     }
 }

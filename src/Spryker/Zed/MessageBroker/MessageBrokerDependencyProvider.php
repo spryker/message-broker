@@ -42,6 +42,11 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     public const PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER = 'PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER';
 
     /**
+     * @var string
+     */
+    public const PLUGINS_MIDDLEWARE_VALIDATOR = 'PLUGINS_MIDDLEWARE_VALIDATOR';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -55,6 +60,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideMessageReceiverAdapterPlugins($container);
         $container = $this->provideMessageHandlerPlugins($container);
         $container = $this->provideMessageAttributeProviderPlugins($container);
+        $container = $this->provideMiddlewareValidatorPlugins($container);
 
         return $container;
     }
@@ -135,9 +141,31 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function provideMiddlewareValidatorPlugins(Container $container): Container
+    {
+        $container->set(static::PLUGINS_MIDDLEWARE_VALIDATOR, function () {
+            return $this->getMiddlewareValidatorPlugins();
+        });
+
+        return $container;
+    }
+
+    /**
      * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface>
      */
     public function getMessageHandlerPlugins(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array<\Symfony\Component\Messenger\Middleware\MiddlewareInterface>
+     */
+    public function getMiddlewareValidatorPlugins(): array
     {
         return [];
     }

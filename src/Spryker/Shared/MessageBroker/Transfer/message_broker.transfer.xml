@@ -8,6 +8,7 @@
         <property name="appIdentifier" type="string"/>
         <property name="timestamp" type="string"/>
         <property name="correlationId" type="string"/>
+        <property name="storeReference" type="string"/>
     </transfer>
 
     <transfer name="MessageBrokerWorkerConfig">
