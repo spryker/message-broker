@@ -9,6 +9,7 @@ namespace Spryker\Zed\MessageBroker;
 
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
+use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreBridge;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -44,7 +45,12 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @var string
      */
-    public const PLUGINS_MIDDLEWARE_VALIDATOR = 'PLUGINS_MIDDLEWARE_VALIDATOR';
+    public const PLUGINS_MIDDLEWARE = 'PLUGINS_MIDDLEWARE';
+
+    /**
+     * @var string
+     */
+    public const FACADE_STORE = 'FACADE_STORE';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -60,7 +66,8 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideMessageReceiverAdapterPlugins($container);
         $container = $this->provideMessageHandlerPlugins($container);
         $container = $this->provideMessageAttributeProviderPlugins($container);
-        $container = $this->provideMiddlewareValidatorPlugins($container);
+        $container = $this->provideMiddlewarePlugins($container);
+        $container = $this->addStoreFacade($container);
 
         return $container;
     }
@@ -145,10 +152,10 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function provideMiddlewareValidatorPlugins(Container $container): Container
+    protected function provideMiddlewarePlugins(Container $container): Container
     {
-        $container->set(static::PLUGINS_MIDDLEWARE_VALIDATOR, function () {
-            return $this->getMiddlewareValidatorPlugins();
+        $container->set(static::PLUGINS_MIDDLEWARE, function () {
+            return $this->getMiddlewarePlugins();
         });
 
         return $container;
@@ -165,7 +172,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @return array<\Symfony\Component\Messenger\Middleware\MiddlewareInterface>
      */
-    public function getMiddlewareValidatorPlugins(): array
+    public function getMiddlewarePlugins(): array
     {
         return [];
     }
@@ -190,5 +197,19 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     public function getMessageAttributeProviderPlugins(): array
     {
         return [];
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addStoreFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_STORE, function (Container $container) {
+            return new MessageBrokerToStoreBridge($container->getLocator()->store()->facade());
+        });
+
+        return $container;
     }
 }

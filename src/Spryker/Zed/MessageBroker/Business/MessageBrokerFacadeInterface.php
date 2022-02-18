@@ -51,4 +51,17 @@ interface MessageBrokerFacadeInterface
      * @return void
      */
     public function printDebug(OutputInterface $output, ?string $pathToAsyncApiFile = null): void;
+
+    /**
+     * Specification:
+     * - Checks if message can be handled.
+     * - Returns false if can\'t be handled and logs the reason.
+     *
+     * @api
+     *
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $message
+     *
+     * @return bool
+     */
+    public function canHandleMessage(TransferInterface $message): bool;
 }

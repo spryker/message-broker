@@ -16,11 +16,15 @@ use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttribute
 use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface;
 use Spryker\Zed\MessageBroker\Business\MessageHandler\MessageHandlerLocator;
 use Spryker\Zed\MessageBroker\Business\MessageSender\MessageSenderLocator;
-use Spryker\Zed\MessageBroker\Business\Middleware\ValidationMiddleware;
+use Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorInterface;
+use Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorStack;
+use Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorStackInterface;
+use Spryker\Zed\MessageBroker\Business\MessageValidator\StoreReferenceMessageValidator;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisher;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
+use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerSdk\AsyncApi\Loader\AsyncApiLoader;
 use SprykerSdk\AsyncApi\Loader\AsyncApiLoaderInterface;
@@ -82,9 +86,9 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     public function getMiddlewares(): array
     {
-        return array_merge($this->getMiddlewareValidatorPlugins(), [
+        return array_merge($this->getMiddlewarePlugins(), [
             $this->createSendMessageMiddleware(),
-            $this->createHandleMessageMiddleware()
+            $this->createHandleMessageMiddleware(),
         ]);
     }
 
@@ -206,10 +210,36 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorStackInterface
+     */
+    public function createMessageValidatorStack(): MessageValidatorStackInterface
+    {
+        return new MessageValidatorStack([
+            $this->createStoreReferenceMessageValidator(),
+        ]);
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorInterface
+     */
+    public function createStoreReferenceMessageValidator(): MessageValidatorInterface
+    {
+        return new StoreReferenceMessageValidator($this->getStoreFacade());
+    }
+
+    /**
      * @return array<\Symfony\Component\Messenger\Middleware\MiddlewareInterface>
      */
-    protected function getMiddlewareValidatorPlugins(): array
+    protected function getMiddlewarePlugins(): array
     {
-        return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MIDDLEWARE_VALIDATOR);
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MIDDLEWARE);
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface
+     */
+    protected function getStoreFacade(): MessageBrokerToStoreFacadeInterface
+    {
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::FACADE_STORE);
     }
 }

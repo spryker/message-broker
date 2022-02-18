@@ -60,4 +60,18 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
     {
         $this->getFactory()->createDebugPrinter()->printDebug($output, $pathToAsyncApiFile);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $message
+     *
+     * @return bool
+     */
+    public function canHandleMessage(TransferInterface $message): bool
+    {
+        return $this->getFactory()->createMessageValidatorStack()->isValidMessage($message);
+    }
 }
