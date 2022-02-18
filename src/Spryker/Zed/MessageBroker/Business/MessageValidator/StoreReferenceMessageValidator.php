@@ -41,7 +41,7 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
     public function isValidMessage(TransferInterface $message): bool
     {
         $storeReference = $this->getStoreReference();
-        if ($storeReference == $message->getMessageAttributes()->getStoreReference()) {
+        if ($storeReference !== $message->getMessageAttributes()->getStoreReference()) {
             $this->getLogger()->error(static::VALIDATION_ERROR_STORE_REFERENCE_ERROR, [
                 'message' => $message->toArray(),
                 'storeReference' => $storeReference,
