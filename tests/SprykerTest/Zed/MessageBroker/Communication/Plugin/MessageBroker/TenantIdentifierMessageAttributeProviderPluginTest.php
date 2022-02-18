@@ -36,7 +36,7 @@ class TenantIdentifierMessageAttributeProviderPluginTest extends Unit
     public function testProvideMessageAttributesAddsTenantIdentifierWhenItExists(): void
     {
         // Arrange
-        putenv(sprintf('AOP_TENANT_IDENTIFIER=%s', static::TENANT_IDENTIFIER));
+        putenv(sprintf('TENANT_IDENTIFIER=%s', static::TENANT_IDENTIFIER));
 
         $messageAttributesTransfer = new MessageAttributesTransfer();
         $tenantIdentifierMessageAttributeProviderPlugin = new TenantIdentifierMessageAttributeProviderPlugin();
@@ -46,7 +46,7 @@ class TenantIdentifierMessageAttributeProviderPluginTest extends Unit
 
         // Assert
         $this->assertSame(static::TENANT_IDENTIFIER, $messageAttributesTransfer->getTenantIdentifier());
-        putenv('AOP_TENANT_IDENTIFIER');
+        putenv('TENANT_IDENTIFIER');
     }
 
     /**

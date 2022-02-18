@@ -28,8 +28,11 @@ class StoreReferenceMessageAttributeProviderPlugin extends AbstractPlugin implem
      */
     public function provideMessageAttributes(MessageAttributesTransfer $messageAttributesTransfer): MessageAttributesTransfer
     {
-        $storeReference = $this->getFacade()->buildStoreReference();
+        if (!getenv('TENANT_IDENTIFIER')) {
+            return $messageAttributesTransfer;
+        }
 
+        $storeReference = $this->getFacade()->buildStoreReference();
         $messageAttributesTransfer->setStoreReference($storeReference);
 
         return $messageAttributesTransfer;
