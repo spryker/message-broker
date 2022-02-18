@@ -74,4 +74,16 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
     {
         return $this->getFactory()->createMessageValidatorStack()->isValidMessage($message);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function buildStoreReference(): string
+    {
+        return $this->getFactory()->createStoreReferenceBuilder()->buildStoreReference();
+    }
 }

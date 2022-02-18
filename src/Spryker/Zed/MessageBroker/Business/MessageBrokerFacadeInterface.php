@@ -64,4 +64,14 @@ interface MessageBrokerFacadeInterface
      * @return bool
      */
     public function canHandleMessage(TransferInterface $message): bool;
+
+    /**
+     * Specification:
+     * - Builds a storeReference string wich consist of currentStoreName and tenantIdentifier from env.
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function buildStoreReference(): string;
 }

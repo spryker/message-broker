@@ -9,7 +9,7 @@ namespace Spryker\Zed\MessageBroker\Business\MessageValidator;
 
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Shared\Log\LoggerTrait;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
+use Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface;
 
 class StoreReferenceMessageValidator implements MessageValidatorInterface
 {
@@ -21,16 +21,16 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
     protected const VALIDATION_ERROR_STORE_REFERENCE_ERROR = 'Invalid storeReference in message for current queue.';
 
     /**
-     * @var \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface
+     * @var \Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface
      */
-    protected $storeFacade;
+    protected $storeReferenceBuilder;
 
     /**
-     * @param \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface $storeFacade
+     * @param \Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface $storeReferenceBuilder
      */
-    public function __construct(MessageBrokerToStoreFacadeInterface $storeFacade)
+    public function __construct(StoreReferenceBuilderInterface $storeReferenceBuilder)
     {
-        $this->storeFacade = $storeFacade;
+        $this->storeReferenceBuilder = $storeReferenceBuilder;
     }
 
     /**
@@ -40,7 +40,7 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
      */
     public function isValidMessage(TransferInterface $message): bool
     {
-        $storeReference = $this->getStoreReference();
+        $storeReference = $this->storeReferenceBuilder->buildStoreReference();
         if ($storeReference !== $message->getMessageAttributes()->getStoreReference()) {
             $this->getLogger()->error(static::VALIDATION_ERROR_STORE_REFERENCE_ERROR, [
                 'message' => $message->toArray(),
@@ -51,13 +51,5 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
         }
 
         return true;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getStoreReference(): string
-    {
-        return $this->storeFacade->getCurrentStore()->getName() . '_' . getenv('TENANT_IDENTIFIER');
     }
 }
