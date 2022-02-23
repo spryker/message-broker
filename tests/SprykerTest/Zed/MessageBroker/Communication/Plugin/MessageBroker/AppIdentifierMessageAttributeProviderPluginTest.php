@@ -45,7 +45,7 @@ class AppIdentifierMessageAttributeProviderPluginTest extends Unit
         $messageAttributesTransfer = $appIdentifierMessageAttributeProviderPlugin->provideMessageAttributes($messageAttributesTransfer);
 
         // Assert
-        $this->assertSame(static::APP_IDENTIFIER, $messageAttributesTransfer->getAppIdentifier());
+        $this->assertSame(static::APP_IDENTIFIER, $messageAttributesTransfer->getPublisher()->getAppIdentifier());
         putenv('AOP_APP_IDENTIFIER');
     }
 
@@ -62,6 +62,6 @@ class AppIdentifierMessageAttributeProviderPluginTest extends Unit
         $messageAttributesTransfer = $appIdentifierMessageAttributeProviderPlugin->provideMessageAttributes($messageAttributesTransfer);
 
         // Assert
-        $this->assertNull($messageAttributesTransfer->getAppIdentifier());
+        $this->assertNull($messageAttributesTransfer->getPublisher());
     }
 }

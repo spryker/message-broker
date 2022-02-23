@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker;
 
 use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Generated\Shared\Transfer\PublisherTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageAttributeProviderPluginInterface;
 
@@ -34,6 +35,9 @@ class StoreReferenceMessageAttributeProviderPlugin extends AbstractPlugin implem
 
         $storeReference = $this->getFacade()->buildStoreReference();
         $messageAttributesTransfer->setStoreReference($storeReference);
+
+        $publisher = $messageAttributesTransfer->getPublisher() ?? new PublisherTransfer();
+        $messageAttributesTransfer->setPublisher($publisher->setStoreReference($storeReference));
 
         return $messageAttributesTransfer;
     }

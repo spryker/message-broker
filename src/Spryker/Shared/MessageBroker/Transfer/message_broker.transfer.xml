@@ -4,11 +4,15 @@
     <transfer name="MessageAttributes">
         <property name="transferName" type="string"/>
         <property name="event" type="string"/>
-        <property name="tenantIdentifier" type="string"/>
-        <property name="appIdentifier" type="string"/>
+        <property name="storeReference" type="string"/>
+        <property name="publisher" type="Publisher"/>
         <property name="timestamp" type="string"/>
         <property name="correlationId" type="string"/>
+    </transfer>
+
+    <transfer name="Publisher">
         <property name="storeReference" type="string"/>
+        <property name="appIdentifier" type="string"/>
     </transfer>
 
     <transfer name="MessageBrokerWorkerConfig">
@@ -30,6 +34,10 @@
     </transfer>
 
     <transfer name="AnotherOutgoingMessage">
+    </transfer>
+
+    <transfer name="Store">
+        <property name="name" type="string"/>
     </transfer>
 
 </transfers>

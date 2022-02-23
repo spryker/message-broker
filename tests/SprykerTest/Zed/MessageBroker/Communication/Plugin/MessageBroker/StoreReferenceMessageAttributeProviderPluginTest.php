@@ -10,11 +10,9 @@ namespace SprykerTest\Zed\MessageBroker\Communication\Plugin\MessageBroker;
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
-use Pyz\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\StoreReferenceMessageAttributeProviderPlugin;
-use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\TenantIdentifierMessageAttributeProviderPlugin;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreBridge;
-use Spryker\Zed\Store\Business\StoreFacade;
+use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester;
 
 /**
@@ -35,6 +33,10 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
      * @var string
      */
     protected const TENANT_IDENTIFIER = 'foo';
+
+    /**
+     * @var string
+     */
     protected const STORE_NAME = 'boo';
 
     /**
@@ -53,10 +55,10 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
         $this->mockStoreFacadeDefaultStore();
 
         $messageAttributesTransfer = new MessageAttributesTransfer();
-        $tenantIdentifierMessageAttributeProviderPlugin = new StoreReferenceMessageAttributeProviderPlugin();
+        $storeReferenceMessageAttributeProviderPlugin = new StoreReferenceMessageAttributeProviderPlugin();
 
         // Act
-        $messageAttributesTransfer = $tenantIdentifierMessageAttributeProviderPlugin->provideMessageAttributes($messageAttributesTransfer);
+        $messageAttributesTransfer = $storeReferenceMessageAttributeProviderPlugin->provideMessageAttributes($messageAttributesTransfer);
 
         // Assert
         $this->assertSame(static::STORE_NAME . '_' . static::TENANT_IDENTIFIER, $messageAttributesTransfer->getStoreReference());
@@ -70,10 +72,10 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
     {
         // Arrange
         $messageAttributesTransfer = new MessageAttributesTransfer();
-        $tenantIdentifierMessageAttributeProviderPlugin = new StoreReferenceMessageAttributeProviderPlugin();
+        $storeReferenceMessageAttributeProviderPlugin = new StoreReferenceMessageAttributeProviderPlugin();
 
         // Act
-        $messageAttributesTransfer = $tenantIdentifierMessageAttributeProviderPlugin->provideMessageAttributes($messageAttributesTransfer);
+        $messageAttributesTransfer = $storeReferenceMessageAttributeProviderPlugin->provideMessageAttributes($messageAttributesTransfer);
 
         // Assert
         $this->assertNull($messageAttributesTransfer->getStoreReference());
