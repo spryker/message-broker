@@ -7,6 +7,10 @@
 
 namespace Spryker\Zed\MessageBroker\Business;
 
+use Monolog\Handler\HandlerInterface;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBroker\Business\Config\JsonToArrayConfigFormatter;
@@ -37,6 +41,11 @@ use Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface;
  */
 class MessageBrokerBusinessFactory extends AbstractBusinessFactory
 {
+    /**
+     * @var string
+     */
+    protected const LOGGER_NAME = 'messageBrokerLogger';
+
     /**
      * @return \Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface
      */
@@ -162,6 +171,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
             $this->getMessageReceiverPlugins(),
             $this->createMessageBus(),
             $this->getEventDispatcher(),
+            $this->createLogger()
         );
     }
 
@@ -202,5 +212,30 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     public function createAsyncApiLoader(): AsyncApiLoaderInterface
     {
         return new AsyncApiLoader();
+    }
+
+    /**
+     * @return \Psr\Log\LoggerInterface|null
+     */
+    public function createLogger(): ?LoggerInterface
+    {
+        if (!$this->getConfig()->isLoggingEnabled()) {
+            return null;
+        }
+
+        $logger = new Logger(static::LOGGER_NAME);
+        $logger->pushHandler(
+            $this->createStreamHandler(),
+        );
+
+        return $logger;
+    }
+
+    /**
+     * @return \Monolog\Handler\HandlerInterface
+     */
+    public function createStreamHandler(): HandlerInterface
+    {
+        return new StreamHandler($this->getConfig()->getLogFilePath());
     }
 }

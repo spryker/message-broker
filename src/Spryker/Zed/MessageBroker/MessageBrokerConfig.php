@@ -55,4 +55,20 @@ class MessageBrokerConfig extends AbstractBundleConfig
 
         return [];
     }
+
+    /**
+     * @return bool
+     */
+    public function isLoggingEnabled(): bool
+    {
+        return $this->get(MessageBrokerConstants::LOGGING_ENABLED, false);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogFilePath(): string
+    {
+        return sprintf('%s/data/logs/message_broker_%s.log', APPLICATION_ROOT_DIR, APPLICATION_STORE);
+    }
 }
