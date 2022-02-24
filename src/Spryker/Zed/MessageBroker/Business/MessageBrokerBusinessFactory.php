@@ -171,7 +171,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
             $this->getMessageReceiverPlugins(),
             $this->createMessageBus(),
             $this->getEventDispatcher(),
-            $this->createLogger()
+            $this->createLogger(),
         );
     }
 

@@ -57,6 +57,10 @@ class MessageBrokerConfig extends AbstractBundleConfig
     }
 
     /**
+     * This configuration enables loggin for worker.
+     *
+     * @api
+     *
      * @return bool
      */
     public function isLoggingEnabled(): bool
@@ -65,6 +69,10 @@ class MessageBrokerConfig extends AbstractBundleConfig
     }
 
     /**
+     * This configuration defines log file path.
+     *
+     * @api
+     *
      * @return string
      */
     public function getLogFilePath(): string
