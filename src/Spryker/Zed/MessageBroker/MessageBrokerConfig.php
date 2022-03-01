@@ -55,4 +55,28 @@ class MessageBrokerConfig extends AbstractBundleConfig
 
         return [];
     }
+
+    /**
+     * This configuration enables loggin for worker.
+     *
+     * @api
+     *
+     * @return bool
+     */
+    public function isLoggingEnabled(): bool
+    {
+        return $this->get(MessageBrokerConstants::LOGGING_ENABLED, false);
+    }
+
+    /**
+     * This configuration defines log file path.
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getLogFilePath(): string
+    {
+        return sprintf('%s/data/logs/message_broker_%s.log', APPLICATION_ROOT_DIR, APPLICATION_STORE);
+    }
 }
