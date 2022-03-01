@@ -14,7 +14,7 @@ class MessageValidatorStack implements MessageValidatorStackInterface
     /**
      * @var array<\Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorInterface>
      */
-    protected $messageValidators;
+    protected array $messageValidators;
 
     /**
      * @param array<\Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorInterface> $messageValidators
@@ -25,15 +25,15 @@ class MessageValidatorStack implements MessageValidatorStackInterface
     }
 
     /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $message
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
      * @return bool
      */
-    public function isValidMessage(TransferInterface $message): bool
+    public function isValidMessage(TransferInterface $messageTransfer): bool
     {
         $isValidMessage = true;
         foreach ($this->messageValidators as $messageValidator) {
-            $isValidMessage = $messageValidator->isValidMessage($message);
+            $isValidMessage = $messageValidator->isValid($messageTransfer);
 
             if (!$isValidMessage) {
                 $isValidMessage = false;

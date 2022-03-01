@@ -18,12 +18,12 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
     /**
      * @var string
      */
-    protected const VALIDATION_ERROR_STORE_REFERENCE_ERROR = 'Invalid storeReference in message for current queue.';
+    protected const VALIDATION_ERROR_STORE_REFERENCE_ERROR = 'Invalid storeReference in message "%s"';
 
     /**
      * @var \Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface
      */
-    protected $storeReferenceBuilder;
+    protected StoreReferenceBuilderInterface $storeReferenceBuilder;
 
     /**
      * @param \Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface $storeReferenceBuilder
@@ -34,18 +34,21 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
     }
 
     /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $message
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
      * @return bool
      */
-    public function isValidMessage(TransferInterface $message): bool
+    public function isValid(TransferInterface $messageTransfer): bool
     {
         $storeReference = $this->storeReferenceBuilder->buildStoreReference();
-        if ($storeReference !== $message->getMessageAttributes()->getStoreReference()) {
-            $this->getLogger()->error(static::VALIDATION_ERROR_STORE_REFERENCE_ERROR, [
-                'message' => $message->toArray(),
-                'storeReference' => $storeReference,
-            ]);
+        if ($storeReference !== $messageTransfer->getMessageAttributes()->getStoreReference()) {
+            $this->getLogger()->error(
+                sprintf(static::VALIDATION_ERROR_STORE_REFERENCE_ERROR, get_class($messageTransfer)),
+                [
+                    'message' => $messageTransfer->toArray(),
+                    'storeReference' => $storeReference,
+                ]
+            );
 
             return false;
         }

@@ -14,7 +14,7 @@ class MessageBrokerToStoreBridge implements MessageBrokerToStoreFacadeInterface
     /**
      * @var \Spryker\Zed\Store\Business\StoreFacadeInterface
      */
-    protected $storeFacade;
+    protected StoreFacadeInterface $storeFacade;
 
     /**
      * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade

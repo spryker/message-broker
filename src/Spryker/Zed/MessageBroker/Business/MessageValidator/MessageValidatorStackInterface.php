@@ -12,9 +12,9 @@ use Spryker\Shared\Kernel\Transfer\TransferInterface;
 interface MessageValidatorStackInterface
 {
     /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $message
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
      * @return bool
      */
-    public function isValidMessage(TransferInterface $message): bool;
+    public function isValidMessage(TransferInterface $messageTransfer): bool;
 }
