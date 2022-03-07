@@ -52,6 +52,7 @@ $config[MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP] = [
     PaymentMethodTransfer::class => 'payment',
 ];
 
+
 $config[MessageBrokerAwsConstants::MESSAGE_TO_CHANNEL_MAP] = [
     PaymentMethodTransfer::class => 'payment',
 ];
