@@ -12,6 +12,7 @@ use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\StoreReferenceMessageAttributeProviderPlugin;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreBridge;
+use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceBridge;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester;
 
@@ -32,12 +33,17 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
     /**
      * @var string
      */
-    protected const TENANT_IDENTIFIER = 'foo';
+    protected const STORE_NAME_REFERENCE_MAP = '{"boo":"development_test-boo","foo":"development_test-foo"}';
 
     /**
      * @var string
      */
     protected const STORE_NAME = 'boo';
+
+    /**
+     * @var string
+     */
+    protected const STORE_REFERENCE_NAME = 'development_test-boo';
 
     /**
      * @var \SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester
@@ -50,9 +56,10 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
     public function testProvideMessageAttributesAddsStoreReferenceWhenItExists(): void
     {
         // Arrange
-        putenv(sprintf('TENANT_IDENTIFIER=%s', static::TENANT_IDENTIFIER));
+        putenv(sprintf('STORE_NAME_REFERENCE_MAP=%s', static::STORE_NAME_REFERENCE_MAP));
 
         $this->mockStoreFacadeDefaultStore();
+        $this->mockStoreReferenceFacadeDefaultStore();
 
         $messageAttributesTransfer = new MessageAttributesTransfer();
         $storeReferenceMessageAttributeProviderPlugin = new StoreReferenceMessageAttributeProviderPlugin();
@@ -61,8 +68,8 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
         $messageAttributesTransfer = $storeReferenceMessageAttributeProviderPlugin->provideMessageAttributes($messageAttributesTransfer);
 
         // Assert
-        $this->assertSame(static::STORE_NAME . '_' . static::TENANT_IDENTIFIER, $messageAttributesTransfer->getStoreReference());
-        putenv('TENANT_IDENTIFIER');
+        $this->assertSame(static::STORE_REFERENCE_NAME, $messageAttributesTransfer->getStoreReference());
+        putenv('STORE_NAME_REFERENCE_MAP');
     }
 
     /**
@@ -94,5 +101,20 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
         );
 
         $this->tester->setDependency(MessageBrokerDependencyProvider::FACADE_STORE, $storeFacadeMock);
+    }
+
+    /**
+     * @return void
+     */
+    protected function mockStoreReferenceFacadeDefaultStore(): void
+    {
+        $storeFacadeReferenceMock = $this->getMockBuilder(MessageBrokerToStoreReferenceBridge::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $storeFacadeReferenceMock->method('getStoreByStoreName')->willReturn(
+            (new StoreTransfer())->setStoreReference(static::STORE_REFERENCE_NAME),
+        );
+
+        $this->tester->setDependency(MessageBrokerDependencyProvider::FACADE_STORE_REFERENCE, $storeFacadeReferenceMock);
     }
 }
