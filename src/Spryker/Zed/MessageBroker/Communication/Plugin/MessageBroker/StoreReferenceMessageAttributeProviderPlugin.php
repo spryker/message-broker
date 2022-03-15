@@ -29,7 +29,7 @@ class StoreReferenceMessageAttributeProviderPlugin extends AbstractPlugin implem
      */
     public function provideMessageAttributes(MessageAttributesTransfer $messageAttributesTransfer): MessageAttributesTransfer
     {
-        if (!getenv('TENANT_IDENTIFIER')) {
+        if (!getenv('STORE_NAME_REFERENCE_MAP')) {
             return $messageAttributesTransfer;
         }
 

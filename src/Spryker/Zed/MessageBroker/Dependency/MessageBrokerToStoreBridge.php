@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Dependency;
 
 use Generated\Shared\Transfer\StoreTransfer;
+use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 class MessageBrokerToStoreBridge implements MessageBrokerToStoreFacadeInterface
 {

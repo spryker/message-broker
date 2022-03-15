@@ -10,6 +10,7 @@ namespace Spryker\Zed\MessageBroker;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreBridge;
+use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceBridge;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -53,6 +54,11 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     public const FACADE_STORE = 'FACADE_STORE';
 
     /**
+     * @var string
+     */
+    public const FACADE_STORE_REFERENCE = 'FACADE_STORE_REFERENCE';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -68,6 +74,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideMessageAttributeProviderPlugins($container);
         $container = $this->provideMiddlewarePlugins($container);
         $container = $this->addStoreFacade($container);
+        $container = $this->addStoreReferenceFacade($container);
 
         return $container;
     }
@@ -208,6 +215,20 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_STORE, function (Container $container) {
             return new MessageBrokerToStoreBridge($container->getLocator()->store()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addStoreReferenceFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_STORE_REFERENCE, function (Container $container) {
+            return new MessageBrokerToStoreReferenceBridge($container->getLocator()->storeReference()->facade());
         });
 
         return $container;

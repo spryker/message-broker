@@ -31,6 +31,7 @@ use Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuild
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
+use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerSdk\AsyncApi\Loader\AsyncApiLoader;
 use SprykerSdk\AsyncApi\Loader\AsyncApiLoaderInterface;
@@ -256,11 +257,22 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface
+     */
+    protected function getStoreReferenceFacade(): MessageBrokerToStoreReferenceFacadeInterface
+    {
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::FACADE_STORE_REFERENCE);
+    }
+
+    /**
      * @return \Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface
      */
     public function createStoreReferenceBuilder(): StoreReferenceBuilderInterface
     {
-        return new StoreReferenceBuilder($this->getStoreFacade());
+        return new StoreReferenceBuilder(
+            $this->getStoreFacade(),
+            $this->getStoreReferenceFacade()
+        );
     }
 
     /**

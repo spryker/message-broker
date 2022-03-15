@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder;
 
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
+use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface;
 
 class StoreReferenceBuilder implements StoreReferenceBuilderInterface
 {
@@ -17,11 +18,20 @@ class StoreReferenceBuilder implements StoreReferenceBuilderInterface
     protected $storeFacade;
 
     /**
+     * @var \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface
+     */
+    protected $storeReferenceFacade;
+
+    /**
      * @param \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface $storeFacade
      */
-    public function __construct(MessageBrokerToStoreFacadeInterface $storeFacade)
+    public function __construct(
+        MessageBrokerToStoreFacadeInterface $storeFacade,
+        MessageBrokerToStoreReferenceFacadeInterface $storeReferenceFacade
+    )
     {
         $this->storeFacade = $storeFacade;
+        $this->storeReferenceFacade = $storeReferenceFacade;
     }
 
     /**
@@ -29,6 +39,9 @@ class StoreReferenceBuilder implements StoreReferenceBuilderInterface
      */
     public function buildStoreReference(): string
     {
-        return $this->storeFacade->getCurrentStore()->getName() . '_' . getenv('TENANT_IDENTIFIER');
+        $storeName = $this->storeFacade->getCurrentStore()->getName();
+        $store = $this->storeReferenceFacade->getStoreByStoreName($storeName);
+
+        return $store->getStoreReference();
     }
 }
