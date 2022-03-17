@@ -1,11 +1,16 @@
 <?php
 
+/**
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
+
 namespace Spryker\Zed\MessageBroker\Dependency;
 
 use Generated\Shared\Transfer\StoreTransfer;
 use Spryker\Zed\StoreReference\Business\StoreReferenceFacadeInterface;
 
-class MessageBrokerToStoreReferenceBridge implements MessageBrokerToStoreReferenceFacadeInterface
+class MessageBrokerToStoreReferenceFacadeBridge implements MessageBrokerToStoreReferenceFacadeInterface
 {
     /**
      * @var \Spryker\Zed\StoreReference\Business\StoreReferenceFacadeInterface

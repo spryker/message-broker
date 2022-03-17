@@ -47,7 +47,7 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
                 [
                     'message' => $messageTransfer->toArray(),
                     'storeReference' => $storeReference,
-                ]
+                ],
             );
 
             return false;

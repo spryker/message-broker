@@ -271,7 +271,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     {
         return new StoreReferenceBuilder(
             $this->getStoreFacade(),
-            $this->getStoreReferenceFacade()
+            $this->getStoreReferenceFacade(),
         );
     }
 

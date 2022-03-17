@@ -24,12 +24,12 @@ class StoreReferenceBuilder implements StoreReferenceBuilderInterface
 
     /**
      * @param \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface $storeFacade
+     * @param \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface $storeReferenceFacade
      */
     public function __construct(
         MessageBrokerToStoreFacadeInterface $storeFacade,
         MessageBrokerToStoreReferenceFacadeInterface $storeReferenceFacade
-    )
-    {
+    ) {
         $this->storeFacade = $storeFacade;
         $this->storeReferenceFacade = $storeReferenceFacade;
     }

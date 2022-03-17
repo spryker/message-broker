@@ -11,8 +11,8 @@ use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\StoreReferenceMessageAttributeProviderPlugin;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreBridge;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceBridge;
+use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeBridge;
+use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeBridge;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester;
 
@@ -93,7 +93,7 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
      */
     protected function mockStoreFacadeDefaultStore(): void
     {
-        $storeFacadeMock = $this->getMockBuilder(MessageBrokerToStoreBridge::class)
+        $storeFacadeMock = $this->getMockBuilder(MessageBrokerToStoreFacadeBridge::class)
             ->disableOriginalConstructor()
             ->getMock();
         $storeFacadeMock->method('getCurrentStore')->willReturn(
@@ -108,7 +108,7 @@ class StoreReferenceMessageAttributeProviderPluginTest extends Unit
      */
     protected function mockStoreReferenceFacadeDefaultStore(): void
     {
-        $storeFacadeReferenceMock = $this->getMockBuilder(MessageBrokerToStoreReferenceBridge::class)
+        $storeFacadeReferenceMock = $this->getMockBuilder(MessageBrokerToStoreReferenceFacadeBridge::class)
             ->disableOriginalConstructor()
             ->getMock();
         $storeFacadeReferenceMock->method('getStoreByStoreName')->willReturn(
