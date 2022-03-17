@@ -40,8 +40,8 @@ class StoreReferenceBuilder implements StoreReferenceBuilderInterface
     public function buildStoreReference(): string
     {
         $storeName = $this->storeFacade->getCurrentStore()->getName();
-        $store = $this->storeReferenceFacade->getStoreByStoreName($storeName);
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreName($storeName);
 
-        return $store->getStoreReference();
+        return $storeTransfer->getStoreReference();
     }
 }
