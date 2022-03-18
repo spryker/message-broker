@@ -32,6 +32,7 @@ use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface;
+use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerSdk\AsyncApi\Loader\AsyncApiLoader;
 use SprykerSdk\AsyncApi\Loader\AsyncApiLoaderInterface;
@@ -131,7 +132,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     public function createConfigFormatter(): ConfigFormatterInterface
     {
-        return new JsonToArrayConfigFormatter();
+        return new JsonToArrayConfigFormatter($this->getUtilEncodingService());
     }
 
     /**
@@ -262,6 +263,14 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     protected function getStoreReferenceFacade(): MessageBrokerToStoreReferenceFacadeInterface
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::FACADE_STORE_REFERENCE);
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface
+     */
+    protected function getUtilEncodingService(): MessageBrokerToUtilEncodingServiceInterface
+    {
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::SERVICE_UTIL_ENCODING);
     }
 
     /**

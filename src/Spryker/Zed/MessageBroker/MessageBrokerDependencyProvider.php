@@ -11,6 +11,7 @@ use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeBridge;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeBridge;
+use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceBridge;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -59,6 +60,11 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     public const FACADE_STORE_REFERENCE = 'FACADE_STORE_REFERENCE';
 
     /**
+     * @var string
+     */
+    public const SERVICE_UTIL_ENCODING = 'SERVICE_UTIL_ENCODING';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -75,6 +81,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideMiddlewarePlugins($container);
         $container = $this->addStoreFacade($container);
         $container = $this->addStoreReferenceFacade($container);
+        $container = $this->addUtilEncodingService($container);
 
         return $container;
     }
@@ -229,6 +236,22 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_STORE_REFERENCE, function (Container $container) {
             return new MessageBrokerToStoreReferenceFacadeBridge($container->getLocator()->storeReference()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addUtilEncodingService(Container $container): Container
+    {
+        $container->set(static::SERVICE_UTIL_ENCODING, function (Container $container) {
+            return new MessageBrokerToUtilEncodingServiceBridge(
+                $container->getLocator()->utilEncoding()->service(),
+            );
         });
 
         return $container;

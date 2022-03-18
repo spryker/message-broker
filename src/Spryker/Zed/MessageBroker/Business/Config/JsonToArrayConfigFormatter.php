@@ -7,23 +7,40 @@
 
 namespace Spryker\Zed\MessageBroker\Business\Config;
 
-use Exception;
+use Spryker\Zed\MessageBroker\Business\Exception\ConfigDecodingFailedException;
+use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface;
 
 class JsonToArrayConfigFormatter implements ConfigFormatterInterface
 {
     /**
+     * @var \Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface
+     */
+    protected $utilEncodingService;
+
+    /**
+     * @param \Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface $utilEncodingService
+     */
+    public function __construct(MessageBrokerToUtilEncodingServiceInterface $utilEncodingService)
+    {
+        $this->utilEncodingService = $utilEncodingService;
+    }
+
+    /**
      * @param string $config
      *
-     * @throws \Exception
+     * @throws \Spryker\Zed\MessageBroker\Business\Exception\ConfigDecodingFailedException
      *
      * @return array<string, mixed>
      */
     public function format(string $config): array
     {
-        $formattedConfig = json_decode(html_entity_decode($config, ENT_QUOTES), true);
+        $formattedConfig = $this->utilEncodingService->decodeJson(
+            html_entity_decode($config, ENT_QUOTES),
+            true,
+        );
 
-        if (json_last_error()) {
-            throw new Exception(json_last_error_msg());
+        if (!$formattedConfig) {
+            throw new ConfigDecodingFailedException();
         }
 
         return $formattedConfig;
