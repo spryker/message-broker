@@ -26,8 +26,8 @@ use Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorStackInt
 use Spryker\Zed\MessageBroker\Business\MessageValidator\StoreReferenceMessageValidator;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisher;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
-use Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilder;
-use Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface;
+use Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver\StoreReferenceReceiver;
+use Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver\StoreReferenceReceiverInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
@@ -237,7 +237,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     public function createStoreReferenceMessageValidator(): MessageValidatorInterface
     {
-        return new StoreReferenceMessageValidator($this->createStoreReferenceBuilder());
+        return new StoreReferenceMessageValidator($this->createStoreReferenceReceiver());
     }
 
     /**
@@ -265,11 +265,11 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface
+     * @return \Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver\StoreReferenceReceiverInterface
      */
-    public function createStoreReferenceBuilder(): StoreReferenceBuilderInterface
+    public function createStoreReferenceReceiver(): StoreReferenceReceiverInterface
     {
-        return new StoreReferenceBuilder(
+        return new StoreReferenceReceiver(
             $this->getStoreFacade(),
             $this->getStoreReferenceFacade(),
         );

@@ -9,7 +9,7 @@ namespace Spryker\Zed\MessageBroker\Business\MessageValidator;
 
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Shared\Log\LoggerTrait;
-use Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface;
+use Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver\StoreReferenceReceiverInterface;
 
 class StoreReferenceMessageValidator implements MessageValidatorInterface
 {
@@ -21,16 +21,16 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
     protected const VALIDATION_ERROR_STORE_REFERENCE_ERROR = 'Invalid storeReference in message "%s"';
 
     /**
-     * @var \Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface
+     * @var \Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver\StoreReferenceReceiverInterface
      */
-    protected StoreReferenceBuilderInterface $storeReferenceBuilder;
+    protected StoreReferenceReceiverInterface $storeReferenceReceiver;
 
     /**
-     * @param \Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder\StoreReferenceBuilderInterface $storeReferenceBuilder
+     * @param \Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver\StoreReferenceReceiverInterface $storeReferenceReceiver
      */
-    public function __construct(StoreReferenceBuilderInterface $storeReferenceBuilder)
+    public function __construct(StoreReferenceReceiverInterface $storeReferenceReceiver)
     {
-        $this->storeReferenceBuilder = $storeReferenceBuilder;
+        $this->storeReferenceReceiver = $storeReferenceReceiver;
     }
 
     /**
@@ -40,7 +40,7 @@ class StoreReferenceMessageValidator implements MessageValidatorInterface
      */
     public function isValid(TransferInterface $messageTransfer): bool
     {
-        $storeReference = $this->storeReferenceBuilder->buildStoreReference();
+        $storeReference = $this->storeReferenceReceiver->getStoreReference();
         if ($storeReference !== $messageTransfer->getMessageAttributes()->getStoreReference()) {
             $this->getLogger()->error(
                 sprintf(static::VALIDATION_ERROR_STORE_REFERENCE_ERROR, get_class($messageTransfer)),

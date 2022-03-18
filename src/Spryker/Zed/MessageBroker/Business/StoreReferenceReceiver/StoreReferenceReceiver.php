@@ -5,12 +5,12 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder;
+namespace Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver;
 
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
 use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface;
 
-class StoreReferenceBuilder implements StoreReferenceBuilderInterface
+class StoreReferenceReceiver implements StoreReferenceReceiverInterface
 {
     /**
      * @var \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface
@@ -37,7 +37,7 @@ class StoreReferenceBuilder implements StoreReferenceBuilderInterface
     /**
      * @return string
      */
-    public function buildStoreReference(): string
+    public function getStoreReference(): string
     {
         $storeName = $this->storeFacade->getCurrentStore()->getName();
         $storeTransfer = $this->storeReferenceFacade->getStoreByStoreName($storeName);

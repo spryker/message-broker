@@ -33,7 +33,7 @@ class StoreReferenceMessageAttributeProviderPlugin extends AbstractPlugin implem
             return $messageAttributesTransfer;
         }
 
-        $storeReference = $this->getFacade()->buildStoreReference();
+        $storeReference = $this->getFacade()->getStoreReference();
         $messageAttributesTransfer->setStoreReference($storeReference);
 
         $publisher = $messageAttributesTransfer->getPublisher() ?? new PublisherTransfer();

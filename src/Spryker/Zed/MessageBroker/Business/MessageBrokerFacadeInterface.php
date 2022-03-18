@@ -73,5 +73,5 @@ interface MessageBrokerFacadeInterface
      *
      * @return string
      */
-    public function buildStoreReference(): string;
+    public function getStoreReference(): string;
 }

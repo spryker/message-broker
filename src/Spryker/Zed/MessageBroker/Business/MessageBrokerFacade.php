@@ -82,8 +82,8 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @return string
      */
-    public function buildStoreReference(): string
+    public function getStoreReference(): string
     {
-        return $this->getFactory()->createStoreReferenceBuilder()->buildStoreReference();
+        return $this->getFactory()->createStoreReferenceReceiver()->getStoreReference();
     }
 }

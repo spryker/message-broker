@@ -20,7 +20,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
      */
     public function format(string $config): array
     {
-        $formattedConfig = json_decode($config, true);
+        $formattedConfig = json_decode(html_entity_decode($config, ENT_QUOTES), true);
 
         if (json_last_error()) {
             throw new Exception(json_last_error_msg());

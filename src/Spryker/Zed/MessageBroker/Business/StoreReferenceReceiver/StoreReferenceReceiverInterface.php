@@ -5,12 +5,12 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBroker\Business\StoreReferenceBuilder;
+namespace Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver;
 
-interface StoreReferenceBuilderInterface
+interface StoreReferenceReceiverInterface
 {
     /**
      * @return string
      */
-    public function buildStoreReference(): string;
+    public function getStoreReference(): string;
 }

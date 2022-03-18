@@ -50,8 +50,8 @@ class InMemoryMessageBrokerHelper extends Module
         $this->transport = null;
         $this->transportPlugin = null;
 
-        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
-        putenv('AOP_CHANNEL_TO_TRANSPORT_MAP');
+        putenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP');
+        putenv('SPRYKER_CHANNEL_TO_TRANSPORT_MAP');
 
         $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_SENDER, [$this->getInMemoryMessageTransportPlugin()]);
     }
@@ -66,8 +66,8 @@ class InMemoryMessageBrokerHelper extends Module
      */
     public function setupMessageBroker(string $messageClassName, string $channelName): void
     {
-        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
-        putenv(sprintf('AOP_CHANNEL_TO_TRANSPORT_MAP={"%s": "in-memory"}', $channelName));
+        putenv(sprintf('SPRYKER_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
+        putenv(sprintf('SPRYKER_CHANNEL_TO_TRANSPORT_MAP={"%s": "in-memory"}', $channelName));
     }
 
     /**

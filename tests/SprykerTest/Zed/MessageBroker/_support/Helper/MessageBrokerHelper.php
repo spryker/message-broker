@@ -90,8 +90,8 @@ class MessageBrokerHelper extends Module
 
         $this->transportPlugin = null;
 
-        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
-        putenv('AOP_CHANNEL_TO_TRANSPORT_MAP');
+        putenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP');
+        putenv('SPRYKER_CHANNEL_TO_TRANSPORT_MAP');
         putenv('AOP_MESSAGE_BROKER_SNS_SENDER');
         putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER');
     }
@@ -278,7 +278,7 @@ class MessageBrokerHelper extends Module
      */
     public function setMessageToChannelNameMap(string $messageClassName, string $channelName): void
     {
-        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
+        putenv(sprintf('SPRYKER_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
     /**
@@ -289,7 +289,7 @@ class MessageBrokerHelper extends Module
      */
     public function setMessageToSenderChannelNameMap(string $messageClassName, string $channelName): void
     {
-        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
+        putenv(sprintf('SPRYKER_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
     /**
@@ -300,7 +300,7 @@ class MessageBrokerHelper extends Module
      */
     public function setChannelToTransportMap(string $channelName, string $clientName): void
     {
-        putenv(sprintf('AOP_CHANNEL_TO_TRANSPORT_MAP={"%s": "%s"}', $channelName, $clientName));
+        putenv(sprintf('SPRYKER_CHANNEL_TO_TRANSPORT_MAP={"%s": "%s"}', $channelName, $clientName));
     }
 
     /**
@@ -323,7 +323,7 @@ class MessageBrokerHelper extends Module
      */
     public function createSnsSenderPlugin(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): MessageSenderPluginInterface
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
+        putenv(sprintf('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
 
         return $this->sender = new AwsSnsMessageSenderPlugin();
     }
@@ -335,7 +335,7 @@ class MessageBrokerHelper extends Module
      */
     public function createAwsSqsReceiverPlugin(string $queueName = 'message-broker'): MessageReceiverPluginInterface
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
+        putenv(sprintf('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
 
         return $this->receiver = new AwsSqsMessageReceiverPlugin();
     }
