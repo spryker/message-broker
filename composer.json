@@ -7,7 +7,7 @@
         "php": ">=7.4",
         "spryker/kernel": "^3.30.0",
         "spryker/log": "^3.0.0",
-        "spryker/message-broker-extension": "*",
+        "spryker/message-broker-extension": "^1.0.0",
         "spryker/symfony": "^3.7.0",
         "symfony/messenger": "^5.0.0 || ^6.0.0",
         "spryker-sdk/async-api": "dev-master"
