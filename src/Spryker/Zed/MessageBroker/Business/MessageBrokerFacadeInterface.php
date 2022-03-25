@@ -23,9 +23,9 @@ interface MessageBrokerFacadeInterface
      *
      * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
-     * @return \Symfony\Component\Messenger\Envelope
+     * @return void
      */
-    public function sendMessage(TransferInterface $messageTransfer): Envelope;
+    public function sendMessage(TransferInterface $messageTransfer): void;
 
     /**
      * Specification:

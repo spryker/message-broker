@@ -15,12 +15,12 @@ class StoreReferenceReceiver implements StoreReferenceReceiverInterface
     /**
      * @var \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface
      */
-    protected $storeFacade;
+    protected MessageBrokerToStoreFacadeInterface $storeFacade;
 
     /**
-     * @var \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface
+     * @var \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface
      */
-    protected $storeReferenceFacade;
+    protected MessageBrokerToStoreReferenceFacadeInterface $storeReferenceFacade;
 
     /**
      * @param \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface $storeFacade

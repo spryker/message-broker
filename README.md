@@ -2,7 +2,8 @@
 [![Latest Stable Version](https://poser.pugx.org/spryker/message-broker/v/stable.svg)](https://packagist.org/packages/spryker/message-broker)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.4-8892BF.svg)](https://php.net/)
 
-{{ADD DESCRIPTION HERE}}
+Wraps message in a Symfony Envelope and sends it through the configured transport.
+Starts a worker processes for the defined channels.
 
 ## Installation
 

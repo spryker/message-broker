@@ -25,11 +25,11 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
-     * @return \Symfony\Component\Messenger\Envelope
+     * @return void
      */
-    public function sendMessage(TransferInterface $messageTransfer): Envelope
+    public function sendMessage(TransferInterface $messageTransfer): void
     {
-        return $this->getFactory()->createMessagePublisher()->sendMessage($messageTransfer);
+        $this->getFactory()->createMessagePublisher()->sendMessage($messageTransfer);
     }
 
     /**

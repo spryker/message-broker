@@ -35,7 +35,7 @@ class MessageBrokerConfig extends AbstractBundleConfig
     }
 
     /**
-     * This configuration can to be done via environment variable.
+     * This configuration can be done via environment variables.
      *
      * @api
      *
