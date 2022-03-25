@@ -100,11 +100,11 @@ class MessageBrokerFacadeTest extends Unit
         $messageBrokerTestMessageTransfer->setKey('value');
 
         // Act
-        $envelope = $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
+        $messageResponseTransfer = $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
 
+        //Assert
         /** @var \Generated\Shared\Transfer\MessageAttributesTransfer $messageAttributesTransfer */
-        $messageAttributesTransfer = $envelope->getMessage()->getMessageAttributes();
-
+        $messageAttributesTransfer = $messageResponseTransfer->getBody()->getMessage()->getMessageAttributes();
         $this->assertIsString($messageAttributesTransfer->getCorrelationId());
         $this->assertIsString($messageAttributesTransfer->getTimestamp());
     }
@@ -129,8 +129,9 @@ class MessageBrokerFacadeTest extends Unit
         $messageBrokerTestMessageTransfer->setKey('value');
 
         // Act
-        $envelope = $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
+        $messageResponseTransfer = $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
 
-        $this->tester->assertMessageWasSentWithSender($envelope, 'in-memory');
+        //Assert
+        $this->tester->assertMessageWasSentWithSender($messageResponseTransfer->getBody(), 'in-memory');
     }
 }

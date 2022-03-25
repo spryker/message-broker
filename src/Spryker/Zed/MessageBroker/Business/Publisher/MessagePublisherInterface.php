@@ -7,15 +7,15 @@
 
 namespace Spryker\Zed\MessageBroker\Business\Publisher;
 
+use Generated\Shared\Transfer\MessageResponseTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
-use Symfony\Component\Messenger\Envelope;
 
 interface MessagePublisherInterface
 {
     /**
      * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
-     * @return \Symfony\Component\Messenger\Envelope
+     * @return \Generated\Shared\Transfer\MessageResponseTransfer
      */
-    public function sendMessage(TransferInterface $messageTransfer): Envelope;
+    public function sendMessage(TransferInterface $messageTransfer): MessageResponseTransfer;
 }

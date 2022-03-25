@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Business;
 
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
+use Generated\Shared\Transfer\MessageResponseTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -22,9 +23,9 @@ interface MessageBrokerFacadeInterface
      *
      * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
-     * @return void
+     * @return \Generated\Shared\Transfer\MessageResponseTransfer
      */
-    public function sendMessage(TransferInterface $messageTransfer): void;
+    public function sendMessage(TransferInterface $messageTransfer): MessageResponseTransfer;
 
     /**
      * Specification:

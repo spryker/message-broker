@@ -8,10 +8,10 @@
 namespace Spryker\Zed\MessageBroker\Business\Publisher;
 
 use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Generated\Shared\Transfer\MessageResponseTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\MessageBroker\Business\Exception\MessageBrokerException;
 use Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface;
-use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class MessagePublisher implements MessagePublisherInterface
@@ -39,13 +39,15 @@ class MessagePublisher implements MessagePublisherInterface
     /**
      * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
-     * @return \Symfony\Component\Messenger\Envelope
+     * @return \Generated\Shared\Transfer\MessageResponseTransfer
      */
-    public function sendMessage(TransferInterface $messageTransfer): Envelope
+    public function sendMessage(TransferInterface $messageTransfer): MessageResponseTransfer
     {
-        return $this->messageBus->dispatch(
+        $envelope = $this->messageBus->dispatch(
             $this->provideMessageAttributes($messageTransfer),
         );
+
+        return (new MessageResponseTransfer())->setBody($envelope);
     }
 
     /**

@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Business;
 
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
+use Generated\Shared\Transfer\MessageResponseTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,11 +25,11 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
      *
-     * @return void
+     * @return \Generated\Shared\Transfer\MessageResponseTransfer
      */
-    public function sendMessage(TransferInterface $messageTransfer): void
+    public function sendMessage(TransferInterface $messageTransfer): MessageResponseTransfer
     {
-        $this->getFactory()->createMessagePublisher()->sendMessage($messageTransfer);
+        return $this->getFactory()->createMessagePublisher()->sendMessage($messageTransfer);
     }
 
     /**
