@@ -11,7 +11,6 @@ use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Messenger\Envelope;
 
 /**
  * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory getFactory()

@@ -10,7 +10,6 @@ namespace Spryker\Zed\MessageBroker\Business;
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Messenger\Envelope;
 
 interface MessageBrokerFacadeInterface
 {
