@@ -1,4 +1,5 @@
 parameters:
+    level: 8
     ignoreErrors:
         - '#Call to an undefined method Spryker\\Shared\\Kernel\\Transfer\\TransferInterface::getMessageAttributes\(\).#'
         - '#Parameter \#1 \$iterator of function iterator_to_array expects Traversable, iterable\<string, .*> given.#'

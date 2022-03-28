@@ -13,7 +13,7 @@ composer require spryker/message-broker
 
 ## Documentation
 
-[Spryker Documentation](https://academy.spryker.com/developing_with_spryker/module_guide/modules.html)
+[Spryker Documentation](https://docs.spryker.com)
 
 
 ### Configuration example (config_x.php)
