@@ -8,6 +8,7 @@
         <property name="publisher" type="Publisher"/>
         <property name="timestamp" type="string"/>
         <property name="correlationId" type="string"/>
+        <property name="tenantIdentifier" type="string"/>
     </transfer>
 
     <transfer name="Publisher">
@@ -16,7 +17,7 @@
     </transfer>
 
     <transfer name="MessageBrokerWorkerConfig">
-        <property name="channels" type="array"/>
+        <property name="channels" type="array" singular="channel"/>
         <property name="limit" type="int"/>
         <property name="failureLimit" type="int"/>
         <property name="memoryLimit" type="int"/>

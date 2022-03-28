@@ -33,7 +33,9 @@ class ValidationMiddlewarePlugin extends AbstractPlugin implements MiddlewareInt
      */
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
-        if (!$this->getFacade()->canHandleMessage($envelope->getMessage())) {
+        /** @var \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer */
+        $messageTransfer = $envelope->getMessage();
+        if (!$this->getFacade()->canHandleMessage($messageTransfer)) {
             throw new UnrecoverableMessageHandlingException();
         }
 

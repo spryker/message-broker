@@ -39,9 +39,9 @@ class StoreReferenceReceiver implements StoreReferenceReceiverInterface
      */
     public function getStoreReference(): string
     {
-        $storeName = $this->storeFacade->getCurrentStore()->getName();
+        $storeName = (string)$this->storeFacade->getCurrentStore()->getName();
         $storeTransfer = $this->storeReferenceFacade->getStoreByStoreName($storeName);
 
-        return $storeTransfer->getStoreReference();
+        return $storeTransfer->getStoreReferenceOrFail();
     }
 }
