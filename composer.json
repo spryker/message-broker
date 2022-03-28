@@ -10,8 +10,7 @@
         "spryker/message-broker-extension": "^1.0.0",
         "spryker/symfony": "^3.7.0",
         "spryker/transfer": "^3.25.0",
-        "symfony/messenger": "^5.0.0 || ^6.0.0",
-        "spryker-sdk/async-api": "dev-master as 1.0.0"
+        "symfony/messenger": "^5.0.0 || ^6.0.0"
     },
     "require-dev": {
         "spryker/application": "*",
@@ -21,7 +20,8 @@
         "spryker/event-dispatcher": "*",
         "spryker/message-broker-aws": "*",
         "spryker/ramsey-uuid": "*",
-        "spryker/testify": "*"
+        "spryker/testify": "*",
+        "spryker-sdk/async-api": "dev-master"
     },
     "suggest": {
         "spryker/ramsey-uuid": "When the CorrelationIdMessageAttributeProviderPlugin is used you need to install this."
