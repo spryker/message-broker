@@ -30,8 +30,8 @@ use Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver\StoreReferenceRece
 use Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver\StoreReferenceReceiverInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface;
+use Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreFacadeInterface;
+use Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreReferenceFacadeInterface;
 use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerSdk\AsyncApi\Loader\AsyncApiLoader;
@@ -250,7 +250,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface
+     * @return \Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreFacadeInterface
      */
     protected function getStoreFacade(): MessageBrokerToStoreFacadeInterface
     {
@@ -258,7 +258,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface
+     * @return \Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreReferenceFacadeInterface
      */
     protected function getStoreReferenceFacade(): MessageBrokerToStoreReferenceFacadeInterface
     {

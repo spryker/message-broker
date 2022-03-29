@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBroker\Dependency;
+namespace Spryker\Zed\MessageBroker\Dependency\Facade;
 
 use Generated\Shared\Transfer\StoreTransfer;
 use Spryker\Zed\StoreReference\Business\StoreReferenceFacadeInterface;

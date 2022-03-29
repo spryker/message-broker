@@ -9,8 +9,8 @@ namespace Spryker\Zed\MessageBroker;
 
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeBridge;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeBridge;
+use Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreFacadeBridge;
+use Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreReferenceFacadeBridge;
 use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceBridge;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 

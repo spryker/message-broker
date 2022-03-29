@@ -7,24 +7,24 @@
 
 namespace Spryker\Zed\MessageBroker\Business\StoreReferenceReceiver;
 
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface;
+use Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreFacadeInterface;
+use Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreReferenceFacadeInterface;
 
 class StoreReferenceReceiver implements StoreReferenceReceiverInterface
 {
     /**
-     * @var \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface
+     * @var \Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreFacadeInterface
      */
     protected MessageBrokerToStoreFacadeInterface $storeFacade;
 
     /**
-     * @var \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface
+     * @var \Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreReferenceFacadeInterface
      */
     protected MessageBrokerToStoreReferenceFacadeInterface $storeReferenceFacade;
 
     /**
-     * @param \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeInterface $storeFacade
-     * @param \Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeInterface $storeReferenceFacade
+     * @param \Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreFacadeInterface $storeFacade
+     * @param \Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreReferenceFacadeInterface $storeReferenceFacade
      */
     public function __construct(
         MessageBrokerToStoreFacadeInterface $storeFacade,
