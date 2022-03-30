@@ -87,6 +87,11 @@ class MessageBrokerWorkerConsole extends Console
     public const OPTION_SLEEP_SHORT = 's';
 
     /**
+     * @var int
+     */
+    protected const DEFAULT_VALUE_OPTION_SLEEP = 1;
+
+    /**
      * @return void
      */
     protected function configure(): void
@@ -99,7 +104,7 @@ class MessageBrokerWorkerConsole extends Console
             new InputOption(static::OPTION_FAILURE_LIMIT, static::OPTION_FAILURE_LIMIT_SHORT, InputOption::VALUE_REQUIRED, 'The number of failed messages the worker can consume.'),
             new InputOption(static::OPTION_MEMORY_LIMIT, static::OPTION_MEMORY_LIMIT_SHORT, InputOption::VALUE_REQUIRED, 'The memory limit the worker can consume.'),
             new InputOption(static::OPTION_TIME_LIMIT, static::OPTION_TIME_LIMIT_SHORT, InputOption::VALUE_REQUIRED, 'The time limit in seconds the worker can handle new messages.'),
-            new InputOption(static::OPTION_SLEEP, static::OPTION_SLEEP_SHORT, InputOption::VALUE_REQUIRED, 'Seconds to sleep before asking for new messages after no messages were found.', 1),
+            new InputOption(static::OPTION_SLEEP, static::OPTION_SLEEP_SHORT, InputOption::VALUE_REQUIRED, 'Seconds to sleep before asking for new messages after no messages were found.', static::DEFAULT_VALUE_OPTION_SLEEP),
         ]);
     }
 
@@ -113,30 +118,30 @@ class MessageBrokerWorkerConsole extends Console
     {
         $messageBrokerWorkerConfigTransfer = new MessageBrokerWorkerConfigTransfer();
 
-        $channels = $input->getArgument(static::ARGUMENT_CHANNELS);
+        $channels = (array)$input->getArgument(static::ARGUMENT_CHANNELS);
         $messageBrokerWorkerConfigTransfer->setChannels($channels);
 
         $stopsWhen = [];
 
-        $limit = $input->getOption(static::OPTION_MESSAGE_LIMIT);
-        if ($limit) {
-            $stopsWhen[] = "processed {$limit} messages";
-            $messageBrokerWorkerConfigTransfer->setLimit($limit);
+        $messageLimit = $this->findOptionMessageLimitValue($input);
+        if ($messageLimit) {
+            $stopsWhen[] = "processed {$messageLimit} messages";
+            $messageBrokerWorkerConfigTransfer->setLimit($messageLimit);
         }
 
-        $failureLimit = $input->getOption(static::OPTION_FAILURE_LIMIT);
+        $failureLimit = $this->findOptionFailureLimitValue($input);
         if ($failureLimit) {
             $stopsWhen[] = "reached {$failureLimit} failed messages";
             $messageBrokerWorkerConfigTransfer->setFailureLimit($failureLimit);
         }
 
-        $memoryLimit = $input->getOption(static::OPTION_MEMORY_LIMIT);
+        $memoryLimit = $this->findOptionMemoryLimitValue($input);
         if ($memoryLimit) {
             $stopsWhen[] = "exceeded {$memoryLimit} of memory";
             $messageBrokerWorkerConfigTransfer->setMemoryLimit($memoryLimit);
         }
 
-        $timeLimit = $input->getOption(static::OPTION_TIME_LIMIT);
+        $timeLimit = $this->findOptionTimeLimitValue($input);
         if ($timeLimit) {
             $stopsWhen[] = "been running for {$timeLimit}s";
             $messageBrokerWorkerConfigTransfer->setTimeLimit($timeLimit);
@@ -154,10 +159,90 @@ class MessageBrokerWorkerConsole extends Console
             $io->comment('Re-run the command with a -vv option to see logs about consumed messages.');
         }
 
-        $messageBrokerWorkerConfigTransfer->setSleep($input->getOption(static::OPTION_SLEEP) * 1000000);
+        $messageBrokerWorkerConfigTransfer->setSleep($this->getOptionSleepValue($input) * 1000000);
 
         $this->getFacade()->startWorker($messageBrokerWorkerConfigTransfer);
 
         return static::CODE_SUCCESS;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return int|null
+     */
+    protected function findOptionMessageLimitValue(InputInterface $input): ?int
+    {
+        $optionMessageLimitValue = $input->getOption(static::OPTION_MESSAGE_LIMIT);
+
+        if (!is_numeric($optionMessageLimitValue)) {
+            return null;
+        }
+
+        return (int)$optionMessageLimitValue;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return int|null
+     */
+    protected function findOptionFailureLimitValue(InputInterface $input): ?int
+    {
+        $optionFailureLimitValue = $input->getOption(static::OPTION_FAILURE_LIMIT);
+
+        if (!is_numeric($optionFailureLimitValue)) {
+            return null;
+        }
+
+        return (int)$optionFailureLimitValue;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return int|null
+     */
+    protected function findOptionMemoryLimitValue(InputInterface $input): ?int
+    {
+        $optionMemoryLimitValue = $input->getOption(static::OPTION_MEMORY_LIMIT);
+
+        if (!is_numeric($optionMemoryLimitValue)) {
+            return null;
+        }
+
+        return (int)$optionMemoryLimitValue;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return int|null
+     */
+    protected function findOptionTimeLimitValue(InputInterface $input): ?int
+    {
+        $optionTimeLimitValue = $input->getOption(static::OPTION_TIME_LIMIT);
+
+        if (!is_numeric($optionTimeLimitValue)) {
+            return null;
+        }
+
+        return (int)$optionTimeLimitValue;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return int
+     */
+    protected function getOptionSleepValue(InputInterface $input): int
+    {
+        $optionSleepValue = $input->getOption(static::OPTION_SLEEP);
+
+        if (!is_numeric($optionSleepValue)) {
+            return static::DEFAULT_VALUE_OPTION_SLEEP;
+        }
+
+        return (int)$optionSleepValue;
     }
 }

@@ -55,8 +55,24 @@ class MessageBrokerDebugConsole extends Console
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->getFacade()->printDebug($output, $input->getOption(static::OPTION_ASYNC_API_FILE));
+        $this->getFacade()->printDebug($output, $this->findOptionAsyncApiFileValue($input));
 
         return static::CODE_SUCCESS;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return string|null
+     */
+    protected function findOptionAsyncApiFileValue(InputInterface $input): ?string
+    {
+        $optionAsyncApiFileValue = $input->getOption(static::OPTION_ASYNC_API_FILE);
+
+        if ($optionAsyncApiFileValue === null || is_array($optionAsyncApiFileValue)) {
+            return null;
+        }
+
+        return (string)$optionAsyncApiFileValue;
     }
 }
