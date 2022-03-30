@@ -11,8 +11,8 @@ use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\StoreReferenceMessageAttributeProviderPlugin;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreFacadeBridge;
-use Spryker\Zed\MessageBroker\Dependency\MessageBrokerToStoreReferenceFacadeBridge;
+use Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreFacadeBridge;
+use Spryker\Zed\MessageBroker\Dependency\Facade\MessageBrokerToStoreReferenceFacadeBridge;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerTest\Zed\MessageBroker\MessageBrokerCommunicationTester;
 
