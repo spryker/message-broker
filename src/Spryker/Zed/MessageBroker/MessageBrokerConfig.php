@@ -12,6 +12,8 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class MessageBrokerConfig extends AbstractBundleConfig
 {
+    const HTTP_CHANNEL_TRANSPORT = 'http-channel';
+
     /**
      * @var int
      */
@@ -103,6 +105,8 @@ class MessageBrokerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @deprecated will be removed
+     *
      * This configuration can be done via environment variables.
      *
      * @api
@@ -118,6 +122,50 @@ class MessageBrokerConfig extends AbstractBundleConfig
         if ($this->getConfig()->hasKey(MessageBrokerConstants::CHANNEL_TO_TRANSPORT_MAP)) {
             // @codeCoverageIgnoreStart
             return $this->get(MessageBrokerConstants::CHANNEL_TO_TRANSPORT_MAP);
+            // @codeCoverageIgnoreEnd
+        }
+
+        return [];
+    }
+
+    /**
+     * This configuration can be done via environment variables.
+     *
+     * @api
+     *
+     * @return array<string, string>|string
+     */
+    public function getChannelToReceiverTransportMap()
+    {
+        if (getenv('CHANNEL_TO_RECEIVER_TRANSPORT_MAP') !== false) {
+            return getenv('CHANNEL_TO_RECEIVER_TRANSPORT_MAP');
+        }
+
+        if ($this->getConfig()->hasKey(MessageBrokerConstants::CHANNEL_TO_RECEIVER_TRANSPORT_MAP)) {
+            // @codeCoverageIgnoreStart
+            return $this->get(MessageBrokerConstants::CHANNEL_TO_RECEIVER_TRANSPORT_MAP);
+            // @codeCoverageIgnoreEnd
+        }
+
+        return [];
+    }
+
+    /**
+     * This configuration can be done via environment variables.
+     *
+     * @api
+     *
+     * @return array<string, string>|string
+     */
+    public function getChannelToSenderTransportMap()
+    {
+        if (getenv('CHANNEL_TO_SENDER_TRANSPORT_MAP') !== false) {
+            return getenv('CHANNEL_TO_SENDER_TRANSPORT_MAP');
+        }
+
+        if ($this->getConfig()->hasKey(MessageBrokerConstants::CHANNEL_TO_SENDER_TRANSPORT_MAP)) {
+            // @codeCoverageIgnoreStart
+            return $this->get(MessageBrokerConstants::CHANNEL_TO_SENDER_TRANSPORT_MAP);
             // @codeCoverageIgnoreEnd
         }
 
@@ -170,5 +218,21 @@ class MessageBrokerConfig extends AbstractBundleConfig
     public function getDefaultWorkerChannels(): array
     {
         return [];
+    }
+
+    /**
+     * @return string
+     */
+    public function getProducerGatewayUrl(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getConsumerGatewayUrl(): string
+    {
+        return '';
     }
 }

@@ -86,6 +86,14 @@ class MessageSenderLocator implements SendersLocatorInterface
             $channelToSenderClientMap = $this->configFormatter->format($channelToSenderClientMap);
         }
 
+        $channelToSenderTransportMap = $this->config->getChannelToSenderTransportMap();
+
+        if (is_string($channelToSenderTransportMap)) {
+            $channelToSenderTransportMap = $this->configFormatter->format($channelToSenderTransportMap);
+        }
+
+        $channelToSenderClientMap = array_merge($channelToSenderClientMap, $channelToSenderTransportMap);
+
         if (isset($channelToSenderClientMap[$channel])) {
             return $channelToSenderClientMap[$channel];
         }

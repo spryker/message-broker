@@ -18,6 +18,8 @@ interface MessageBrokerConstants
     public const MESSAGE_TO_CHANNEL_MAP = 'MESSAGE_BROKER:MESSAGE_TO_CHANNEL_MAP';
 
     /**
+     * @deprecated will be removed
+     *
      * @var string
      */
     public const CHANNEL_TO_TRANSPORT_MAP = 'MESSAGE_BROKER:SENDER_CHANNEL_TO_CLIENT_MAP';
@@ -26,4 +28,14 @@ interface MessageBrokerConstants
      * @var string
      */
     public const LOGGING_ENABLED = 'MESSAGE_BROKER:LOGGING_ENABLED';
+
+    /**
+     * @var string
+     */
+    public const CHANNEL_TO_RECEIVER_TRANSPORT_MAP = 'MESSAGE_BROKER:CHANNEL_TO_RECEIVER_TRANSPORT_MAP';
+
+    /**
+     * @var string
+     */
+    public const CHANNEL_TO_SENDER_TRANSPORT_MAP = 'MESSAGE_BROKER:CHANNEL_TO_RECEIVER_TRANSPORT_MAP';
 }
