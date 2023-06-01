@@ -12,6 +12,9 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class MessageBrokerConfig extends AbstractBundleConfig
 {
+    /**
+     * @var string
+     */
     const HTTP_CHANNEL_TRANSPORT = 'http-channel';
 
     /**

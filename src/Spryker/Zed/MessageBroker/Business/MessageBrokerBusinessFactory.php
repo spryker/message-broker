@@ -24,6 +24,7 @@ use Spryker\Zed\MessageBroker\Business\MessageHandler\MessageHandlerLocator;
 use Spryker\Zed\MessageBroker\Business\MessageSender\MessageSenderLocator;
 use Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorStack;
 use Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorStackInterface;
+use Spryker\Zed\MessageBroker\Business\Middleware\AddChannelNameStampMiddleware;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisher;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
@@ -107,7 +108,18 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         return array_merge($this->getMiddlewarePlugins(), [
             $this->createSendMessageMiddleware(),
             $this->createHandleMessageMiddleware(),
+            $this->createAddChannelNameStampMiddleware(),
         ]);
+    }
+
+    /**
+     * @return \Symfony\Component\Messenger\Middleware\MiddlewareInterface
+     */
+    public function createAddChannelNameStampMiddleware(): MiddlewareInterface
+    {
+        return new AddChannelNameStampMiddleware(
+            $this->createMessageSenderLocator(),
+        );
     }
 
     /**
