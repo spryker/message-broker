@@ -9,6 +9,7 @@ namespace Spryker\Zed\MessageBroker\Business\Worker;
 
 use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Psr\Log\LoggerInterface;
+use Spryker\Zed\MessageBroker\Business\ClientAttributeProvider\ClientAttributeProviderInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerConfig;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnFailureLimitListener;
@@ -21,6 +22,16 @@ use Symfony\Component\Messenger\Worker as SymfonyWorker;
 class Worker implements WorkerInterface
 {
     /**
+     * @var array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface>
+     */
+    protected array $messageReceiverPlugins;
+
+    /**
+     * @var \Symfony\Component\Messenger\MessageBusInterface
+     */
+    protected MessageBusInterface $bus;
+
+    /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     protected EventDispatcherInterface $eventDispatcher;
@@ -29,11 +40,6 @@ class Worker implements WorkerInterface
      * @var \Psr\Log\LoggerInterface|null
      */
     protected ?LoggerInterface $logger;
-
-    /**
-     * @var \Symfony\Component\Messenger\Worker
-     */
-    protected SymfonyWorker $worker;
 
     /**
      * @var \Spryker\Zed\MessageBroker\MessageBrokerConfig
@@ -54,16 +60,10 @@ class Worker implements WorkerInterface
         MessageBrokerConfig $config,
         ?LoggerInterface $logger = null
     ) {
-        $receivers = [];
-
-        foreach ($messageReceiverPlugins as $messageReceiverPlugin) {
-            $receivers[$messageReceiverPlugin->getTransportName()] = $messageReceiverPlugin;
-        }
-
+        $this->messageReceiverPlugins = $messageReceiverPlugins;
+        $this->bus = $bus;
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
-
-        $this->worker = new SymfonyWorker($receivers, $bus, $eventDispatcher, $logger);
         $this->config = $config;
     }
 
@@ -95,24 +95,56 @@ class Worker implements WorkerInterface
             $channels = $this->config->getDefaultWorkerChannels();
         }
 
-        $options = [
-            'queues' => $channels,
-        ];
+        if ($messageBrokerWorkerConfigTransfer->getIsQueueEnabled()) {
+            $options = [
+                'queues' => $channels,
+            ];
+        }
 
         if ($messageBrokerWorkerConfigTransfer->getSleep()) {
             $options['sleep'] = $messageBrokerWorkerConfigTransfer->getSleep();
         }
 
-        $this->run($options);
+        $this->run($options, $channels);
+    }
+
+    /**
+     * @param array<string> $channels
+     *
+     * @return array<string, \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface>
+     */
+    protected function prepareReceiverPlugins(array $channels): array
+    {
+        $channelToReceiverTransportMap = $this->config->getChannelToReceiverTransportMap();
+        $receivers = [];
+
+        foreach ($this->messageReceiverPlugins as $messageReceiverPlugin) {
+            foreach ($channels as $channel) {
+                if (!isset($channelToReceiverTransportMap[$channel])) {
+                    continue;
+                }
+                $receiverTransport = $channelToReceiverTransportMap[$channel];
+
+                if ($messageReceiverPlugin->getTransportName() == $receiverTransport) {
+                    $receivers[$receiverTransport] = $messageReceiverPlugin;
+                }
+            }
+        }
+
+        return $receivers;
     }
 
     /**
      * @param array<string, mixed> $options
+     * @param array<string> $channels
      *
      * @return void
      */
-    protected function run(array $options): void
+    protected function run(array $options, array $channels): void
     {
-        $this->worker->run($options);
+        $receivers = $this->prepareReceiverPlugins($channels);
+
+        $worker = new SymfonyWorker($receivers, $this->bus, $this->eventDispatcher, $this->logger);
+        $worker->run($options);
     }
 }

@@ -25,6 +25,7 @@
         <property name="memoryLimit" type="int"/>
         <property name="timeLimit" type="int"/>
         <property name="sleep" type="int"/>
+        <property name="isQueueEnabled" type="bool"/>
     </transfer>
 
     <transfer name="IncomingMessage">

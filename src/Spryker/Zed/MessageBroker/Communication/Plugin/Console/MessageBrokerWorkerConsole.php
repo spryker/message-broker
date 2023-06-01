@@ -87,6 +87,16 @@ class MessageBrokerWorkerConsole extends Console
     public const OPTION_SLEEP_SHORT = 's';
 
     /**
+     * @var string
+     */
+    public const OPTION_NOT_QUEUE = 'not-queue';
+
+    /**
+     * @var string
+     */
+    public const OPTION_NOT_QUEUE_SHORT = 'nq';
+
+    /**
      * @var int
      */
     protected const DEFAULT_VALUE_OPTION_SLEEP = 1;
@@ -110,6 +120,12 @@ class MessageBrokerWorkerConsole extends Console
                 InputOption::VALUE_REQUIRED,
                 'Seconds to sleep before asking for new messages after no messages were found.',
                 (string)static::DEFAULT_VALUE_OPTION_SLEEP,
+            ),
+            new InputOption(
+                static::OPTION_NOT_QUEUE,
+                static::OPTION_NOT_QUEUE_SHORT,
+                InputOption::VALUE_OPTIONAL,
+                'To skip using queues option',
             ),
         ]);
     }
@@ -152,6 +168,8 @@ class MessageBrokerWorkerConsole extends Console
             $stopsWhen[] = "been running for {$timeLimit}s";
             $messageBrokerWorkerConfigTransfer->setTimeLimit($timeLimit);
         }
+
+        $messageBrokerWorkerConfigTransfer->setIsQueueEnabled($this->getOptionIsQueueEnabled($input));
 
         $io = new SymfonyStyle($input, $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output);
         if ($channels) {
@@ -254,5 +272,15 @@ class MessageBrokerWorkerConsole extends Console
         }
 
         return (int)$optionSleepValue;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return bool
+     */
+    protected function getOptionIsQueueEnabled(InputInterface $input): bool
+    {
+        return !$input->getOption(static::OPTION_NOT_QUEUE);
     }
 }
