@@ -12,6 +12,8 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\MessageBroker\Business\ClientAttributeProvider\ClientAttributeProvider;
+use Spryker\Zed\MessageBroker\Business\ClientAttributeProvider\ClientAttributeProviderInterface;
 use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBroker\Business\Config\JsonToArrayConfigFormatter;
 use Spryker\Zed\MessageBroker\Business\Debug\DebugPrinter;
@@ -118,7 +120,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     public function createAddChannelNameStampMiddleware(): MiddlewareInterface
     {
         return new AddChannelNameStampMiddleware(
-            $this->createMessageSenderLocator(),
+            $this->createClientAttributeProvider(),
         );
     }
 
@@ -133,6 +135,17 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \Spryker\Zed\MessageBroker\Business\ClientAttributeProvider\ClientAttributeProviderInterface
+     */
+    public function createClientAttributeProvider(): ClientAttributeProviderInterface
+    {
+        return new ClientAttributeProvider(
+            $this->getConfig(),
+            $this->createConfigFormatter(),
+        );
+    }
+
+    /**
      * @return \Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface
      */
     public function createMessageSenderLocator(): SendersLocatorInterface
@@ -141,6 +154,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->createConfigFormatter(),
             $this->getMessageSenderPlugins(),
+            $this->createClientAttributeProvider(),
         );
     }
 
