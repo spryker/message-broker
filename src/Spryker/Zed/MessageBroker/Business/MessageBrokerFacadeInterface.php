@@ -66,4 +66,16 @@ interface MessageBrokerFacadeInterface
      * @return bool
      */
     public function canHandleMessage(TransferInterface $message): bool;
+
+    /**
+     * Specification:
+     * - Receives messages via http-channel
+     *
+     * @codeCoverageIgnore
+     *
+     * @api
+     *
+     * @return array<\Symfony\Component\Messenger\Envelope>
+     */
+    public function getEnvelopes(): iterable;
 }

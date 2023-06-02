@@ -10,6 +10,7 @@ namespace Spryker\Zed\MessageBroker\Business\Middleware;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 use Spryker\Zed\MessageBroker\Business\ClientAttributeProvider\ClientAttributeProviderInterface;
+use Spryker\Zed\MessageBroker\Business\Receiver\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBroker\MessageBrokerConfig;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;

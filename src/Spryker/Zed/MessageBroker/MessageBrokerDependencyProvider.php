@@ -7,6 +7,8 @@
 
 namespace Spryker\Zed\MessageBroker;
 
+use GuzzleHttp\Client;
+use Spryker\Zed\MessageBroker\Dependency\Guzzle\MessageBrokerToGuzzleClientBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceBridge;
@@ -58,6 +60,11 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     public const PLUGINS_EXTERNAL_VALIDATOR = 'PLUGINS_EXTERNAL_VALIDATOR';
 
     /**
+     * @var string
+     */
+    public const CLIENT_GUZZLE = 'CLIENT_GUZZLE';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -74,6 +81,21 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideExternalValidatorPlugins($container);
         $container = $this->provideMiddlewarePlugins($container);
         $container = $this->addUtilEncodingService($container);
+        $container = $this->addGuzzleClient($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Client\Kernel\Container $container
+     *
+     * @return \Spryker\Client\Kernel\Container
+     */
+    protected function addGuzzleClient(Container $container): Container
+    {
+        $container->set(static::CLIENT_GUZZLE, function () {
+            return new MessageBrokerToGuzzleClientBridge(new Client());
+        });
 
         return $container;
     }

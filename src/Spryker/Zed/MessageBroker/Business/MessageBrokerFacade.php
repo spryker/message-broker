@@ -74,4 +74,18 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
     {
         return $this->getFactory()->createMessageValidatorStack()->isValidMessage($message);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @codeCoverageIgnore
+     *
+     * @api
+     *
+     * @return array<\Symfony\Component\Messenger\Envelope>
+     */
+    public function getEnvelopes(): iterable
+    {
+        return $this->getFactory()->createHttpChannelReceiver()->receive();
+    }
 }

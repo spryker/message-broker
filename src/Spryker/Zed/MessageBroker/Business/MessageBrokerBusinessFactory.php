@@ -29,8 +29,11 @@ use Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorStackInt
 use Spryker\Zed\MessageBroker\Business\Middleware\AddChannelNameStampMiddleware;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisher;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
+use Spryker\Zed\MessageBroker\Business\Receiver\HttpChannelReceiver;
+use Spryker\Zed\MessageBroker\Business\Receiver\HttpChannelReceiverInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
+use Spryker\Zed\MessageBroker\Dependency\Guzzle\MessageBrokerToGuzzleClientInterface;
 use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use SprykerSdk\AsyncApi\AsyncApi\Loader\AsyncApiLoader;
@@ -318,6 +321,24 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     public function createStreamHandler(): HandlerInterface
     {
         return new StreamHandler($this->getConfig()->getLogFilePath());
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Receiver\HttpChannelReceiverInterface
+     */
+    public function createHttpChannelReceiver(): HttpChannelReceiverInterface
+    {
+        return new HttpChannelReceiver(
+            $this->getGuzzleClient(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Dependency\Guzzle\MessageBrokerToGuzzleClientInterface
+     */
+    public function getGuzzleClient(): MessageBrokerToGuzzleClientInterface
+    {
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::CLIENT_GUZZLE);
     }
 
     /**
