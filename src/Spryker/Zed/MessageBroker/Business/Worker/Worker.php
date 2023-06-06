@@ -126,6 +126,7 @@ class Worker implements WorkerInterface
                 $receiverTransport = $channelToReceiverTransportMap[$channel];
 
                 if ($messageReceiverPlugin->getTransportName() == $receiverTransport) {
+                    $messageReceiverPlugin->setChannels($channels);
                     $receivers[$receiverTransport] = $messageReceiverPlugin;
                 }
             }

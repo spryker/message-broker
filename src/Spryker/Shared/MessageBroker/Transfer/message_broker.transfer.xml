@@ -48,4 +48,27 @@
     <transfer name="MessageResponse">
         <property name="body" type="object"/>
     </transfer>
+
+    <transfer name="AccessTokenRequest">
+        <property name="accessTokenRequestOptions" type="AccessTokenRequestOptions"/>
+    </transfer>
+
+    <transfer name="AccessTokenRequestOptions">
+        <property name="tenantIdentifier" type="string"/>
+    </transfer>
+
+    <transfer name="HttpRequest">
+        <property name="consumerId" type="string"/>
+    </transfer>
+
+    <transfer name="HttpRequest">
+        <property name="consumerId" type="string"/>
+    </transfer>
+
+    <transfer name="HttpChannelMessage">
+        <property name="message" type="string"/>
+        <property name="messageId" type="string"/>
+        <property name="messageAttributes" type="MessageAttributes"/>
+    </transfer>
+
 </transfers>

@@ -21,6 +21,12 @@ use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
 {
     /**
+     * @var array<string>
+     *
+     */
+    protected $channels = [];
+
+    /**
      * {@inheritDoc}
      *
      * @api
@@ -30,6 +36,16 @@ class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements Message
     public function getTransportName(): string
     {
         return MessageBrokerConfig::HTTP_CHANNEL_TRANSPORT;
+    }
+
+    /**
+     * @return self
+     */
+    public function setChannels(array $channels): self
+    {
+        $this->channels = $channels;
+
+        return $this;
     }
 
     /**
@@ -57,7 +73,7 @@ class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements Message
      */
     public function get(): iterable
     {
-        return $this->getFacade()->getEnvelopes();
+        return $this->getFacade()->getEnvelopes($this->channels);
     }
 
     /**
@@ -71,7 +87,7 @@ class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements Message
      */
     public function ack(Envelope $envelope): void
     {
-        $this->getFacade()->ack($envelope);
+        $this->getFacade()->deleteEnvelope($envelope, $this->channels);
     }
 
     /**
@@ -85,6 +101,6 @@ class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements Message
      */
     public function reject(Envelope $envelope): void
     {
-        $this->getFacade()->reject($envelope);
+        $this->getFacade()->deleteEnvelope($envelope, $this->channels);
     }
 }

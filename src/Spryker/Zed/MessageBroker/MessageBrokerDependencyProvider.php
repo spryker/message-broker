@@ -8,7 +8,9 @@
 namespace Spryker\Zed\MessageBroker;
 
 use GuzzleHttp\Client;
+use Spryker\Glue\AuthRestApi\Dependency\Client\AuthRestApiToOauthClientBridge;
 use Spryker\Zed\MessageBroker\Dependency\Guzzle\MessageBrokerToGuzzleClientBridge;
+use Spryker\Zed\MessageBroker\Dependency\Oauth\MessageBrokerToOauthClientBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceBridge;
@@ -65,6 +67,21 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     public const CLIENT_GUZZLE = 'CLIENT_GUZZLE';
 
     /**
+     * @var string
+     */
+    public const CLIENT_OAUTH = 'CLIENT_OAUTH';
+
+    /**
+     * @var string
+     */
+    public const PLUGINS_HTTP_CHANNEL_MESSAGE_CONSUMER_REQUEST_EXPANDER = 'PLUGINS_HTTP_CHANNEL_MESSAGE_CONSUMER_REQUEST_EXPANDER';
+
+    /**
+     * @var string
+     */
+    public const FACADE_MESSAGE_BROKER_AWS = 'FACADE_MESSAGE_BROKER_AWS';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -82,6 +99,59 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideMiddlewarePlugins($container);
         $container = $this->addUtilEncodingService($container);
         $container = $this->addGuzzleClient($container);
+        $container = $this->addOauthClient($container);
+        $container = $this->addHttpChannelMessageConsumerRequestExpanderPlugins($container);
+        $container = $this->addMessageBrokerAws($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addHttpChannelMessageConsumerRequestExpanderPlugins(Container $container): Container
+    {
+        $container->set(static::PLUGINS_HTTP_CHANNEL_MESSAGE_CONSUMER_REQUEST_EXPANDER, function () {
+            return $this->getHttpChannelMessageConsumerRequestExpanderPlugins();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\HttpChannelMessageConsumerRequestExpanderPluginInterface>
+     */
+    protected function getHttpChannelMessageConsumerRequestExpanderPlugins(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addMessageBrokerAws(Container $container): Container
+    {
+        $container->set(static::FACADE_MESSAGE_BROKER_AWS, function (Container $container) {
+            return $container->getLocator()->messageBrokerAws()->facade();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addOauthClient(Container $container): Container
+    {
+        $container->set(static::CLIENT_OAUTH, function (Container $container) {
+            return new MessageBrokerToOauthClientBridge($container->getLocator()->oauthClient()->facade());
+        });
 
         return $container;
     }

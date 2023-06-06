@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Generated\Shared\Transfer\MessageResponseTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Messenger\Envelope;
 
 interface MessageBrokerFacadeInterface
 {
@@ -75,7 +76,17 @@ interface MessageBrokerFacadeInterface
      *
      * @api
      *
+     * @param array<string> $channels
+     *
      * @return array<\Symfony\Component\Messenger\Envelope>
      */
-    public function getEnvelopes(): iterable;
+    public function getEnvelopes(array $channels): iterable;
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     * @param array $channels
+     *
+     * @return void
+     */
+    public function deleteEnvelope(Envelope $envelope, array $channels): void;
 }

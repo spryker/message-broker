@@ -11,6 +11,8 @@ use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Spryker\Glue\AuthRestApi\AuthRestApiDependencyProvider;
+use Spryker\Glue\AuthRestApi\Dependency\Client\AuthRestApiToOauthClientInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\MessageBroker\Business\ClientAttributeProvider\ClientAttributeProvider;
 use Spryker\Zed\MessageBroker\Business\ClientAttributeProvider\ClientAttributeProviderInterface;
@@ -34,8 +36,10 @@ use Spryker\Zed\MessageBroker\Business\Receiver\HttpChannelReceiverInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
 use Spryker\Zed\MessageBroker\Dependency\Guzzle\MessageBrokerToGuzzleClientInterface;
+use Spryker\Zed\MessageBroker\Dependency\Oauth\MessageBrokerToOauthClientInterface;
 use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
+use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface;
 use SprykerSdk\AsyncApi\AsyncApi\Loader\AsyncApiLoader;
 use SprykerSdk\AsyncApi\AsyncApi\Loader\AsyncApiLoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -329,8 +333,19 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     public function createHttpChannelReceiver(): HttpChannelReceiverInterface
     {
         return new HttpChannelReceiver(
+            $this->getConfig(),
             $this->getGuzzleClient(),
+            $this->getHttpChannelMessageConsumerRequestExpanderPlugins(),
+            $this->getMessageBrokerAws(),
         );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface
+     */
+    public function getMessageBrokerAws(): MessageBrokerAwsFacadeInterface
+    {
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::FACADE_MESSAGE_BROKER_AWS);
     }
 
     /**
@@ -342,10 +357,26 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \Spryker\Zed\MessageBroker\Dependency\Oauth\MessageBrokerToOauthClientInterface
+     */
+    public function getOauthClient(): MessageBrokerToOauthClientInterface
+    {
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::CLIENT_OAUTH);
+    }
+
+    /**
      * @return \Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface
      */
     protected function getExternalValidator(): MessageBrokerToUtilEncodingServiceInterface
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::SERVICE_UTIL_ENCODING);
+    }
+
+    /**
+     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\HttpChannelMessageConsumerRequestExpanderPluginInterface>
+     */
+    protected function getHttpChannelMessageConsumerRequestExpanderPlugins(): array
+    {
+        return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_HTTP_CHANNEL_MESSAGE_CONSUMER_REQUEST_EXPANDER);
     }
 }

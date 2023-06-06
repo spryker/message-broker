@@ -20,6 +20,11 @@ class MessageBrokerConfig extends AbstractBundleConfig
     /**
      * @var int
      */
+    protected const MESSAGE_CONSUME_LIMIT = 100;
+
+    /**
+     * @var int
+     */
     protected const MESSAGE_BROKER_CALL_SUCCESS_CODE = 11000;
 
     /**
@@ -176,6 +181,14 @@ class MessageBrokerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @return int
+     */
+    public function getMessageConsumeLimit(): int
+    {
+        return static::MESSAGE_CONSUME_LIMIT;
+    }
+
+    /**
      * This configuration enables loggin for worker.
      *
      * @api
@@ -236,6 +249,6 @@ class MessageBrokerConfig extends AbstractBundleConfig
      */
     public function getConsumerGatewayUrl(): string
     {
-        return '';
+        return $this->get(MessageBrokerConstants::CONSUME_GATEWAY_URL, '');
     }
 }

@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBroker\Dependency\Guzzle;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class MessageBrokerToGuzzleClientBridge implements MessageBrokerToGuzzleClientInterface
 {
@@ -33,5 +34,17 @@ class MessageBrokerToGuzzleClientBridge implements MessageBrokerToGuzzleClientIn
     public function send(RequestInterface $request, array $options = [])
     {
         return $this->guzzleClient->send($request, $options);
+    }
+
+    /**
+     * @param string $method
+     * @param string $uri
+     * @param array $options
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function request(string $method, $uri, array $options = []): ResponseInterface
+    {
+        return $this->guzzleClient->request($method, $uri, $options);
     }
 }

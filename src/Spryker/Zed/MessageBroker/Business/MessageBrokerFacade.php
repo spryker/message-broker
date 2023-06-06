@@ -12,6 +12,7 @@ use Generated\Shared\Transfer\MessageResponseTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Messenger\Envelope;
 
 /**
  * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory getFactory()
@@ -82,10 +83,23 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
      *
      * @api
      *
+     * @param array<string> $channels
+     *
      * @return array<\Symfony\Component\Messenger\Envelope>
      */
-    public function getEnvelopes(): iterable
+    public function getEnvelopes(array $channels): iterable
     {
-        return $this->getFactory()->createHttpChannelReceiver()->receive();
+        return $this->getFactory()->createHttpChannelReceiver()->receive($channels);
+    }
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     * @param array $channels
+     *
+     * @return void
+     */
+    public function deleteEnvelope(Envelope $envelope, array $channels): void
+    {
+        $this->getFactory()->createHttpChannelReceiver()->delete($envelope, $channels);
     }
 }

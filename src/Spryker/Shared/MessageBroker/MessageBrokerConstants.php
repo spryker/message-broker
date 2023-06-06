@@ -38,4 +38,9 @@ interface MessageBrokerConstants
      * @var string
      */
     public const CHANNEL_TO_SENDER_TRANSPORT_MAP = 'MESSAGE_BROKER:CHANNEL_TO_RECEIVER_TRANSPORT_MAP';
+
+    /**
+     * @var string
+     */
+    public const CONSUME_GATEWAY_URL = 'MESSAGE_BROKER:CONSUME_GATEWAY_URL';
 }
