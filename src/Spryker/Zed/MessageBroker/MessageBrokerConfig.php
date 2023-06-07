@@ -241,7 +241,7 @@ class MessageBrokerConfig extends AbstractBundleConfig
      */
     public function getProducerGatewayUrl(): string
     {
-        return '';
+        return $this->get(MessageBrokerConstants::PRODUCER_GATEWAY_URL, '');
     }
 
     /**

@@ -102,4 +102,14 @@ class MessageBrokerFacade extends AbstractFacade implements MessageBrokerFacadeI
     {
         $this->getFactory()->createHttpChannelReceiver()->delete($envelope, $channels);
     }
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return \Symfony\Component\Messenger\Envelope
+     */
+    public function send(Envelope $envelope): Envelope
+    {
+        return $this->getFactory()->createSender()->send($envelope);
+    }
 }

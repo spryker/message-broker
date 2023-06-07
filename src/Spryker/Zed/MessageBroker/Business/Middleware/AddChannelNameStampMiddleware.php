@@ -45,7 +45,7 @@ class AddChannelNameStampMiddleware implements MiddlewareInterface
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
         $channel = $this->clientAttributeProvider->getChannelForMessageClass($envelope);
-        $envelope->with(new ChannelNameStamp($channel));
+        $envelope = $envelope->with(new ChannelNameStamp($channel));
 
         return $stack->next()->handle($envelope, $stack);
     }

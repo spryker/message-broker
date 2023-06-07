@@ -43,4 +43,9 @@ interface MessageBrokerConstants
      * @var string
      */
     public const CONSUME_GATEWAY_URL = 'MESSAGE_BROKER:CONSUME_GATEWAY_URL';
+
+    /**
+     * @var string
+     */
+    public const PRODUCER_GATEWAY_URL = 'MESSAGE_BROKER:PRODUCER_GATEWAY_URL';
 }

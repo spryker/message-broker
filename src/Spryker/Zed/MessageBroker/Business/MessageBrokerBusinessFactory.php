@@ -33,6 +33,8 @@ use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisher;
 use Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface;
 use Spryker\Zed\MessageBroker\Business\Receiver\HttpChannelReceiver;
 use Spryker\Zed\MessageBroker\Business\Receiver\HttpChannelReceiverInterface;
+use Spryker\Zed\MessageBroker\Business\Sender\Client\Formatter\HttpHeaderFormatter;
+use Spryker\Zed\MessageBroker\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface;
 use Spryker\Zed\MessageBroker\Business\Worker\Worker;
 use Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface;
 use Spryker\Zed\MessageBroker\Dependency\Guzzle\MessageBrokerToGuzzleClientInterface;
@@ -40,6 +42,12 @@ use Spryker\Zed\MessageBroker\Dependency\Oauth\MessageBrokerToOauthClientInterfa
 use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface;
+use Spryker\Zed\MessageBroker\Business\Sender\Sender;
+use Spryker\Zed\MessageBroker\Business\Sender\SenderInterface;
+use Spryker\Zed\MessageBroker\Business\Sender\Client\Locator\SenderClientLocator;
+use Spryker\Zed\MessageBroker\Business\Sender\Client\Locator\SenderClientLocatorInterface;
+use Spryker\Zed\MessageBroker\Business\Sender\Client\HttpChannelSenderClient;
+use Spryker\Zed\MessageBroker\Business\Sender\Client\SenderClientInterface;
 use SprykerSdk\AsyncApi\AsyncApi\Loader\AsyncApiLoader;
 use SprykerSdk\AsyncApi\AsyncApi\Loader\AsyncApiLoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -115,9 +123,9 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     public function getMiddlewares(): array
     {
         return array_merge($this->getMiddlewarePlugins(), [
+            $this->createAddChannelNameStampMiddleware(),
             $this->createSendMessageMiddleware(),
             $this->createHandleMessageMiddleware(),
-            $this->createAddChannelNameStampMiddleware(),
         ]);
     }
 
@@ -362,6 +370,61 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     public function getOauthClient(): MessageBrokerToOauthClientInterface
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::CLIENT_OAUTH);
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Sender\SenderInterface
+     */
+    public function createSender(): SenderInterface
+    {
+        return new Sender(
+            $this->getConfig(),
+            $this->createSenderClientLocator(),
+            $this->createConfigFormatter(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Sender\Client\Locator\SenderClientLocatorInterface
+     */
+    public function createSenderClientLocator(): SenderClientLocatorInterface
+    {
+        return new SenderClientLocator(
+            $this->getConfig(),
+            $this->getSenderClients(),
+            $this->createConfigFormatter(),
+        );
+    }
+
+    /**
+     * @return array<string, \Spryker\Zed\MessageBroker\Business\Sender\Client\SenderClientInterface>
+     */
+    public function getSenderClients(): array
+    {
+        return [
+            'http-channel' => $this->createHttpChannelSenderClient(),
+        ];
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Sender\Client\SenderClientInterface
+     */
+    public function createHttpChannelSenderClient(): SenderClientInterface
+    {
+        return new HttpChannelSenderClient(
+            $this->getConfig(),
+            $this->getGuzzleClient(),
+            $this->getMessageBrokerAws(),
+            $this->createHttpHeaderFormatter(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBroker\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface
+     */
+    public function createHttpHeaderFormatter(): HttpHeaderFormatterInterface
+    {
+        return new HttpHeaderFormatter($this->getConfig());
     }
 
     /**

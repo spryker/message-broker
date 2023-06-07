@@ -89,4 +89,11 @@ interface MessageBrokerFacadeInterface
      * @return void
      */
     public function deleteEnvelope(Envelope $envelope, array $channels): void;
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return \Symfony\Component\Messenger\Envelope
+     */
+    public function send(Envelope $envelope): Envelope;
 }
