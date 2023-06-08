@@ -45,6 +45,6 @@ class HttpChannelMessageSenderPlugin extends AbstractPlugin implements MessageSe
      */
     public function send(Envelope $envelope): Envelope
     {
-        return $this->getFacade()->send($envelope);
+        return $this->getFacade()->sendEnvelopeWithHttpChannel($envelope);
     }
 }

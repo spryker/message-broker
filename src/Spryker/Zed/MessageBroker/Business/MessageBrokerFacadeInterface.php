@@ -95,5 +95,5 @@ interface MessageBrokerFacadeInterface
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
-    public function send(Envelope $envelope): Envelope;
+    public function sendEnvelopeWithHttpChannel(Envelope $envelope): Envelope;
 }

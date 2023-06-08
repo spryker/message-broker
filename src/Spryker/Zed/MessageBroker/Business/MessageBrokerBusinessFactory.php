@@ -42,8 +42,8 @@ use Spryker\Zed\MessageBroker\Dependency\Oauth\MessageBrokerToOauthClientInterfa
 use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerDependencyProvider;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface;
-use Spryker\Zed\MessageBroker\Business\Sender\Sender;
-use Spryker\Zed\MessageBroker\Business\Sender\SenderInterface;
+use Spryker\Zed\MessageBroker\Business\Sender\HttpChannelSender;
+use Spryker\Zed\MessageBroker\Business\Sender\HttpChannelSenderInterface;
 use Spryker\Zed\MessageBroker\Business\Sender\Client\Locator\SenderClientLocator;
 use Spryker\Zed\MessageBroker\Business\Sender\Client\Locator\SenderClientLocatorInterface;
 use Spryker\Zed\MessageBroker\Business\Sender\Client\HttpChannelSenderClient;
@@ -373,40 +373,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\MessageBroker\Business\Sender\SenderInterface
-     */
-    public function createSender(): SenderInterface
-    {
-        return new Sender(
-            $this->getConfig(),
-            $this->createSenderClientLocator(),
-            $this->createConfigFormatter(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\Sender\Client\Locator\SenderClientLocatorInterface
-     */
-    public function createSenderClientLocator(): SenderClientLocatorInterface
-    {
-        return new SenderClientLocator(
-            $this->getConfig(),
-            $this->getSenderClients(),
-            $this->createConfigFormatter(),
-        );
-    }
-
-    /**
-     * @return array<string, \Spryker\Zed\MessageBroker\Business\Sender\Client\SenderClientInterface>
-     */
-    public function getSenderClients(): array
-    {
-        return [
-            'http-channel' => $this->createHttpChannelSenderClient(),
-        ];
-    }
-
-    /**
      * @return \Spryker\Zed\MessageBroker\Business\Sender\Client\SenderClientInterface
      */
     public function createHttpChannelSenderClient(): SenderClientInterface
@@ -424,7 +390,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     public function createHttpHeaderFormatter(): HttpHeaderFormatterInterface
     {
-        return new HttpHeaderFormatter($this->getConfig());
+        return new HttpHeaderFormatter();
     }
 
     /**

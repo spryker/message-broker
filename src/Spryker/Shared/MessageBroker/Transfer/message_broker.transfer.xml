@@ -61,10 +61,6 @@
         <property name="consumerId" type="string"/>
     </transfer>
 
-    <transfer name="HttpRequest">
-        <property name="consumerId" type="string"/>
-    </transfer>
-
     <transfer name="HttpChannelMessage">
         <property name="message" type="string"/>
         <property name="messageId" type="string"/>

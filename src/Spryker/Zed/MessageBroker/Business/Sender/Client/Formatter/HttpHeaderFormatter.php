@@ -13,19 +13,6 @@ use Spryker\Zed\MessageBroker\MessageBrokerConfig;
 class HttpHeaderFormatter implements HttpHeaderFormatterInterface
 {
     /**
-     * @var \Spryker\Zed\MessageBroker\MessageBrokerConfig
-     */
-    protected $MessageBrokerConfig;
-
-    /**
-     * @param \Spryker\Zed\MessageBroker\MessageBrokerConfig $MessageBrokerConfig
-     */
-    public function __construct(MessageBrokerConfig $MessageBrokerConfig)
-    {
-        $this->MessageBrokerConfig = $MessageBrokerConfig;
-    }
-
-    /**
      * @param array<string, mixed> $headers
      *
      * @return array<string, mixed>
@@ -48,8 +35,8 @@ class HttpHeaderFormatter implements HttpHeaderFormatterInterface
             $formattedHeaders[$headerName] = $value;
         }
 
-        $formattedHeaders['Actor-Id'] = $formattedHeaders['Tenant-Identifier'];
-        $formattedHeaders['Name'] = $formattedHeaders['Transfer-Name'];
+        $formattedHeaders['Actor-Id'] = $formattedHeaders['Tenant-Identifier'] ?? null;
+        $formattedHeaders['Name'] = $formattedHeaders['Transfer-Name'] ?? null;
 
         return $formattedHeaders;
     }

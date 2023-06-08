@@ -70,12 +70,14 @@ class MessageSenderLocator implements SendersLocatorInterface
      */
     protected function getMessageSenderPlugins(Envelope $envelope): iterable
     {
-        $clientName = $this->getSenderClientNameForMessage($envelope);
+        $clientNames = $this->getSenderClientNameForMessage($envelope);
 
         $clientMessageSenderPlugins = [];
         foreach ($this->messageSenderPlugins as $messageSenderPlugin) {
-            if ($clientName === null || $clientName === $messageSenderPlugin->getTransportName()) {
-                $clientMessageSenderPlugins[$messageSenderPlugin->getTransportName()] = $messageSenderPlugin;
+            foreach ($clientNames as $clientName) {
+                if ($clientName === null || $clientName === $messageSenderPlugin->getTransportName()) {
+                    $clientMessageSenderPlugins[$messageSenderPlugin->getTransportName()] = $messageSenderPlugin;
+                }
             }
         }
 
@@ -85,9 +87,9 @@ class MessageSenderLocator implements SendersLocatorInterface
     /**
      * @param \Symfony\Component\Messenger\Envelope $envelope
      *
-     * @return string|null
+     * @return array|null
      */
-    protected function getSenderClientNameForMessage(Envelope $envelope): ?string
+    protected function getSenderClientNameForMessage(Envelope $envelope): ?array
     {
         $channel =  $this->clientAttributeProvider->getChannelForMessageClass($envelope);
 
@@ -106,7 +108,11 @@ class MessageSenderLocator implements SendersLocatorInterface
         $channelToSenderClientMap = array_merge($channelToSenderClientMap, $channelToSenderTransportMap);
 
         if (isset($channelToSenderClientMap[$channel])) {
-            return $channelToSenderClientMap[$channel];
+            if (is_array($channelToSenderClientMap[$channel])) {
+                return $channelToSenderClientMap[$channel];
+            }
+
+            return [$channelToSenderClientMap[$channel]];
         }
 
         return null;
