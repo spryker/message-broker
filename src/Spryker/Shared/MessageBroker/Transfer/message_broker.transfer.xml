@@ -67,4 +67,10 @@
         <property name="messageAttributes" type="MessageAttributes"/>
     </transfer>
 
+    <transfer name="PaymentPreauthorized">
+        <property name="message" type="string"/>
+        <property name="messageId" type="string"/>
+        <property name="messageAttributes" type="MessageAttributes"/>
+    </transfer>
+
 </transfers>

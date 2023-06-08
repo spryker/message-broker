@@ -105,25 +105,27 @@ class Worker implements WorkerInterface
             $options['sleep'] = $messageBrokerWorkerConfigTransfer->getSleep();
         }
 
-        $this->run($options, $channels);
+        $receivers = $this->prepareReceiverPlugins($channels, $messageBrokerWorkerConfigTransfer);
+        $this->run($options, $receivers);
     }
 
     /**
      * @param array<string> $channels
+     * @param \Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
      *
      * @return array<string, \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface>
      */
-    protected function prepareReceiverPlugins(array $channels): array
+    protected function prepareReceiverPlugins(array $channels, MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): array
     {
         $channelToReceiverTransportMap = $this->config->getChannelToReceiverTransportMap();
         $receivers = [];
+        $receiverTransports = $this->getReceiverTransports($channels);
 
         foreach ($this->messageReceiverPlugins as $messageReceiverPlugin) {
-            foreach ($channels as $channel) {
-                if (!isset($channelToReceiverTransportMap[$channel])) {
+            foreach ($receiverTransports as $receiverTransport) {
+                if (!$messageBrokerWorkerConfigTransfer->getIsQueueEnabled() && $receiverTransport == 'sqs') {
                     continue;
                 }
-                $receiverTransport = $channelToReceiverTransportMap[$channel];
 
                 if ($messageReceiverPlugin->getTransportName() == $receiverTransport) {
                     $messageReceiverPlugin->setChannels($channels);
@@ -136,15 +138,38 @@ class Worker implements WorkerInterface
     }
 
     /**
+     * @param array $channels
+     *
+     * @return array
+     */
+    protected function getReceiverTransports(array $channels): array
+    {
+        $channelToReceiverTransportMap = $this->config->getChannelToReceiverTransportMap();
+
+        $transports = [];
+        foreach ($channels as $channel) {
+            if (!isset($channelToReceiverTransportMap[$channel])) {
+                continue;
+            }
+
+            if (is_array($channelToReceiverTransportMap[$channel])) {
+                $transports = array_merge($transports, $channelToReceiverTransportMap[$channel]);
+            } else {
+                $transports[] = $channelToReceiverTransportMap[$channel];
+            }
+        }
+
+        return $transports;
+    }
+
+    /**
      * @param array<string, mixed> $options
-     * @param array<string> $channels
+     * @param array<mixed> $channels
      *
      * @return void
      */
-    protected function run(array $options, array $channels): void
+    protected function run(array $options, array $receivers): void
     {
-        $receivers = $this->prepareReceiverPlugins($channels);
-
         $worker = new SymfonyWorker($receivers, $this->bus, $this->eventDispatcher, $this->logger);
         $worker->run($options);
     }

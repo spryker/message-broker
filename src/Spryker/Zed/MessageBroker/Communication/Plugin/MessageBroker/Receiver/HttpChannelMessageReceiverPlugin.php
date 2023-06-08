@@ -87,7 +87,7 @@ class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements Message
      */
     public function ack(Envelope $envelope): void
     {
-        $this->getFacade()->deleteEnvelope($envelope, $this->channels);
+        $this->getFacade()->deleteEnvelope($envelope);
     }
 
     /**
@@ -101,6 +101,6 @@ class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements Message
      */
     public function reject(Envelope $envelope): void
     {
-        $this->getFacade()->deleteEnvelope($envelope, $this->channels);
+        $this->getFacade()->deleteEnvelope($envelope);
     }
 }

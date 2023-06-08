@@ -12,6 +12,7 @@ use Generated\Shared\Transfer\HttpChannelMessageTransfer;
 use Generated\Shared\Transfer\HttpRequestTransfer;
 use GuzzleHttp\RequestOptions;
 use Monolog\Logger;
+use Spryker\Zed\MessageBroker\Business\Receiver\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBroker\Dependency\Guzzle\MessageBrokerToGuzzleClientInterface;
 use Spryker\Zed\MessageBroker\Dependency\Oauth\MessageBrokerToOauthClientInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerConfig;
@@ -96,32 +97,30 @@ class HttpChannelReceiver implements HttpChannelReceiverInterface
 
     /**
      * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param array $channels
      *
      * @return void
      */
-    public function delete(Envelope $envelope, $channels): void
+    public function delete(Envelope $envelope): void
     {
         $httpRequestTransfer = $this->getHttpRequestTransfer();
         $messageId = $envelope->getMessage()->getMessageId();
+        $channelNameStamp = $envelope->last(ChannelNameStamp::class);
 
-        foreach ($channels as $channel) {
-            $body = json_encode([
-                "messageIds" => [$messageId]
-            ]);
-            $response = $this->httpClient->request(
-                Request::METHOD_DELETE,
-                $this->messageBrokerConfig->getConsumerGatewayUrl() . $channel,
-                [
-                    RequestOptions::HEADERS => [
-                        'consumer-id' => $httpRequestTransfer->getConsumerId(),
-                        'authorization' => $httpRequestTransfer->getAuthorization(),
-                        'Content-Type' => 'application/json',
-                    ],
-                    RequestOptions::BODY => $body,
+        $body = json_encode([
+            "messageIds" => [$messageId]
+        ]);
+        $response = $this->httpClient->request(
+            Request::METHOD_DELETE,
+            $this->messageBrokerConfig->getConsumerGatewayUrl() . $channelNameStamp->getChannelName(),
+            [
+                RequestOptions::HEADERS => [
+                    'consumer-id' => $httpRequestTransfer->getConsumerId(),
+                    'authorization' => $httpRequestTransfer->getAuthorization(),
+                    'Content-Type' => 'application/json',
                 ],
-            );
-        }
+                RequestOptions::BODY => $body,
+            ],
+        );
     }
 
     /**
@@ -146,7 +145,9 @@ class HttpChannelReceiver implements HttpChannelReceiverInterface
     {
         $envelopes = [];
         foreach ($messages as $message) {
-            $message['MessageAttributes']['transferName'] = 'HttpChannelMessage';
+            if (!isset($message['MessageAttributes']['transferName'])) {
+                $message['MessageAttributes']['transferName'] = $message['MessageAttributes']['name'];
+            }
 
             $envelopeData = [
                 'body' => json_encode([
