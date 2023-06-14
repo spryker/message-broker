@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
+use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface;
 use Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBroker\Business\Receiver\Stamp\ChannelNameStamp;
@@ -74,7 +75,7 @@ class HttpChannelSenderClient implements SenderClientInterface
     public function send(Envelope $envelope): Envelope
     {
         $channelNameStamp = $envelope->last(ChannelNameStamp::class);
-        $encodedMessage = $this->messageBrokerAwsFacade->serializeEnvelope($envelope);
+        $encodedMessage = (new MessageBrokerAwsBusinessFactory())->createSerializer()->encode($envelope);
         $headers = $this->headerFormatter->formatHeaders($encodedMessage['headers'] ?? []);
         $body = '"' . addcslashes(json_encode($encodedMessage['bodyRaw']), '"') . '"';
 

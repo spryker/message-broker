@@ -11,12 +11,14 @@ use Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer;
 use Psr\Log\LoggerInterface;
 use Spryker\Zed\MessageBroker\Business\ClientAttributeProvider\ClientAttributeProviderInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerConfig;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageChannelReceiverPluginInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnFailureLimitListener;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMemoryLimitListener;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnTimeLimitListener;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 use Symfony\Component\Messenger\Worker as SymfonyWorker;
 
 class Worker implements WorkerInterface
@@ -74,6 +76,8 @@ class Worker implements WorkerInterface
      */
     public function runWorker(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): void
     {
+        $options = [];
+
         if ($messageBrokerWorkerConfigTransfer->getLimit()) {
             $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener($messageBrokerWorkerConfigTransfer->getLimit(), $this->logger));
         }
@@ -96,9 +100,7 @@ class Worker implements WorkerInterface
         }
 
         if ($messageBrokerWorkerConfigTransfer->getIsQueueEnabled()) {
-            $options = [
-                'queues' => $channels,
-            ];
+            $options['queues'] = $channels;
         }
 
         if ($messageBrokerWorkerConfigTransfer->getSleep()) {
@@ -117,20 +119,28 @@ class Worker implements WorkerInterface
      */
     protected function prepareReceiverPlugins(array $channels, MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): array
     {
-        $channelToReceiverTransportMap = $this->config->getChannelToReceiverTransportMap();
         $receivers = [];
         $receiverTransports = $this->getReceiverTransports($channels);
 
         foreach ($this->messageReceiverPlugins as $messageReceiverPlugin) {
             foreach ($receiverTransports as $receiverTransport) {
-                if (!$messageBrokerWorkerConfigTransfer->getIsQueueEnabled() && $receiverTransport == 'sqs') {
+                if (!$messageBrokerWorkerConfigTransfer->getIsQueueEnabled() && $messageReceiverPlugin instanceof QueueReceiverInterface) {
                     continue;
                 }
 
-                if ($messageReceiverPlugin->getTransportName() == $receiverTransport) {
-                    $messageReceiverPlugin->setChannels($channels);
-                    $receivers[$receiverTransport] = $messageReceiverPlugin;
+                if ($messageBrokerWorkerConfigTransfer->getIsQueueEnabled() && !$messageReceiverPlugin instanceof QueueReceiverInterface) {
+                    continue;
                 }
+
+                if ($messageReceiverPlugin->getTransportName() !== $receiverTransport) {
+                    continue;
+                }
+
+                if ($messageReceiverPlugin instanceof MessageChannelReceiverPluginInterface) {
+                    $messageReceiverPlugin->setChannels($channels);
+                }
+
+                $receivers[$receiverTransport] = $messageReceiverPlugin;
             }
         }
 
@@ -159,7 +169,7 @@ class Worker implements WorkerInterface
             }
         }
 
-        return $transports;
+        return array_unique($transports);
     }
 
     /**

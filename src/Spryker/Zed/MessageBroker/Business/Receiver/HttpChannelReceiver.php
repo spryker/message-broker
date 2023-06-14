@@ -10,12 +10,14 @@ namespace Spryker\Zed\MessageBroker\Business\Receiver;
 use Generated\Shared\Transfer\AccessTokenRequestTransfer;
 use Generated\Shared\Transfer\HttpChannelMessageTransfer;
 use Generated\Shared\Transfer\HttpRequestTransfer;
+use Generated\Shared\Transfer\MessageMetadataTransfer;
 use GuzzleHttp\RequestOptions;
 use Monolog\Logger;
 use Spryker\Zed\MessageBroker\Business\Receiver\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBroker\Dependency\Guzzle\MessageBrokerToGuzzleClientInterface;
 use Spryker\Zed\MessageBroker\Dependency\Oauth\MessageBrokerToOauthClientInterface;
 use Spryker\Zed\MessageBroker\MessageBrokerConfig;
+use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\Envelope;
@@ -103,12 +105,13 @@ class HttpChannelReceiver implements HttpChannelReceiverInterface
     public function delete(Envelope $envelope): void
     {
         $httpRequestTransfer = $this->getHttpRequestTransfer();
-        $messageId = $envelope->getMessage()->getMessageId();
+        $messageId = $envelope->getMessage()->getMessageAttributes()->getMetadata()->getMessageId();
         $channelNameStamp = $envelope->last(ChannelNameStamp::class);
 
         $body = json_encode([
             "messageIds" => [$messageId]
         ]);
+
         $response = $this->httpClient->request(
             Request::METHOD_DELETE,
             $this->messageBrokerConfig->getConsumerGatewayUrl() . $channelNameStamp->getChannelName(),
@@ -150,13 +153,14 @@ class HttpChannelReceiver implements HttpChannelReceiverInterface
             }
 
             $envelopeData = [
-                'body' => json_encode([
-                    'message' => $message['MessageBody'],
-                    'messageId' => $message['MessageId'],
-                ]),
+                'body' => $message['MessageBody'],
                 'headers' => $message['MessageAttributes'],
             ];
-            $envelopes[] = $this->messageBrokerAwsFacade->createEnvelope($envelopeData);
+            $envelope = (new MessageBrokerAwsBusinessFactory())->createSerializer()->decode($envelopeData);
+            $envelope->getMessage()->getMessageAttributes()->setMetadata(
+                (new MessageMetadataTransfer())->setMessageId($message['MessageId']),
+            );
+            $envelopes[] = $envelope;
         }
 
         return $envelopes;

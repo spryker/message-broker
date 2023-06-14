@@ -10,6 +10,7 @@ namespace Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\Receiver;
 use Exception;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBroker\MessageBrokerConfig;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageChannelReceiverPluginInterface;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
  * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface getFacade()
  */
-class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
+class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements MessageChannelReceiverPluginInterface
 {
     /**
      * @var array<string>
@@ -46,20 +47,6 @@ class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements Message
         $this->channels = $channels;
 
         return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param array<string> $queueNames
-     *
-     * @return array<\Symfony\Component\Messenger\Envelope>
-     */
-    public function getFromQueues(array $queueNames): iterable
-    {
-        return [];
     }
 
     /**

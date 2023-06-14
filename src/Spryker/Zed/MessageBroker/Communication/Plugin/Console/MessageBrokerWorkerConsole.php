@@ -124,7 +124,7 @@ class MessageBrokerWorkerConsole extends Console
             new InputOption(
                 static::OPTION_NOT_QUEUE,
                 static::OPTION_NOT_QUEUE_SHORT,
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_NONE,
                 'To skip using queues option',
             ),
         ]);

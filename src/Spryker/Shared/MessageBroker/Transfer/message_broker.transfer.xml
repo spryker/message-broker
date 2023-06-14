@@ -61,16 +61,12 @@
         <property name="consumerId" type="string"/>
     </transfer>
 
-    <transfer name="HttpChannelMessage">
-        <property name="message" type="string"/>
-        <property name="messageId" type="string"/>
-        <property name="messageAttributes" type="MessageAttributes"/>
+    <transfer name="MessageAttributes">
+        <property name="metadata" type="MessageMetadata"/>
     </transfer>
 
-    <transfer name="PaymentPreauthorized">
-        <property name="message" type="string"/>
+    <transfer name="MessageMetadata">
         <property name="messageId" type="string"/>
-        <property name="messageAttributes" type="MessageAttributes"/>
     </transfer>
 
 </transfers>
