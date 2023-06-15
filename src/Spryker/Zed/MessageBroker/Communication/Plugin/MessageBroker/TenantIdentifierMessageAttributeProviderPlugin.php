@@ -32,7 +32,10 @@ class TenantIdentifierMessageAttributeProviderPlugin extends AbstractPlugin impl
             return $messageAttributesTransfer;
         }
 
-        $messageAttributesTransfer->setTenantIdentifier(getenv('SPRYKER_TENANT_IDENTIFIER'));
+        $tenantIdentifier = getenv('SPRYKER_TENANT_IDENTIFIER') ?: '';
+
+        $messageAttributesTransfer->setTenantIdentifier($tenantIdentifier);
+        $messageAttributesTransfer->setActorId($tenantIdentifier);
 
         return $messageAttributesTransfer;
     }

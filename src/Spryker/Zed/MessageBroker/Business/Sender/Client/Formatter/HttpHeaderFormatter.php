@@ -35,7 +35,6 @@ class HttpHeaderFormatter implements HttpHeaderFormatterInterface
             $formattedHeaders[$headerName] = $value;
         }
 
-        $formattedHeaders['Actor-Id'] = $formattedHeaders['Tenant-Identifier'] ?? null;
         $formattedHeaders['Name'] = $formattedHeaders['Transfer-Name'] ?? null;
 
         return $formattedHeaders;
