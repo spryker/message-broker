@@ -12,15 +12,14 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageAttributeProviderPluginInterface;
 
 /**
- * @deprecated Use {@link \Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\TenantActorMessageAttributeProviderPlugin} instead.
- *
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
  * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface getFacade()
  */
-class TenantIdentifierMessageAttributeProviderPlugin extends AbstractPlugin implements MessageAttributeProviderPluginInterface
+class TenantActorMessageAttributeProviderPlugin extends AbstractPlugin implements MessageAttributeProviderPluginInterface
 {
     /**
      * {@inheritDoc}
+     * - Sets `MessageAttributes.tenantIdentifier` and `MessageAttributes.actorId` using tenant identifier value.
      *
      * @api
      *
@@ -30,12 +29,10 @@ class TenantIdentifierMessageAttributeProviderPlugin extends AbstractPlugin impl
      */
     public function provideMessageAttributes(MessageAttributesTransfer $messageAttributesTransfer): MessageAttributesTransfer
     {
-        if (!getenv('TENANT_IDENTIFIER')) {
-            return $messageAttributesTransfer;
-        }
+        $tenantIdentifier = $this->getConfig()->getTenantIdentifier();
 
-        $messageAttributesTransfer->setTenantIdentifier(getenv('TENANT_IDENTIFIER'));
-
-        return $messageAttributesTransfer;
+        return $messageAttributesTransfer
+            ->setTenantIdentifier($tenantIdentifier)
+            ->setActorId($tenantIdentifier);
     }
 }
