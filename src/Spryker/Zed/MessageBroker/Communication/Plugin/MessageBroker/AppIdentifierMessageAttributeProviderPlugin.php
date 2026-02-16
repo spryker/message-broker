@@ -28,11 +28,12 @@ class AppIdentifierMessageAttributeProviderPlugin extends AbstractPlugin impleme
      */
     public function provideMessageAttributes(MessageAttributesTransfer $messageAttributesTransfer): MessageAttributesTransfer
     {
-        if (!getenv('AOP_APP_IDENTIFIER')) {
+        $aopAppIdentifier = getenv('AOP_APP_IDENTIFIER');
+        if ($aopAppIdentifier === false) {
             return $messageAttributesTransfer;
         }
 
-        $emitter = $messageAttributesTransfer->getEmitter() ?? getenv('AOP_APP_IDENTIFIER');
+        $emitter = $messageAttributesTransfer->getEmitter() ?? $aopAppIdentifier;
         $messageAttributesTransfer->setEmitter($emitter);
 
         return $messageAttributesTransfer;

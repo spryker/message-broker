@@ -24,7 +24,7 @@ interface MessageChannelProviderInterface
     /**
      * @param \Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
      *
-     * @return list<string>
+     * @return array<string>
      */
     public function getChannelsForConsuming(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): array;
 

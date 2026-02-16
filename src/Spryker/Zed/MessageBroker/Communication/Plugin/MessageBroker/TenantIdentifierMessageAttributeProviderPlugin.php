@@ -30,11 +30,12 @@ class TenantIdentifierMessageAttributeProviderPlugin extends AbstractPlugin impl
      */
     public function provideMessageAttributes(MessageAttributesTransfer $messageAttributesTransfer): MessageAttributesTransfer
     {
-        if (!getenv('TENANT_IDENTIFIER')) {
+        $tenantIdentifier = getenv('TENANT_IDENTIFIER');
+        if ($tenantIdentifier === false) {
             return $messageAttributesTransfer;
         }
 
-        $messageAttributesTransfer->setTenantIdentifier(getenv('TENANT_IDENTIFIER'));
+        $messageAttributesTransfer->setTenantIdentifier($tenantIdentifier);
 
         return $messageAttributesTransfer;
     }

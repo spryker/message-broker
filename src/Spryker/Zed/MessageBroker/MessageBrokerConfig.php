@@ -166,8 +166,9 @@ class MessageBrokerConfig extends AbstractBundleConfig
      */
     public function getMessageToChannelMap()
     {
-        if (getenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP') !== false) {
-            return getenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP');
+        $messageToChannelMap = getenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP');
+        if ($messageToChannelMap !== false) {
+            return $messageToChannelMap;
         }
 
         if ($this->getConfig()->hasKey(MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP)) {
@@ -191,8 +192,9 @@ class MessageBrokerConfig extends AbstractBundleConfig
      */
     public function getChannelToTransportMap()
     {
-        if (getenv('SPRYKER_CHANNEL_TO_TRANSPORT_MAP') !== false) {
-            return getenv('SPRYKER_CHANNEL_TO_TRANSPORT_MAP');
+        $channelToTransportMap = getenv('SPRYKER_CHANNEL_TO_TRANSPORT_MAP');
+        if ($channelToTransportMap !== false) {
+            return $channelToTransportMap;
         }
 
         if ($this->getConfig()->hasKey(MessageBrokerConstants::CHANNEL_TO_TRANSPORT_MAP)) {

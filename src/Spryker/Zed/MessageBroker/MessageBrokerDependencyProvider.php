@@ -138,7 +138,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface>
+     * @return list<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface>
      */
     public function getMessageReceiverPlugins(): array
     {
@@ -264,7 +264,7 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\FilterMessageChannelPluginInterface>
+     * @return list<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\FilterMessageChannelPluginInterface>
      */
     public function getFilterMessageChannelPlugins(): array
     {

@@ -260,7 +260,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface>
+     * @return list<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface>
      */
     public function getMessageReceiverPlugins(): array
     {
@@ -331,7 +331,7 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\FilterMessageChannelPluginInterface>
+     * @return list<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\FilterMessageChannelPluginInterface>
      */
     public function getMessageChannelPlugins(): array
     {

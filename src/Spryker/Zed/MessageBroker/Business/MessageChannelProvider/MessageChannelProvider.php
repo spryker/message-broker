@@ -31,14 +31,14 @@ class MessageChannelProvider implements MessageChannelProviderInterface
     protected ConfigFormatterInterface $configFormatter;
 
     /**
-     * @var list<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\FilterMessageChannelPluginInterface>
+     * @var array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\FilterMessageChannelPluginInterface>
      */
     protected array $filterMessageChannelPlugins;
 
     /**
      * @param \Spryker\Zed\MessageBroker\MessageBrokerConfig $config
      * @param \Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface $configFormatter
-     * @param list<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\FilterMessageChannelPluginInterface> $filterMessageChannelPlugins
+     * @param array<\Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\FilterMessageChannelPluginInterface> $filterMessageChannelPlugins
      */
     public function __construct(
         MessageBrokerConfig $config,
@@ -65,7 +65,7 @@ class MessageChannelProvider implements MessageChannelProviderInterface
     /**
      * @param \Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
      *
-     * @return list<string>
+     * @return array<string>
      */
     public function getChannelsForConsuming(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): array
     {
@@ -131,9 +131,9 @@ class MessageChannelProvider implements MessageChannelProviderInterface
     }
 
     /**
-     * @param list<string> $channels
+     * @param array<string> $channels
      *
-     * @return list<string>
+     * @return array<string>
      */
     protected function applyFilterMessageChannelPlugins(array $channels): array
     {
@@ -141,6 +141,6 @@ class MessageChannelProvider implements MessageChannelProviderInterface
             $channels = $filterMessageChannelPlugin->filter($channels);
         }
 
-        return array_values($channels);
+        return $channels;
     }
 }
