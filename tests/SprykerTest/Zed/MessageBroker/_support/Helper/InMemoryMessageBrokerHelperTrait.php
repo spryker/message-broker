@@ -11,9 +11,6 @@ use Codeception\Module;
 
 trait InMemoryMessageBrokerHelperTrait
 {
-    /**
-     * @return \SprykerTest\Zed\MessageBroker\Helper\InMemoryMessageBrokerHelper
-     */
     protected function getInMemoryMessageBrokerHelper(): InMemoryMessageBrokerHelper
     {
         /** @var \SprykerTest\Zed\MessageBroker\Helper\InMemoryMessageBrokerHelper $inMemoryMessageBrokerHelper */
@@ -22,10 +19,5 @@ trait InMemoryMessageBrokerHelperTrait
         return $inMemoryMessageBrokerHelper;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return \Codeception\Module
-     */
     abstract protected function getModule(string $name): Module;
 }

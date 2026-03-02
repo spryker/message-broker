@@ -24,10 +24,6 @@ class MessageValidator implements MessageValidatorInterface
      */
     protected MessageBrokerConfig $messageBrokerConfig;
 
-    /**
-     * @param \Spryker\Zed\MessageBroker\Business\MessageChannelProvider\MessageChannelProviderInterface $messageChannelProvider
-     * @param \Spryker\Zed\MessageBroker\MessageBrokerConfig $messageBrokerConfig
-     */
     public function __construct(
         MessageChannelProviderInterface $messageChannelProvider,
         MessageBrokerConfig $messageBrokerConfig
@@ -36,11 +32,6 @@ class MessageValidator implements MessageValidatorInterface
         $this->messageBrokerConfig = $messageBrokerConfig;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\MessageSendingContextTransfer $messageSendingContextTransfer
-     *
-     * @return bool
-     */
     public function isMessageSendable(MessageSendingContextTransfer $messageSendingContextTransfer): bool
     {
         if (!$this->messageBrokerConfig->isEnabled()) {

@@ -30,9 +30,6 @@ class CorrelationIdMessageAttributeProviderPluginTest extends Unit
      */
     protected const CORRELATION_ID = 'foo';
 
-    /**
-     * @return void
-     */
     public function testProvideMessageAttributesAddsCorrelationIdWhenItDoesNotExists(): void
     {
         // Arrange
@@ -46,9 +43,6 @@ class CorrelationIdMessageAttributeProviderPluginTest extends Unit
         $this->assertNotNull($messageAttributesTransfer->getCorrelationId());
     }
 
-    /**
-     * @return void
-     */
     public function testProvideMessageAttributesDoesNotAddCorrelationIdWhenItAlreadyExists(): void
     {
         // Arrange

@@ -50,11 +50,6 @@ class MessageChannelProvider implements MessageChannelProviderInterface
         $this->filterMessageChannelPlugins = $filterMessageChannelPlugins;
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return string|null
-     */
     public function findChannelForMessage(Envelope $envelope): ?string
     {
         $messageName = get_class($envelope->getMessage());

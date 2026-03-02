@@ -25,9 +25,6 @@ use Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServ
  */
 class JsonToArrayConfigFormatterTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testFormatFormatsJsonStringToArray(): void
     {
         // Arrange
@@ -40,9 +37,6 @@ class JsonToArrayConfigFormatterTest extends Unit
         $this->assertSame(['foo' => 'bar'], $formatted);
     }
 
-    /**
-     * @return void
-     */
     public function testFormatThrowsExceptionWhenStringCanNotBeConvertedToArray(): void
     {
         // Arrange
@@ -55,9 +49,6 @@ class JsonToArrayConfigFormatterTest extends Unit
         $jsonToArrayConfigFormatter->format('"foo": "bar"');
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface
-     */
     protected function getUtilEncodingMock(): MessageBrokerToUtilEncodingServiceInterface
     {
         $utilEncodingService = $this->createMock(MessageBrokerToUtilEncodingServiceInterface::class);

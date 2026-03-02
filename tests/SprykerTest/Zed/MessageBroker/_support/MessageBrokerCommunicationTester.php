@@ -42,9 +42,6 @@ class MessageBrokerCommunicationTester extends Actor
 {
     use _generated\MessageBrokerCommunicationTesterActions;
 
-    /**
-     * @return \Symfony\Component\Console\Tester\CommandTester
-     */
     public function getWorkerConsoleCommandTester(): CommandTester
     {
         $this->mockWorker();
@@ -56,9 +53,6 @@ class MessageBrokerCommunicationTester extends Actor
         return $this->getConsoleTester($command);
     }
 
-    /**
-     * @return \Symfony\Component\Console\Tester\CommandTester
-     */
     public function getDebugConsoleCommandTester(): CommandTester
     {
         $facade = $this->getFacade();
@@ -69,9 +63,6 @@ class MessageBrokerCommunicationTester extends Actor
         return $this->getConsoleTester($command);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\ValidationMiddlewarePlugin
-     */
     public function createValidationMiddlewarePluginThatCanHandleAMessage(): ValidationMiddlewarePlugin
     {
         $messageBrokerFacadeMock = Stub::make(MessageBrokerFacade::class, [
@@ -84,9 +75,6 @@ class MessageBrokerCommunicationTester extends Actor
         return $validationMiddlewarePlugin;
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\ValidationMiddlewarePlugin
-     */
     public function createValidationMiddlewarePluginThatCanNotHandleAMessage(): ValidationMiddlewarePlugin
     {
         $messageBrokerFacadeMock = Stub::make(MessageBrokerFacade::class, [
@@ -111,11 +99,6 @@ class MessageBrokerCommunicationTester extends Actor
         ]);
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return \Symfony\Component\Messenger\Middleware\StackInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
     public function createStackMockWithOnceCalledNextMethod(Envelope $envelope): StackInterface|MockObject
     {
         $stackMock = Stub::makeEmpty(StackInterface::class);
@@ -127,9 +110,6 @@ class MessageBrokerCommunicationTester extends Actor
         return $stackMock;
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Middleware\StackInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
     public function createStackMockWithNeverCalledNextMethod(): StackInterface|MockObject
     {
         $stackMock = Stub::makeEmpty(StackInterface::class);

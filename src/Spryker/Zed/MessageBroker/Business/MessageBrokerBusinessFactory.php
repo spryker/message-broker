@@ -63,9 +63,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
      */
     protected const LOGGER_NAME = 'messageBrokerLogger';
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\Publisher\MessagePublisherInterface
-     */
     public function createMessagePublisher(): MessagePublisherInterface
     {
         return new MessagePublisher(
@@ -75,17 +72,11 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\Logger\MessageLoggerInterface
-     */
     public function createMessageLogger(): MessageLoggerInterface
     {
         return new MessageLogger($this->getConfig());
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface
-     */
     public function createMessageDecorator(): MessageAttributeProviderInterface
     {
         return new MessageAttributeProvider(
@@ -101,9 +92,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER);
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\MessageBusInterface
-     */
     public function createMessageBus(): MessageBusInterface
     {
         return new MessageBus(
@@ -131,17 +119,11 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Middleware\MiddlewareInterface
-     */
     public function createLogMessageHandlingResultMiddleware(): MiddlewareInterface
     {
         return new LogMessageHandlingResultMiddleware($this->createMessageLogger());
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Middleware\MiddlewareInterface
-     */
     public function createAddChannelNameStampMiddleware(): MiddlewareInterface
     {
         return new AddChannelNameStampMiddleware(
@@ -149,17 +131,11 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Middleware\MiddlewareInterface
-     */
     public function createDisableHandleMessagePropelPoolingMiddleware(): MiddlewareInterface
     {
         return new DisableHandleMessagePropelPoolingMiddleware();
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\MessageChannelProvider\MessageChannelProviderInterface
-     */
     public function createMessageChannelProvider(): MessageChannelProviderInterface
     {
         return new MessageChannelProvider(
@@ -179,17 +155,11 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Middleware\MiddlewareInterface
-     */
     public function createLogHandleMessageExceptionMiddleware(): MiddlewareInterface
     {
         return new LogHandleMessageExceptionMiddleware();
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface
-     */
     public function createMessageSenderLocator(): SendersLocatorInterface
     {
         return new MessageSenderLocator(
@@ -200,9 +170,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\Config\ConfigFormatterInterface
-     */
     public function createConfigFormatter(): ConfigFormatterInterface
     {
         return new JsonToArrayConfigFormatter($this->getUtilEncodingService());
@@ -216,9 +183,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_SENDER);
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Middleware\MiddlewareInterface
-     */
     public function createHandleMessageMiddleware(): MiddlewareInterface
     {
         return new HandleMessageMiddleware(
@@ -226,9 +190,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Handler\HandlersLocatorInterface
-     */
     public function createMessageHandlerLocator(): HandlersLocatorInterface
     {
         return new MessageHandlerLocator(
@@ -244,9 +205,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_HANDLER);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\Worker\WorkerInterface
-     */
     public function createWorker(): WorkerInterface
     {
         return new Worker(
@@ -267,17 +225,11 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_RECEIVER);
     }
 
-    /**
-     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
     public function getEventDispatcher(): EventDispatcherInterface
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::EVENT_DISPATCHER);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\Debug\DebugPrinterInterface
-     */
     public function createDebugPrinter(): DebugPrinterInterface
     {
         return new DebugPrinter(
@@ -290,25 +242,16 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \SprykerSdk\AsyncApi\AsyncApi\Loader\AsyncApiLoaderInterface
-     */
     public function createAsyncApiLoader(): AsyncApiLoaderInterface
     {
         return new AsyncApiLoader();
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorInterface
-     */
     public function createMessageValidator(): MessageValidatorInterface
     {
         return new MessageValidator($this->createMessageChannelProvider(), $this->getConfig());
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\MessageValidator\MessageValidatorStackInterface
-     */
     public function createMessageValidatorStack(): MessageValidatorStackInterface
     {
         return new MessageValidatorStack($this->getInternalValidatorPlugins(), $this->getExternalValidatorPlugins());
@@ -346,17 +289,11 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::PLUGINS_MIDDLEWARE);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface
-     */
     protected function getUtilEncodingService(): MessageBrokerToUtilEncodingServiceInterface
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::SERVICE_UTIL_ENCODING);
     }
 
-    /**
-     * @return \Psr\Log\LoggerInterface
-     */
     public function createLogger(): LoggerInterface
     {
         if (!$this->getConfig()->isLoggingEnabled()) {
@@ -375,9 +312,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         return $logger;
     }
 
-    /**
-     * @return \Psr\Log\LoggerInterface
-     */
     public function createNullLogger(): LoggerInterface
     {
         return new NullLogger();
@@ -393,9 +327,6 @@ class MessageBrokerBusinessFactory extends AbstractBusinessFactory
         return new StreamHandler($this->getConfig()->getLogFilePath());
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface
-     */
     protected function getExternalValidator(): MessageBrokerToUtilEncodingServiceInterface
     {
         return $this->getProvidedDependency(MessageBrokerDependencyProvider::SERVICE_UTIL_ENCODING);

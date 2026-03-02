@@ -44,11 +44,6 @@ class InMemoryMessageBrokerHelper extends Module
      */
     protected MessageBrokerBusinessTester $tester;
 
-    /**
-     * @param \Codeception\TestInterface $test
-     *
-     * @return void
-     */
     public function _before(TestInterface $test): void
     {
         $this->getConfigHelper()->setConfig(MessageBrokerConstants::IS_ENABLED, true);
@@ -59,11 +54,6 @@ class InMemoryMessageBrokerHelper extends Module
         $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_RECEIVER, [$this->getInMemoryMessageTransportPlugin()]);
     }
 
-    /**
-     * @param \Codeception\TestInterface $test
-     *
-     * @return void
-     */
     public function _after(TestInterface $test): void
     {
         if ($this->transport) {
@@ -93,11 +83,6 @@ class InMemoryMessageBrokerHelper extends Module
         ]);
     }
 
-    /**
-     * @param string $messageName
-     *
-     * @return void
-     */
     public function assertMessageWasSent(string $messageName): void
     {
         $envelope = $this->getMessageByName($messageName);
@@ -109,12 +94,6 @@ class InMemoryMessageBrokerHelper extends Module
         ));
     }
 
-    /**
-     * @param string $messageName
-     * @param array $requiredHeader
-     *
-     * @return void
-     */
     public function assertMessageWasSentWithRequiredHeader(string $messageName, array $requiredHeader): void
     {
         $this->assertMessageWasSent($messageName);
@@ -167,11 +146,6 @@ class InMemoryMessageBrokerHelper extends Module
         $this->assertCount(0, $missingProperties, sprintf('Expected to have the following properties "%s" in your message "%s" but these are missing "%s".', implode(', ', $requiredFields), $expectedMessageTransfer::class, implode(', ', $missingProperties)));
     }
 
-    /**
-     * @param string $messageName
-     *
-     * @return \Spryker\Shared\Kernel\Transfer\AbstractTransfer
-     */
     public function getMessageTransferByMessageName(string $messageName): AbstractTransfer
     {
         $envelope = $this->getMessageByName($messageName);
@@ -182,11 +156,6 @@ class InMemoryMessageBrokerHelper extends Module
         return $messageTransfer;
     }
 
-    /**
-     * @param string $messageName
-     *
-     * @return void
-     */
     public function assertMessageWasNotSent(string $messageName): void
     {
         $envelope = $this->getMessageByName($messageName);
@@ -194,9 +163,6 @@ class InMemoryMessageBrokerHelper extends Module
         $this->assertNull($envelope, sprintf('Expected not to have a message with class name "%s" sent, but it was sent.', $messageName));
     }
 
-    /**
-     * @return \SprykerTest\Zed\MessageBroker\Helper\Plugin\InMemoryMessageTransportPlugin
-     */
     protected function getInMemoryMessageTransportPlugin(): InMemoryMessageTransportPlugin
     {
         if (!$this->transportPlugin) {
@@ -207,12 +173,6 @@ class InMemoryMessageBrokerHelper extends Module
         return $this->transportPlugin;
     }
 
-    /**
-     * @param callable $callback
-     * @param string $messageName
-     *
-     * @return void
-     */
     public function assertMessagesByCallbackForMessageName(callable $callback, string $messageName): void
     {
         $messages = $this->getMessagesByName($messageName);
@@ -220,9 +180,6 @@ class InMemoryMessageBrokerHelper extends Module
         $callback($messages);
     }
 
-    /**
-     * @return void
-     */
     public function resetInMemoryMessages(): void
     {
         $this->transport->reset();
@@ -254,11 +211,6 @@ class InMemoryMessageBrokerHelper extends Module
         return $messages;
     }
 
-    /**
-     * @param string $messageName
-     *
-     * @return \Symfony\Component\Messenger\Envelope|null
-     */
     protected function getMessageByName(string $messageName): ?Envelope
     {
         if (!method_exists($this->transport, 'getSent')) {
@@ -277,9 +229,6 @@ class InMemoryMessageBrokerHelper extends Module
         return null;
     }
 
-    /**
-     * @return array
-     */
     protected function getAllSentMessageTransferNames(): array
     {
         $sentMessageTransferNames = [];

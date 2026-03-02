@@ -24,11 +24,6 @@ class MessageAttributeProvider implements MessageAttributeProviderInterface
         $this->messageAttributeProviderPlugins = $messageAttributeProviderPlugins;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\MessageAttributesTransfer $messageAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\MessageAttributesTransfer
-     */
     public function provideMessageAttributes(MessageAttributesTransfer $messageAttributesTransfer): MessageAttributesTransfer
     {
         foreach ($this->messageAttributeProviderPlugins as $messageAttributeProviderPlugin) {

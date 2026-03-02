@@ -26,9 +26,6 @@ use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\TenantActorMess
  */
 class TenantActorMessageAttributeProviderPluginTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testMessageAttributesProvidedCorrectlyWhenTenantIdentifierIsPresentInConfig(): void
     {
         // Arrange

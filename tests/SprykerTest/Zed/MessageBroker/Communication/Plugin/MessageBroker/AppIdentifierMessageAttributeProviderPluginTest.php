@@ -30,9 +30,6 @@ class AppIdentifierMessageAttributeProviderPluginTest extends Unit
      */
     protected const APP_IDENTIFIER = 'foo';
 
-    /**
-     * @return void
-     */
     public function testProvideMessageAttributesAddsAppIdentifierWhenItExists(): void
     {
         // Arrange
@@ -49,9 +46,6 @@ class AppIdentifierMessageAttributeProviderPluginTest extends Unit
         putenv('AOP_APP_IDENTIFIER');
     }
 
-    /**
-     * @return void
-     */
     public function testProvideMessageAttributesDoesNotAddAppIdentifierWhenItDoesNotExists(): void
     {
         // Arrange

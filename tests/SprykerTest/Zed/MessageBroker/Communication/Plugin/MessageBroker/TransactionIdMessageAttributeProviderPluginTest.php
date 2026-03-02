@@ -26,9 +26,6 @@ use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\TransactionIdMe
  */
 class TransactionIdMessageAttributeProviderPluginTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testProvideMessageAttributesAddsTransactionIdWhenItDoesNotExists(): void
     {
         // Arrange
@@ -44,9 +41,6 @@ class TransactionIdMessageAttributeProviderPluginTest extends Unit
         $this->assertNotNull($extendedMessageAttributesTransfer->getTransactionId());
     }
 
-    /**
-     * @return void
-     */
     public function testProvideMessageAttributesDoesNotAddTransactionIdWhenItAlreadyExists(): void
     {
         // Arrange

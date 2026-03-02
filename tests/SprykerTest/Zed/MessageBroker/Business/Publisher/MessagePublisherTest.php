@@ -29,9 +29,6 @@ class MessagePublisherTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testPublishMessageThrowsExceptionWhenPassedTransferDoesNotHaveMessageAttributes(): void
     {
         // Arrange
@@ -47,9 +44,6 @@ class MessagePublisherTest extends Unit
         $messagePublisher->sendMessage($messageBrokerWorkerConfigTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testPublishMessageThrowsExceptionInCaseOfMessageAttributesMethodDoesntExist(): void
     {
         // Arrange

@@ -13,11 +13,6 @@ use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInt
 
 class SomethingHappenedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\MessageBrokerTestMessageTransfer $messageBrokerTestMessageTransfer
-     *
-     * @return void
-     */
     public function handle(MessageBrokerTestMessageTransfer $messageBrokerTestMessageTransfer): void
     {
         $foo = 'bar';

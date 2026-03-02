@@ -31,9 +31,6 @@ class ValidationMiddlewarePluginTest extends Unit
      */
     protected MessageBrokerCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testValidationMiddlewarePluginCantHandleReceivedMessageWillThrowException(): void
     {
         // Arrange
@@ -50,9 +47,6 @@ class ValidationMiddlewarePluginTest extends Unit
         $validationMiddlewarePlugin->handle($envelope, $stackMock);
     }
 
-    /**
-     * @return void
-     */
     public function testValidationMiddlewarePluginCantHandleSentMessageWillReturnUnhandledEnvelope(): void
     {
         // Arrange
@@ -70,9 +64,6 @@ class ValidationMiddlewarePluginTest extends Unit
         $this->assertCount(0, $handledEnvelope->all());
     }
 
-    /**
-     * @return void
-     */
     public function testValidationMiddlewarePluginCanHandleSentMessageWillReturnEnvelope(): void
     {
         // Arrange
@@ -90,9 +81,6 @@ class ValidationMiddlewarePluginTest extends Unit
         $this->assertCount(0, $handledEnvelope->all());
     }
 
-    /**
-     * @return void
-     */
     public function testValidationMiddlewarePluginCanHandleReceivedMessageWillReturnEnvelope(): void
     {
         // Arrange

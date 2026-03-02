@@ -11,11 +11,5 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 interface DebugPrinterInterface
 {
-    /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param string|null $pathToAsyncApiFile
-     *
-     * @return void
-     */
     public function printDebug(OutputInterface $output, ?string $pathToAsyncApiFile = null): void;
 }

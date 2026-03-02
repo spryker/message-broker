@@ -35,11 +35,6 @@ class MessagePublisher implements MessagePublisherInterface
      */
     protected MessageBrokerConfig $messageBrokerConfig;
 
-    /**
-     * @param \Spryker\Zed\MessageBroker\Business\MessageAttributeProvider\MessageAttributeProviderInterface $messageDecorator
-     * @param \Symfony\Component\Messenger\MessageBusInterface $messageBus
-     * @param \Spryker\Zed\MessageBroker\MessageBrokerConfig $messageBrokerConfig
-     */
     public function __construct(
         MessageAttributeProviderInterface $messageDecorator,
         MessageBusInterface $messageBus,
@@ -50,11 +45,6 @@ class MessagePublisher implements MessagePublisherInterface
         $this->messageBrokerConfig = $messageBrokerConfig;
     }
 
-    /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
-     *
-     * @return \Generated\Shared\Transfer\MessageResponseTransfer
-     */
     public function sendMessage(TransferInterface $messageTransfer): MessageResponseTransfer
     {
         $messageResponseTransfer = new MessageResponseTransfer();
@@ -96,11 +86,6 @@ class MessagePublisher implements MessagePublisherInterface
         return $messageTransfer;
     }
 
-    /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
-     *
-     * @return string
-     */
     protected function getTransferNameFromClass(TransferInterface $messageTransfer): string
     {
         $messageName = get_class($messageTransfer);

@@ -62,17 +62,11 @@ class MessageBrokerFacadeTest extends Unit
      */
     protected ?string $correlationId = null;
 
-    /**
-     * @return void
-     */
     protected function _before(): void
     {
         $this->tester->clearMessageChannelCache();
     }
 
-    /**
-     * @return void
-     */
     public function testSendMessageWithoutConfiguredHandlerThrowsAnException(): void
     {
         // Arrange
@@ -89,9 +83,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testSendMessageWithoutConfiguredSenderThrowsAnException(): void
     {
         // Arrange
@@ -107,9 +98,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testSendMessageWithoutConfiguredMessageToChannelMapThrowsAnException(): void
     {
         // Arrange
@@ -125,9 +113,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->tester->getFacade()->sendMessage($messageBrokerTestMessageTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testSendMessageAddsMessageAttributesToMessage(): void
     {
         // Arrange
@@ -158,9 +143,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->assertIsString($messageAttributesTransfer->getTimestamp());
     }
 
-    /**
-     * @return void
-     */
     public function testSendMessageSendsMessageWithSpecifiedClient(): void
     {
         // Arrange
@@ -184,9 +166,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->tester->assertMessageWasSentWithSender($messageResponseTransfer->getBody(), 'in-memory');
     }
 
-    /**
-     * @return void
-     */
     public function testSendMessageCanBeDisabledByConfiguration(): void
     {
         // Arrange
@@ -209,9 +188,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->assertNull($messageResponseTransfer->getBody(), 'Message body must be null to indicate nothing was sent');
     }
 
-    /**
-     * @return void
-     */
     public function testStartWorkerDoesNothingWhenMessageBrokerIsDisabled(): void
     {
         // Arrange
@@ -231,9 +207,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->tester->getFacade()->startWorker(new MessageBrokerWorkerConfigTransfer());
     }
 
-    /**
-     * @return void
-     */
     public function testMessageConsumeHandlingMessagesUsesDisabledPropelInstancePooling(): void
     {
         $this->enableInstancePooling();
@@ -253,17 +226,11 @@ class MessageBrokerFacadeTest extends Unit
                  */
                 protected MessageBrokerFacadeTest $tester;
 
-                /**
-                 * @param \SprykerTest\Zed\MessageBroker\Business\MessageBrokerFacadeTest $tester
-                 */
                 public function __construct(MessageBrokerFacadeTest $tester)
                 {
                     $this->tester = $tester;
                 }
 
-                /**
-                 * @return iterable
-                 */
                 public function handles(): iterable
                 {
                     yield MessageBrokerTestMessageTransfer::class => function (): void {
@@ -293,9 +260,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->tester->assertTrue($this->isInstancePoolingEnabled(), 'Instance pooling should be enabled');
     }
 
-    /**
-     * @return void
-     */
     public function testIsMessageSendableReturnsFalseWhenMessageBrokerIsDisabled(): void
     {
         // Arrange
@@ -310,9 +274,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->assertFalse($isMessageSendable);
     }
 
-    /**
-     * @return void
-     */
     public function testIsMessageSendableReturnsTrueValueWhenPublishingToMessageBrokerIsEnabledAndChannelsAreNotFiltered(): void
     {
         // Arrange
@@ -337,9 +298,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->assertTrue($isMessageSendable);
     }
 
-    /**
-     * @return void
-     */
     public function testIsMessageSendableReturnsTrueValueWhenPublishingToMessageBrokerIsEnabledAndThereAreNoChannelFilters(): void
     {
         // Arrange
@@ -359,9 +317,6 @@ class MessageBrokerFacadeTest extends Unit
         $this->assertTrue($isMessageSendable);
     }
 
-    /**
-     * @return void
-     */
     public function testIsMessageSendableReturnsFalseValueWhenPublishingToMessageBrokerIsEnabledAndChannelsAreFiltered(): void
     {
         // Arrange

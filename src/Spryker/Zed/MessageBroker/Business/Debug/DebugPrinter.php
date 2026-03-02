@@ -71,12 +71,6 @@ class DebugPrinter implements DebugPrinterInterface
         $this->asyncApiLoader = $asyncApiLoader;
     }
 
-    /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param string|null $pathToAsyncApiFile
-     *
-     * @return void
-     */
     public function printDebug(OutputInterface $output, ?string $pathToAsyncApiFile = null): void
     {
         if ($pathToAsyncApiFile === null) {
@@ -88,11 +82,6 @@ class DebugPrinter implements DebugPrinterInterface
         $this->printDebugForAsyncApi($output, $pathToAsyncApiFile);
     }
 
-    /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return void
-     */
     protected function printDebugForConfiguration(OutputInterface $output): void
     {
         $messageToChannelMap = $this->getMessageToChannelMap();
@@ -146,12 +135,6 @@ class DebugPrinter implements DebugPrinterInterface
         }
     }
 
-    /**
-     * @param \SprykerSdk\AsyncApi\AsyncApi\Channel\AsyncApiChannelInterface $channel
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return void
-     */
     protected function printSubscribeMessageInformation(AsyncApiChannelInterface $channel, OutputInterface $output): void
     {
         $output->writeln('<fg=green>This application can send the following messages</>');
@@ -176,12 +159,6 @@ class DebugPrinter implements DebugPrinterInterface
         $output->writeln('');
     }
 
-    /**
-     * @param string $messageName
-     * @param string $expectedChannelName
-     *
-     * @return string
-     */
     protected function getChannelNameOutputForMessage(string $messageName, string $expectedChannelName): string
     {
         $configuredChannel = $this->getConfiguredChannelForMessage($messageName);
@@ -197,12 +174,6 @@ class DebugPrinter implements DebugPrinterInterface
         return $configuredChannel;
     }
 
-    /**
-     * @param \SprykerSdk\AsyncApi\AsyncApi\Channel\AsyncApiChannelInterface $channel
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return void
-     */
     protected function printPublishMessageInformation(AsyncApiChannelInterface $channel, OutputInterface $output): void
     {
         $output->writeln('<fg=green>This application can receive the following messages</>');
@@ -232,11 +203,6 @@ class DebugPrinter implements DebugPrinterInterface
         $output->writeln('');
     }
 
-    /**
-     * @param string $channelName
-     *
-     * @return string|null
-     */
     protected function getTransportForChannel(string $channelName): ?string
     {
         $channelToTransportMap = $this->getChannelToTransportMap();
@@ -253,11 +219,6 @@ class DebugPrinter implements DebugPrinterInterface
         return $transport;
     }
 
-    /**
-     * @param string $messageClassNAme
-     *
-     * @return string|null
-     */
     protected function getConfiguredChannelForMessage(string $messageClassNAme): ?string
     {
         $messageToChannelMap = $this->getMessageToChannelMap();

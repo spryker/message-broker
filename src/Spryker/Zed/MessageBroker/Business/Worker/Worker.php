@@ -76,11 +76,6 @@ class Worker implements WorkerInterface
         $this->config = $config;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer
-     *
-     * @return void
-     */
     public function runWorker(MessageBrokerWorkerConfigTransfer $messageBrokerWorkerConfigTransfer): void
     {
         if (!$this->config->isEnabled()) {

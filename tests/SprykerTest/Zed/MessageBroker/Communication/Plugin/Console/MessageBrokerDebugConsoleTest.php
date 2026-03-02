@@ -47,9 +47,6 @@ class MessageBrokerDebugConsoleTest extends Unit
      */
     protected MessageBrokerCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testPrintsDebugInformationOfConfiguredChannelMessageAndTransport(): void
     {
         // Arrange
@@ -68,9 +65,6 @@ class MessageBrokerDebugConsoleTest extends Unit
         $this->assertStringContainsString('No handler found', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testPrintsDebugInformationOfConfiguredChannelMessageTransportAndHandlerIfConfigured(): void
     {
         // Arrange
@@ -90,9 +84,6 @@ class MessageBrokerDebugConsoleTest extends Unit
         $this->assertStringContainsString('SprykerTest\Zed\MessageBroker\Helper\Plugin\SomethingHappenedMessageHandlerPlugin', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testPrintDebugThrowsExceptionWhenPathToAsyncApiIsInvalid(): void
     {
         // Expect
@@ -105,9 +96,6 @@ class MessageBrokerDebugConsoleTest extends Unit
         ]);
     }
 
-    /**
-     * @return void
-     */
     public function testPrintDebugWithAsyncApiPrintsInformationAboutChannels(): void
     {
         // Act
@@ -121,9 +109,6 @@ class MessageBrokerDebugConsoleTest extends Unit
         $this->assertStringContainsString('channelNameB', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testPrintDebugWithAsyncApiPrintsInformationAboutMessagesOthersCanSubscribeToWithMissingTransportAndChannelConfiguration(): void
     {
         // Act
@@ -138,9 +123,6 @@ class MessageBrokerDebugConsoleTest extends Unit
         $this->assertStringContainsString('Not mapped to a channel', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testPrintDebugWithAsyncApiPrintsInformationAboutMessagesOthersCanSubscribeToWithWrongChannelConfiguration(): void
     {
         // Arrange
@@ -156,9 +138,6 @@ class MessageBrokerDebugConsoleTest extends Unit
         $this->assertStringContainsString('Wrong channel "channelNameB", expected "channelNameA"', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testPrintDebugWithAsyncApiPrintsInformationAboutMessagesOthersCanSubscribeToWithTransportAndChannelConfiguration(): void
     {
         // Arrange
@@ -176,9 +155,6 @@ class MessageBrokerDebugConsoleTest extends Unit
         $this->assertStringContainsString('channelNameA', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testPrintDebugWithAsyncApiPrintsInformationAboutMessagesOthersCanPublishWithMissingTransportAndChannelConfiguration(): void
     {
         // Act
@@ -194,9 +170,6 @@ class MessageBrokerDebugConsoleTest extends Unit
         $this->assertStringContainsString('Not mapped to a channel', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testPrintDebugWithAsyncApiPrintsInformationAboutMessagesOthersCanPublishWithMissingHandler(): void
     {
         // Arrange

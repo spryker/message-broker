@@ -17,12 +17,6 @@ class DisableHandleMessagePropelPoolingMiddleware implements MiddlewareInterface
 {
     use InstancePoolingTrait;
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param \Symfony\Component\Messenger\Middleware\StackInterface $stack
-     *
-     * @return \Symfony\Component\Messenger\Envelope
-     */
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
         if (!$envelope->all(ReceivedStamp::class)) {

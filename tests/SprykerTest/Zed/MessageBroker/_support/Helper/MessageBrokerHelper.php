@@ -84,11 +84,6 @@ class MessageBrokerHelper extends Module
      */
     protected ?MessageBrokerBusinessTester $tester = null;
 
-    /**
-     * @param \Codeception\TestInterface $test
-     *
-     * @return void
-     */
     public function _before(TestInterface $test): void
     {
         parent::_before($test);
@@ -145,21 +140,11 @@ class MessageBrokerHelper extends Module
         $this->getBusinessHelper()->mockFactoryMethod('createWorker', $workerStub);
     }
 
-    /**
-     * @param string $eventName
-     *
-     * @return void
-     */
     public function assertEventDispatcherHasListenersForEvent(string $eventName): void
     {
         $this->assertTrue($this->eventDispatcher->hasListeners($eventName), sprintf('Expected to have listeners for the "%s" event but no listener found.', $eventName));
     }
 
-    /**
-     * @param string $eventName
-     *
-     * @return void
-     */
     public function assertEventDispatcherDoesNotHasListenersForEvent(string $eventName): void
     {
         $this->assertFalse($this->eventDispatcher->hasListeners($eventName), sprintf('Expected not to have listeners for the "%s" event but listener found.', $eventName));
@@ -192,9 +177,6 @@ class MessageBrokerHelper extends Module
         );
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory
-     */
     protected function getBusinessFactory(): MessageBrokerBusinessFactory
     {
         /** @var \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory $messageBrokerFactory */
@@ -203,12 +185,6 @@ class MessageBrokerHelper extends Module
         return $messageBrokerFactory;
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param string $senderAlias
-     *
-     * @return void
-     */
     public function assertMessageWasSentWithSender(Envelope $envelope, string $senderAlias): void
     {
         /** @var \Symfony\Component\Messenger\Stamp\SentStamp $sentStamp */
@@ -219,12 +195,6 @@ class MessageBrokerHelper extends Module
         $this->assertSame('in-memory', $sentStamp->getSenderAlias(), sprintf('Expected that message was sent with the "in-memory" sender but was sent with "%s".', $sentStamp->getSenderAlias() ?? ''));
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param array $senderAlias
-     *
-     * @return void
-     */
     public function assertMessageWasSentWithSenders(Envelope $envelope, array $senderAlias): void
     {
         $sentStamps = $envelope->all(SentStamp::class);
@@ -239,12 +209,6 @@ class MessageBrokerHelper extends Module
         }
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param string $stampClass
-     *
-     * @return void
-     */
     public function assertMessageHasStamp(Envelope $envelope, string $stampClass): void
     {
         $stamp = $envelope->last($stampClass);
@@ -253,34 +217,16 @@ class MessageBrokerHelper extends Module
         $this->assertNotNull($stamp, sprintf('Expected to have a "%s" stamp but it was not found.', $stampClass));
     }
 
-    /**
-     * @param string $messageClassName
-     * @param string $channelName
-     *
-     * @return void
-     */
     public function setMessageToChannelNameMap(string $messageClassName, string $channelName): void
     {
         putenv(sprintf('SPRYKER_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
-    /**
-     * @param string $messageClassName
-     * @param string $channelName
-     *
-     * @return void
-     */
     public function setMessageToSenderChannelNameMap(string $messageClassName, string $channelName): void
     {
         putenv(sprintf('SPRYKER_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
-    /**
-     * @param string $channelName
-     * @param string $clientName
-     *
-     * @return void
-     */
     public function setChannelToTransportMap(string $channelName, string $clientName): void
     {
         putenv(sprintf('SPRYKER_CHANNEL_TO_TRANSPORT_MAP={"%s": "%s"}', $channelName, $clientName));
@@ -290,9 +236,6 @@ class MessageBrokerHelper extends Module
         ]);
     }
 
-    /**
-     * @return \SprykerTest\Zed\MessageBroker\Helper\Plugin\InMemoryMessageTransportPlugin
-     */
     public function getInMemoryMessageTransportPlugin(): InMemoryMessageTransportPlugin
     {
         if (!$this->transportPlugin) {
@@ -303,11 +246,6 @@ class MessageBrokerHelper extends Module
         return $this->transportPlugin;
     }
 
-    /**
-     * @param string $topic
-     *
-     * @return \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface
-     */
     public function createSnsSenderPlugin(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): MessageSenderPluginInterface
     {
         putenv(sprintf('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
@@ -315,11 +253,6 @@ class MessageBrokerHelper extends Module
         return $this->sender = new AwsSnsMessageSenderPlugin();
     }
 
-    /**
-     * @param string $queueName
-     *
-     * @return \Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface
-     */
     public function createAwsSqsReceiverPlugin(string $queueName = 'message-broker'): MessageReceiverPluginInterface
     {
         putenv(sprintf('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
@@ -356,21 +289,11 @@ class MessageBrokerHelper extends Module
         }
     }
 
-    /**
-     * @param array $seedData
-     *
-     * @return \Generated\Shared\Transfer\MessageAttributesTransfer
-     */
     public function getMessageAttributesTransfer(array $seedData = []): MessageAttributesTransfer
     {
         return (new MessageAttributesBuilder($seedData))->build();
     }
 
-    /**
-     * @param string $messageName
-     *
-     * @return \Symfony\Component\Messenger\Envelope|null
-     */
     protected function getMessageByName(string $messageName): ?Envelope
     {
         if (!method_exists($this->transport, 'getSent')) {
@@ -429,9 +352,6 @@ class MessageBrokerHelper extends Module
         $this->getDependencyProviderHelper()->setDependency(MessageBrokerDependencyProvider::PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER, $messageDecoratorPlugins);
     }
 
-    /**
-     * @return void
-     */
     public function consumeMessages(): void
     {
         // Add Event subscriber that will stop the Worker when all messages are handled or when a time limit was reached.
@@ -473,9 +393,6 @@ class MessageBrokerHelper extends Module
         return $messageBrokerWorkerConfigTransfer;
     }
 
-    /**
-     * @return void
-     */
     public function clearMessageChannelCache(): void
     {
         $reflectionClass = new ReflectionClass(MessageChannelProvider::class);
@@ -484,9 +401,6 @@ class MessageBrokerHelper extends Module
         $reflectionProperty->setValue([]);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface
-     */
     protected function getFacade(): MessageBrokerFacadeInterface
     {
         /** @var \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface $messageBrokerFacade */
@@ -495,9 +409,6 @@ class MessageBrokerHelper extends Module
         return $messageBrokerFacade;
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory
-     */
     protected function getFactory(): MessageBrokerBusinessFactory
     {
         /** @var \Spryker\Zed\MessageBroker\Business\MessageBrokerBusinessFactory $messageBrokerFactory */
@@ -506,9 +417,6 @@ class MessageBrokerHelper extends Module
         return $messageBrokerFactory;
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Envelope
-     */
     public function haveEnvelope(): Envelope
     {
         $messageTransfer = new MessageTransfer();
@@ -516,9 +424,6 @@ class MessageBrokerHelper extends Module
         return new Envelope($messageTransfer);
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Envelope
-     */
     public function haveEnvelopeWithReceivedStamp(): Envelope
     {
         $envelope = $this->haveEnvelope();
@@ -526,17 +431,11 @@ class MessageBrokerHelper extends Module
         return $envelope->with(new ReceivedStamp('someTransport'));
     }
 
-    /**
-     * @return void
-     */
     public function enableMessageBroker(): void
     {
         $this->getConfigHelper()->mockEnvironmentConfig(MessageBrokerConstants::IS_ENABLED, true);
     }
 
-    /**
-     * @return void
-     */
     public function disableMessageBroker(): void
     {
         $this->getConfigHelper()->mockEnvironmentConfig(MessageBrokerConstants::IS_ENABLED, false);

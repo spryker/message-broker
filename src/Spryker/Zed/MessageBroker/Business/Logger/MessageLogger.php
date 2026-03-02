@@ -34,20 +34,11 @@ class MessageLogger implements MessageLoggerInterface
      */
     protected MessageBrokerConfig $messageBrokerConfig;
 
-    /**
-     * @param \Spryker\Zed\MessageBroker\MessageBrokerConfig $messageBrokerConfig
-     */
     public function __construct(MessageBrokerConfig $messageBrokerConfig)
     {
         $this->messageBrokerConfig = $messageBrokerConfig;
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param float $startMicrotime
-     *
-     * @return void
-     */
     public function logInfo(Envelope $envelope, float $startMicrotime): void
     {
         /** @var \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer */
@@ -65,13 +56,6 @@ class MessageLogger implements MessageLoggerInterface
         ] + $logContext);
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param float $startMicrotime
-     * @param string $errorMessage
-     *
-     * @return void
-     */
     public function logError(Envelope $envelope, float $startMicrotime, string $errorMessage): void
     {
         /** @var \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer */
@@ -89,11 +73,6 @@ class MessageLogger implements MessageLoggerInterface
         ] + $logContext);
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return bool
-     */
     protected function isEnvelopeReceived(Envelope $envelope): bool
     {
         return $envelope->last(ReceivedStamp::class) !== null;
@@ -148,11 +127,6 @@ class MessageLogger implements MessageLoggerInterface
         return $loggerMessageAttributes;
     }
 
-    /**
-     * @param float $startMicrotime
-     *
-     * @return float
-     */
     protected function getDurationInSeconds(float $startMicrotime): float
     {
         return round(microtime(true) - $startMicrotime, 2);

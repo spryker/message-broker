@@ -25,11 +25,6 @@ class MessageValidatorStack implements MessageValidatorStackInterface
         $this->validatorPlugins = array_merge($internalValidatorPlugins, $externalValidatorPlugins);
     }
 
-    /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
-     *
-     * @return bool
-     */
     public function isValidMessage(TransferInterface $messageTransfer): bool
     {
         $isValidMessage = true;

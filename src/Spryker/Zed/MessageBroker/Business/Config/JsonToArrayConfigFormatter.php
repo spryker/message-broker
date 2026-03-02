@@ -17,9 +17,6 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
      */
     protected $utilEncodingService;
 
-    /**
-     * @param \Spryker\Zed\MessageBroker\Dependency\Service\MessageBrokerToUtilEncodingServiceInterface $utilEncodingService
-     */
     public function __construct(MessageBrokerToUtilEncodingServiceInterface $utilEncodingService)
     {
         $this->utilEncodingService = $utilEncodingService;

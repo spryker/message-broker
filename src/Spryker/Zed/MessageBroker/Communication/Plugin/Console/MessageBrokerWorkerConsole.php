@@ -91,9 +91,6 @@ class MessageBrokerWorkerConsole extends Console
      */
     protected const DEFAULT_VALUE_OPTION_SLEEP = 1;
 
-    /**
-     * @return void
-     */
     protected function configure(): void
     {
         $this->setName(static::COMMAND_NAME);
@@ -114,12 +111,6 @@ class MessageBrokerWorkerConsole extends Console
         ]);
     }
 
-    /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $messageBrokerWorkerConfigTransfer = new MessageBrokerWorkerConfigTransfer();
@@ -176,11 +167,6 @@ class MessageBrokerWorkerConsole extends Console
         return static::CODE_SUCCESS;
     }
 
-    /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     *
-     * @return int|null
-     */
     protected function findOptionMessageLimitValue(InputInterface $input): ?int
     {
         $optionMessageLimitValue = $input->getOption(static::OPTION_MESSAGE_LIMIT);
@@ -192,11 +178,6 @@ class MessageBrokerWorkerConsole extends Console
         return (int)$optionMessageLimitValue;
     }
 
-    /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     *
-     * @return int|null
-     */
     protected function findOptionFailureLimitValue(InputInterface $input): ?int
     {
         $optionFailureLimitValue = $input->getOption(static::OPTION_FAILURE_LIMIT);
@@ -208,11 +189,6 @@ class MessageBrokerWorkerConsole extends Console
         return (int)$optionFailureLimitValue;
     }
 
-    /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     *
-     * @return int|null
-     */
     protected function findOptionMemoryLimitValue(InputInterface $input): ?int
     {
         $optionMemoryLimitValue = $input->getOption(static::OPTION_MEMORY_LIMIT);
@@ -224,11 +200,6 @@ class MessageBrokerWorkerConsole extends Console
         return (int)$optionMemoryLimitValue;
     }
 
-    /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     *
-     * @return int|null
-     */
     protected function findOptionTimeLimitValue(InputInterface $input): ?int
     {
         $optionTimeLimitValue = $input->getOption(static::OPTION_TIME_LIMIT);
@@ -240,11 +211,6 @@ class MessageBrokerWorkerConsole extends Console
         return (int)$optionTimeLimitValue;
     }
 
-    /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     *
-     * @return int
-     */
     protected function getOptionSleepValue(InputInterface $input): int
     {
         $optionSleepValue = $input->getOption(static::OPTION_SLEEP);

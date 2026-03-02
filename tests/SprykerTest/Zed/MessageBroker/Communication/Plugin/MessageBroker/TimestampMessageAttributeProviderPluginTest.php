@@ -26,9 +26,6 @@ use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\TimestampMessag
  */
 class TimestampMessageAttributeProviderPluginTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testProvideMessageAttributesAddsTimestampWhenItDoesNotExists(): void
     {
         // Arrange
@@ -42,9 +39,6 @@ class TimestampMessageAttributeProviderPluginTest extends Unit
         $this->assertNotNull($messageAttributesTransfer->getTimestamp());
     }
 
-    /**
-     * @return void
-     */
     public function testProvideMessageAttributesAddsValidTimestampWithAdequatePrecision(): void
     {
         // Arrange

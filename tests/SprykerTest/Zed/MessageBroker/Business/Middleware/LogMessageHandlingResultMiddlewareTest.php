@@ -44,9 +44,6 @@ class LogMessageHandlingResultMiddlewareTest extends Unit
      */
     protected MessageBrokerBusinessTester $tester;
 
-    /**
-     * @return void
-     */
     public function testLogMessageHandlingResultMiddlewareWritesSuccessLogInCaseOfSuccessfulMessageSending(): void
     {
         // Arrange
@@ -87,9 +84,6 @@ class LogMessageHandlingResultMiddlewareTest extends Unit
         $logMessageHandlingResultMiddleware->handle($envelope, $stackMock);
     }
 
-    /**
-     * @return void
-     */
     public function testLogMessageHandlingResultMiddlewareWritesSuccessLogInCaseOfSuccessfulMessageReceiving(): void
     {
         // Arrange
@@ -130,9 +124,6 @@ class LogMessageHandlingResultMiddlewareTest extends Unit
         $logMessageHandlingResultMiddleware->handle($envelope, $stackMock);
     }
 
-    /**
-     * @return void
-     */
     public function testLogMessageHandlingResultMiddlewareWritesErrorLogInCaseOfNotSuccessfulMessageSending(): void
     {
         // Arrange
@@ -176,9 +167,6 @@ class LogMessageHandlingResultMiddlewareTest extends Unit
         $logMessageHandlingResultMiddleware->handle(Envelope::wrap($messageBrokerTestMessageTransfer), $stackMock);
     }
 
-    /**
-     * @return void
-     */
     public function testLogMessageHandlingResultMiddlewareWritesErrorLogInCaseOfNotSuccessfulMessageReceiving(): void
     {
         // Arrange
@@ -225,12 +213,6 @@ class LogMessageHandlingResultMiddlewareTest extends Unit
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\MessageAttributesTransfer $messageAttributesTransfer
-     * @param string $transferName
-     *
-     * @return array
-     */
     protected function getMessageLogDataFromMessageAttributesTransfer(
         MessageAttributesTransfer $messageAttributesTransfer,
         string $transferName

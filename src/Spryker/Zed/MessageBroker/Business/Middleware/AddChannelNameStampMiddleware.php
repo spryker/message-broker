@@ -23,20 +23,11 @@ class AddChannelNameStampMiddleware implements MiddlewareInterface
      */
     protected MessageChannelProviderInterface $messageChannelProvider;
 
-    /**
-     * @param \Spryker\Zed\MessageBroker\Business\MessageChannelProvider\MessageChannelProviderInterface $messageChannelProvider
-     */
     public function __construct(MessageChannelProviderInterface $messageChannelProvider)
     {
         $this->messageChannelProvider = $messageChannelProvider;
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param \Symfony\Component\Messenger\Middleware\StackInterface $stack
-     *
-     * @return \Symfony\Component\Messenger\Envelope
-     */
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
         $channel = $this->messageChannelProvider->findChannelForMessage($envelope);

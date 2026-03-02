@@ -12,10 +12,5 @@ use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 interface MessagePublisherInterface
 {
-    /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
-     *
-     * @return \Generated\Shared\Transfer\MessageResponseTransfer
-     */
     public function sendMessage(TransferInterface $messageTransfer): MessageResponseTransfer;
 }

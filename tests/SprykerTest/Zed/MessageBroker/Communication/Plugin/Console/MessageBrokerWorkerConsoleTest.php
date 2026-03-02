@@ -50,9 +50,6 @@ class MessageBrokerWorkerConsoleTest extends Unit
      */
     protected MessageBrokerCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testMessageCanBeConsumed(): void
     {
         $inMemoryMessageTransportMock = $this->tester->getInMemoryMessageTransportPlugin();
@@ -85,9 +82,6 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $commandTester->execute($arguments);
     }
 
-    /**
-     * @return void
-     */
     public function testArgumentQueuesIsPassedToWorker(): void
     {
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
@@ -108,9 +102,6 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $this->assertStringContainsString('Quit the worker with CONTROL-C.', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testArgumentQueuesIsNotPassedToWorker(): void
     {
         //Arrange
@@ -131,9 +122,6 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $this->assertStringContainsString('Quit the worker with CONTROL-C.', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testWhenLimitOptionIsUsedStopWorkerOnMessageLimitListenerIsSubscribed(): void
     {
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
@@ -151,9 +139,6 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $this->assertStringContainsString('processed 1 messages', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testWhenFailureLimitOptionIsUsedStopWorkerOnFailureLimitListenerIsSubscribed(): void
     {
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
@@ -171,9 +156,6 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $this->assertStringContainsString('reached 1 failed messages', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testWhenMemoryLimitOptionIsUsedStopWorkerOnMemoryLimitListenerIsSubscribed(): void
     {
         $commandTester = $this->tester->getWorkerConsoleCommandTester();
@@ -191,9 +173,6 @@ class MessageBrokerWorkerConsoleTest extends Unit
         $this->assertStringContainsString('exceeded 1 of memory', $commandTester->getDisplay());
     }
 
-    /**
-     * @return void
-     */
     public function testWhenTimeLimitOptionIsUsedStopWorkerOnTimeLimitListenerIsSubscribed(): void
     {
         $commandTester = $this->tester->getWorkerConsoleCommandTester();

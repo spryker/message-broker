@@ -11,10 +11,5 @@ use Generated\Shared\Transfer\MessageSendingContextTransfer;
 
 interface MessageValidatorInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\MessageSendingContextTransfer $messageSendingContextTransfer
-     *
-     * @return bool
-     */
     public function isMessageSendable(MessageSendingContextTransfer $messageSendingContextTransfer): bool;
 }

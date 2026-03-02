@@ -20,9 +20,6 @@ class LogMessageHandlingResultMiddleware implements MiddlewareInterface
      */
     protected MessageLoggerInterface $messagePublishLogger;
 
-    /**
-     * @param \Spryker\Zed\MessageBroker\Business\Logger\MessageLoggerInterface $messagePublishLogger
-     */
     public function __construct(MessageLoggerInterface $messagePublishLogger)
     {
         $this->messagePublishLogger = $messagePublishLogger;

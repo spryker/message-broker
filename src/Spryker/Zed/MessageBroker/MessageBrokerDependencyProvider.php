@@ -62,11 +62,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
      */
     public const PLUGINS_FILTER_MESSAGE_CHANNEL = 'PLUGINS_FILTER_MESSAGE_CHANNEL';
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
@@ -101,11 +96,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function provideMessageSenderAdapterPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_MESSAGE_SENDER, function () {
@@ -123,11 +113,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function provideMessageReceiverAdapterPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_MESSAGE_RECEIVER, function () {
@@ -145,11 +130,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function provideMessageHandlerPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_MESSAGE_HANDLER, function () {
@@ -159,11 +139,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function provideMiddlewarePlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_MIDDLEWARE, function () {
@@ -189,11 +164,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function provideMessageAttributeProviderPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_MESSAGE_ATTRIBUTE_PROVIDER, function () {
@@ -211,11 +181,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addUtilEncodingService(Container $container): Container
     {
         $container->set(static::SERVICE_UTIL_ENCODING, function (Container $container) {
@@ -227,11 +192,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function provideExternalValidatorPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_EXTERNAL_VALIDATOR, function () {
@@ -249,11 +209,6 @@ class MessageBrokerDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function provideFilterMessageChannelPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_FILTER_MESSAGE_CHANNEL, function () {
