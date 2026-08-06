@@ -110,6 +110,11 @@ class Worker implements WorkerInterface
             $options['sleep'] = $messageBrokerWorkerConfigTransfer->getSleep();
         }
 
+        if ($messageBrokerWorkerConfigTransfer->getTimeLimit()) {
+            // Without this the worker waits out a full sleep cycle before the time limit stops it.
+            $options['time_limit'] = $messageBrokerWorkerConfigTransfer->getTimeLimit();
+        }
+
         $receivers = $this->prepareReceiverPlugins($channels);
         $this->run($options, $receivers);
     }
