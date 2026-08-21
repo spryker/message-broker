@@ -21,6 +21,7 @@
         "spryker/container": "*",
         "spryker/event-dispatcher": "*",
         "spryker/message-broker-aws": "*",
+        "spryker/propel": "*",
         "spryker/ramsey-uuid": "*",
         "spryker/store": "*",
         "spryker/testify": "*"
