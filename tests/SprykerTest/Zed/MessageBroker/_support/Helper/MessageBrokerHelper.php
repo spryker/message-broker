@@ -397,7 +397,6 @@ class MessageBrokerHelper extends Module
     {
         $reflectionClass = new ReflectionClass(MessageChannelProvider::class);
         $reflectionProperty = $reflectionClass->getProperty('messageToChannelMapCache');
-        $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue([]);
     }
 
