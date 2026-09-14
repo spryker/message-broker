@@ -12,15 +12,12 @@ use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginIn
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginAcceptClientInterface;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\InMemoryTransport;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class InMemoryMessageTransportPlugin extends AbstractPlugin implements MessageSenderPluginInterface, MessageReceiverPluginInterface, TransportInterface, QueueReceiverInterface, MessageSenderPluginAcceptClientInterface
 {
-    /**
-     * @var \Symfony\Component\Messenger\Transport\InMemoryTransport
-     */
     protected InMemoryTransport $transport;
 
     public function __construct(InMemoryTransport $transport)

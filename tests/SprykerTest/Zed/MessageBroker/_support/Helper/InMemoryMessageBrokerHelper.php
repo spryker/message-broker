@@ -19,7 +19,7 @@ use SprykerTest\Zed\MessageBroker\MessageBrokerBusinessTester;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelperTrait;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\InMemoryTransport;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -30,7 +30,7 @@ class InMemoryMessageBrokerHelper extends Module
     use ConfigHelperTrait;
 
     /**
-     * @var \Symfony\Component\Messenger\Transport\InMemoryTransport|null
+     * @var \Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport|null
      */
     protected ?InMemoryTransport $transport = null;
 
